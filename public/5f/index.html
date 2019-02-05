@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*" />
+    <title>新手js地下城 5F-全台空氣指標儀表板</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+TC">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800">
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.css' />
+    <link rel="stylesheet" href="main.css">
+  </head>
+  <body>
+    <div id="app">
+      <div class="theme-header">
+        <div class="md-header">
+          <h1>空氣品質指標(AQI)</h1>
+          <select v-model="key">
+            <option value="請選擇杝區">請選擇杝區</option>
+            <option v-for="(item,i) in datacity" :key="i" :value="item">{{ item }}
+            </option>
+          </select>
+        </div>
+        <div class="md-info">
+          <table>
+            <tr>
+              <td v-for="(item,i) in info" :key="i" :style="{background:item.color}">{{ item.range }}</td>
+            </tr>
+            <tr>
+              <td v-for="(item,idx) in info" :key="idx" v-html="item.feeing">{{ item.feeing }}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <city :data="datalist" :tit="key" />
+    </div>
+  </body>
+</html>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.18-beta.0/vue.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js'></script>
+<script src='main.js'></script>
