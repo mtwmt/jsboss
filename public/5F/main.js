@@ -43,7 +43,7 @@ var vm = new Vue({
   el: '#app',
   data: {
     data: [],
-    key: '臺北市',
+    key: '高雄市',
     info: [{
       range: "0～50",
       feeing: "良好",

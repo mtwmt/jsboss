@@ -13,7 +13,7 @@ const prettify = require('gulp-prettify');
 
 var css = function() {
   return gulp
-    .src('sourse/scss/*.scss')
+    .src('sourse/**/*.scss')
     .pipe(plumber())
     .pipe(
       sass({
@@ -23,21 +23,21 @@ var css = function() {
     )
     .pipe(autoprefixer())
     .pipe(sourcemaps.write())
-    .pipe(gulp.dest('public/css'));
+    .pipe(gulp.dest('public'));
 };
 
 var js = function() {
   return gulp
-    .src('sourse/js/*.js')
+    .src('sourse/**/*.js')
     .pipe(plumber())
     .pipe(babel({ presets: ['env'] }))
     .pipe(sourcemaps.init({ loadMaps: true }))
-    .pipe(gulp.dest('public/js'));
+    .pipe(gulp.dest('public'));
 };
 
 var html = function() {
   return gulp
-    .src(['sourse/*.html', 'sourse/**/*.html'])
+    .src(['sourse/**/*.html'])
     .pipe(plumber())
     .pipe(prettify({ indent_size: 2 }))
     .pipe(gulp.dest('public'));
@@ -48,9 +48,9 @@ var clean = function() {
 };
 
 var watchfile = function() {
-  gulp.watch('sourse/scss/*.scss', css);
-  gulp.watch('sourse/js/*.js', js);
-  gulp.watch(['sourse/*.html', 'sourse/**/*.html'], html);
+  gulp.watch('sourse/**/*.scss', css);
+  gulp.watch('sourse/**/*.js', js);
+  gulp.watch(['sourse/**/*.html'], html);
   gulp.watch(['public'], clean);
 };
 
