@@ -47,7 +47,6 @@ var vm = new Vue({
     info: [{
       range: "0～50",
       feeing: "良好",
-      cls: "aqi1",
       color: "#95F084"
     }, {
       range: "51～100",
@@ -80,7 +79,6 @@ var vm = new Vue({
     var _this = this;
 
     axios.get('https://script.google.com/macros/s/AKfycbzOdvWalYBBLDWpX1h_mE0mL-HMV9wygY6jI-ITovsVPIb6LSqb/exec?url=opendata.epa.gov.tw/ws/Data/AQI/?$format=json').then(function (res) {
-      console.log(res);
       _this.data = res.data;
     });
   },

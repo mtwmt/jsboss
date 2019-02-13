@@ -112,7 +112,6 @@ var vm = new Vue({
       {
         range: "0～50",
         feeing: "良好",
-        cls: "aqi1",
         color: "#95F084"
       },
       {
@@ -150,7 +149,6 @@ var vm = new Vue({
   created() {
     axios.get('https://script.google.com/macros/s/AKfycbzOdvWalYBBLDWpX1h_mE0mL-HMV9wygY6jI-ITovsVPIb6LSqb/exec?url=opendata.epa.gov.tw/ws/Data/AQI/?$format=json')
     .then( res=>{
-      console.log( res )
       this.data = res.data;
     })
   },
