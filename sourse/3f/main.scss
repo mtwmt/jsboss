@@ -37,10 +37,13 @@ body{
     background: #041936;
     .cal{
       font-size: 16px;
+      line-height: 1;
       color: #00C4FF;
     }
     .total{
-      font-size: 56px;
+      // font-size: 56px;
+      font-size: (56/16) * 100%;
+      line-height: 1.2;
       color: #fff;
     }
   }
@@ -65,6 +68,12 @@ body{
       color: #fff;
       &.oper{
         background: #041936;
+      }
+      &.sum{
+        padding: 0 30px 0 0;
+        width: (72 * 2 + 8 ) + px;
+        text-align: right;
+        background: linear-gradient(to right, #00c4ff 0%,#6c00ff 100%);
       }
     }
   }
