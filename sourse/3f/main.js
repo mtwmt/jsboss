@@ -7,7 +7,6 @@
       hd_w = $hd.clientWidth - 40,
       hdtotal_w = $hdtotal.clientWidth;
 
-      console.log(hd_w, $hdtotal.offsetWidth)
 
       function textSize(){
         
