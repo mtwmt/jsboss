@@ -1,20 +1,120 @@
-(function() {
-  let $hd = document.querySelector('.cal-header'),
+(function () {
+  var $hd = document.querySelector('.cal-header'),
+      $hddigit = document.querySelector('.digit'),
       $hdcal = document.querySelector('.cal'),
-      $hdtotal = document.querySelector('.total'),
-      $num = document.querySelectorAll('.num'),
+      $num = document.querySelectorAll('.cal-body span'),
       $sum = document.querySelector('.sum'),
-      hd_w = $hd.clientWidth - 40,
-      hdtotal_w = $hdtotal.clientWidth;
+      calw,
+      calboxW = $hd.clientWidth - 40,
+  textSize = function (textW){
+    let fz = parseInt($hdcal.style.fontSize, 10);
+    while (textW > calboxW) {
+      fz -= 2;
+      $hdcal.style.fontSize = `${fz}px`;
+      textW = $hdcal.clientWidth;
+    }
+  },
+  isNumber = function (obj) {
+    // return (typeof (obj) === 'number');
+    return parseFloat( obj );
+  },
+  toPrice = function( num ){
+    console.log( num )
+    if (!isNumber(num)) {
+      return num;
+    }
+    
+    num = String(num);
+
+    if (num.length > 3) {
+      return num.replace(/\B(?=(?:\d{3})+(?!\d))/g, ',');
+    }
+  },
+  isCalculate = function( dom,type ){
+    dom.textContent = (!parseInt(dom.textContent, 10)) ? '' : dom.textContent;
+    dom.textContent = dom.textContent + type.replace(/[^0-9]/,'');
+  };
 
 
-      function textSize(){
-        
+  $num.forEach(function( el,idx ){
+    
+    // let keyCode = el.getAttribute('data-key').split(',')[0] || el.getAttribute('data-key').split(',')[1];
 
-      };
+    // console.log( keyCode )
+    // window.addEventListener('keydown',function( event ){
       
+    // });
+    el.addEventListener('mousedown', function (event ){
+      isCalculate($hddigit, this.textContent );
+      isCalculate($hdcal, this.textContent);
 
-      textSize();
+      switch ( this.classList.value ){
+        case 'oper':
+          $hdcal.textContent = '';
+          $hddigit.textContent = `${$hddigit.textContent} ${this.textContent} `;
+          break;
+        case 'sum':
+        let total = $hddigit.textContent.split(' '),
+            arr = [];
+            total.map(function( e ){
+              if( e === '÷' ){
+                e = '/';
+              }else if( e === '×' ){
+                e = '*';
+              }else if( e === '−' ){
+                e = '-';
+              }else if( e === '+' ){
+                e = '+';
+              }
+              arr.push( e )
+            });
+            $hdcal.textContent = eval( arr.join('') );
+          break;
+        case 'clear':
+          $hddigit.textContent = 0;
+          $hdcal.textContent = 0;
+          break;
+        default:
+
+      }
+
+
+      // if( this.classList.value === 'oper' ){
+      //   $hdcal.textContent = '';
+      //   $hddigit.textContent = `${$hddigit.textContent} ${this.textContent} `;
+      // }
+      
+      // if( this.classList.value === 'sum' ){
+      //   let total = $hddigit.textContent.split(' '),
+      //       arr = [];
+      //   total.map(function( e ){
+      //     if( e === '÷' ){
+      //       e = '/';
+      //     }else if( e === '×' ){
+      //       e = '*';
+      //     }else if( e === '−' ){
+      //       e = '-';
+      //     }else if( e === '+' ){
+      //       e = '+';
+      //     }
+      //     arr.push( e )
+      //   });
+      //   $hdcal.textContent = eval( arr.join('') );
+      // }
+
+      // if( this.classList.value === 'sum' ){
+
+      // }
+
+
+      calw = $hdcal.clientWidth;
+      textSize( calw )
+
+      
+    });
+  });
+  
+  
 
 
 })();
