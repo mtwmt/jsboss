@@ -30,82 +30,63 @@
       return num.replace(/\B(?=(?:\d{3})+(?!\d))/g, ',');
     }
   },
-  isCalculate = function( dom,type ){
+  isDigit = function( dom,type ){
+    
     dom.textContent = (!parseInt(dom.textContent, 10)) ? '' : dom.textContent;
-    dom.textContent = dom.textContent + type.replace(/[^0-9]/,'');
+    
+    if (dom.textContent.length > 0 ){
+      dom.textContent = dom.textContent + type.replace(/[^0-9]/, '');
+    }else{
+      dom.textContent = dom.textContent + type.replace(/[^0-9]/, '0');
+    }
+  },
+  isCalculate = function( dom ){
+
+    switch (dom.classList.value) {
+      case 'oper':
+        $hdcal.textContent = '';
+        $hddigit.textContent = `${$hddigit.textContent} ${dom.textContent} `;
+        break;
+      case 'dot':
+        break;
+      case 'sum':
+        let total = $hddigit.textContent.split(' '),
+          arr = [];
+        total.map(function (e) {
+          if (e === '÷') {
+            e = '/';
+          } else if (e === '×') {
+            e = '*';
+          } else if (e === '−') {
+            e = '-';
+          } else if (e === '+') {
+            e = '+';
+          }
+          arr.push(e)
+        });
+        $hdcal.textContent = eval(arr.join(''));
+        break;
+      case 'clear':
+        $hddigit.textContent = 0;
+        $hdcal.textContent = 0;
+        break;
+      default:
+        break;
+    }
   };
 
-
   $num.forEach(function( el,idx ){
-    
     // let keyCode = el.getAttribute('data-key').split(',')[0] || el.getAttribute('data-key').split(',')[1];
-
     // console.log( keyCode )
     // window.addEventListener('keydown',function( event ){
       
     // });
     el.addEventListener('mousedown', function (event ){
-      isCalculate($hddigit, this.textContent );
-      isCalculate($hdcal, this.textContent);
-
-      switch ( this.classList.value ){
-        case 'oper':
-          $hdcal.textContent = '';
-          $hddigit.textContent = `${$hddigit.textContent} ${this.textContent} `;
-          break;
-        case 'sum':
-        let total = $hddigit.textContent.split(' '),
-            arr = [];
-            total.map(function( e ){
-              if( e === '÷' ){
-                e = '/';
-              }else if( e === '×' ){
-                e = '*';
-              }else if( e === '−' ){
-                e = '-';
-              }else if( e === '+' ){
-                e = '+';
-              }
-              arr.push( e )
-            });
-            $hdcal.textContent = eval( arr.join('') );
-          break;
-        case 'clear':
-          $hddigit.textContent = 0;
-          $hdcal.textContent = 0;
-          break;
-        default:
-
-      }
-
-
-      // if( this.classList.value === 'oper' ){
-      //   $hdcal.textContent = '';
-      //   $hddigit.textContent = `${$hddigit.textContent} ${this.textContent} `;
-      // }
       
-      // if( this.classList.value === 'sum' ){
-      //   let total = $hddigit.textContent.split(' '),
-      //       arr = [];
-      //   total.map(function( e ){
-      //     if( e === '÷' ){
-      //       e = '/';
-      //     }else if( e === '×' ){
-      //       e = '*';
-      //     }else if( e === '−' ){
-      //       e = '-';
-      //     }else if( e === '+' ){
-      //       e = '+';
-      //     }
-      //     arr.push( e )
-      //   });
-      //   $hdcal.textContent = eval( arr.join('') );
-      // }
+      isDigit($hddigit, this.textContent);
+      isDigit($hdcal, this.textContent);
 
-      // if( this.classList.value === 'sum' ){
-
-      // }
-
+      isCalculate( this );
 
       calw = $hdcal.clientWidth;
       textSize( calw )
