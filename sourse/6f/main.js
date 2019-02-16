@@ -1,8 +1,5 @@
 Vue.component('start',{
   props: ['challenge'],
-  data: function(){
-    return{}
-  },
   methods: {
     go(){
       this.$emit('getpage','play'); 
@@ -42,23 +39,18 @@ Vue.component('play',{
       time: '',
     }
   },
-  mounted(){},
   created() {
     this.time = this.challenge;
     this.countdown();
     this.game();
-  },
-  watch:{},
-  computed: {
   },
   methods: {
     getZero(str, len){
       return ( (Math.pow(10,len) + str + '').substr(1) )
     },
     countdown(){
-      let _self = this,
-            t;
-      if( --_self.time === 0 ){
+      let t;
+      if( --this.time === 0 ){
         clearTimeout(t);
         // 雙向綁定
         this.$emit('getscore', this.score);
@@ -66,16 +58,6 @@ Vue.component('play',{
       }else{
         t = setTimeout( this.countdown, 1000 );
       }
-      // if( _self.time === 0 ){
-      //   clearTimeout(t);
-      //   console.log( 'countdown' )
-      // }else{
-      //   _self.time--;
-      //   if( t ){
-      //     clearTimeout(t);
-      //   }
-      //   t = setTimeout( this.countdown, 1000 );
-      // }
     },
     // 亂數取值
     randTime(min, max) {
@@ -196,11 +178,6 @@ var vm = new Vue({
     page: "start",
     challenge: 60,
     score: 0,
-    time:'',
-  },
-  created() {},
-  computed: {
-    
   },
   methods: {
     getscore( data ){
