@@ -141,7 +141,7 @@ Vue.component('play',{
         <label>{{ challenge }} SECONDS CHALLENGE</label>
         <p><span>SCORE</span>{{ score }}</p>
       </div>
-      <div class="time">{{ time }}</div>
+      <div class="time">00 : {{ time }}</div>
     </div>
     <div class="main">
       <div class="calculate">
