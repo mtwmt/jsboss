@@ -49,8 +49,12 @@ Vue.component('play',{
     this.game();
   },
   watch:{},
-  computed: {},
+  computed: {
+  },
   methods: {
+    getZero(str, len){
+      return ( (Math.pow(10,len) + str + '').substr(1) )
+    },
     countdown(){
       let _self = this,
             t;
@@ -139,9 +143,9 @@ Vue.component('play',{
     <div class="header">
       <div class="now">
         <label>{{ challenge }} SECONDS CHALLENGE</label>
-        <p><span>SCORE</span>{{ score }}</p>
+        <p><span>SCORE</span>{{ getZero(score,3) }}</p>
       </div>
-      <div class="time">00 : {{ time }}</div>
+      <div class="time">00 : {{ getZero(time,2) }}</div>
     </div>
     <div class="main">
       <div class="calculate">
@@ -162,7 +166,7 @@ Vue.component('play',{
 });
 
 Vue.component('end',{
-  props: ['challenge','page','score'],
+  props: ['challenge','score'],
   data: function(){
     return{}
   },
@@ -196,6 +200,7 @@ var vm = new Vue({
   },
   created() {},
   computed: {
+    
   },
   methods: {
     getscore( data ){
