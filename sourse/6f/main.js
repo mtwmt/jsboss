@@ -231,6 +231,3 @@ var vm = new Vue({
   </div>
   `
 });
-
-
- 
