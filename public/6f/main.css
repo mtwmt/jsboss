@@ -53,7 +53,7 @@ section button { margin-top: 100px; width: 350px; height: 58px; color: #FF9D00; 
 
 section p.tip { font-size: 24px; line-height: 1.5; color: #fff; font-style: italic; }
 
-@media screen and (max-width: 640px) { section.start .header { flex-wrap: wrap; justify-content: center; }
+@media screen and (max-width: 980px) { section.start .header { flex-wrap: wrap; justify-content: center; }
   section.play .header { flex-wrap: wrap; justify-content: center; }
   section.play .header .time { margin-top: 30px; }
   section.play .calculate { text-align: center; } }
