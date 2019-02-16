@@ -183,9 +183,6 @@ var vm = new Vue({
     getscore( data ){
       this.score = data;
     },
-    gettime (data){
-      this.time = data || this.challenge;
-    },
     getpage( data ){
       this.page = data;
     }
