@@ -129,7 +129,7 @@ Vue.component('play', {
       this.result = '';
     }
   },
-  template: "\n  <section class=\"play\">\n    <div class=\"header\">\n      <div class=\"now\">\n        <label>{{ challenge }} SECONDS CHALLENGE</label>\n        <p><span>SCORE</span>{{ getZero(score,3) }}</p>\n      </div>\n      <div class=\"time\">00 : {{ getZero(time,2) }}</div>\n    </div>\n    <div class=\"main\">\n      <div class=\"calculate\">\n        <span class=\"num\">{{ status.num1 }}</span>\n        <span class=\"func\">{{ status.func }}</span>\n        <span class=\"num\">{{ status.num2 }}</span>\n        <span class=\"func\">=</span>\n        <span class=\"sum\" >\n          <input type=\"text\" \n          v-model=\"result\" \n          @keyup.enter=\"answer()\"\n          />\n        </span>\n      </div>\n    </div>\n  </section>\n  "
+  template: "\n  <section class=\"play\">\n    <div class=\"header\">\n      <div class=\"now\">\n        <label>{{ challenge }} SECONDS CHALLENGE</label>\n        <p><span>SCORE</span>{{ getZero(score,3) }}</p>\n      </div>\n      <div class=\"time\">00 : {{ getZero(time,2) }}</div>\n    </div>\n    <div class=\"main\">\n      <div class=\"calculate\">\n        <span class=\"num\">{{ status.num1 }}</span>\n        <span class=\"func\">{{ status.func }}</span>\n        <span class=\"num\">{{ status.num2 }}</span>\n        <span class=\"func\">=</span>\n        <span class=\"sum\" >\n          <input type=\"tel\" \n          v-model=\"result\" \n          @keyup.enter=\"answer()\"\n          />\n        </span>\n      </div>\n    </div>\n  </section>\n  "
 });
 Vue.component('end', {
   props: ['challenge', 'score'],

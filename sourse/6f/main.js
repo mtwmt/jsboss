@@ -154,7 +154,7 @@ Vue.component('play',{
         <span class="num">{{ status.num2 }}</span>
         <span class="func">=</span>
         <span class="sum" >
-          <input type="text" 
+          <input type="tel" 
           v-model="result" 
           @keyup.enter="answer()"
           />
