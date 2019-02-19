@@ -44,13 +44,6 @@ Vue.component('play',{
     this.countdown();
     this.game();
   },
-<<<<<<< HEAD
-  watch:{},
-  computed: {
-    
-  },
-=======
->>>>>>> 79f22f182b94871bc02ed1f57a17f46ed285c2ea
   methods: {
     getZero(str, len){
       return ( (Math.pow(10,len) + str + '').substr(1) )

@@ -7,9 +7,11 @@
       calw,
       tempFormula = [],
       tempResult = [],
+      flag = false,
       calboxW = $hd.clientWidth - 40,
   textSize = function (textW){
     let fz = parseInt($hdresult.style.fontSize, 10);
+
     while (textW > calboxW) {
       fz -= 2;
       $hdresult.style.fontSize = `${fz}px`;
@@ -17,22 +19,102 @@
     }
   },
   isNumber = function (obj) {
-    // return (typeof (obj) === 'number');
     return parseFloat( obj );
   },
   toPrice = function( num ){
-    console.log( num )
     if (!isNumber(num)) {
       return num;
     }
-    
     num = String(num);
-
     if (num.length > 3) {
       return num.replace(/\B(?=(?:\d{3})+(?!\d))/g, ',');
     }else{
       return num;
     }
+  },
+  isCalc = function( event ){
+    
+    let cls,
+        textCont;
+
+    if( event.type == 'keydown' ){
+      cls = document.querySelector( `[data-key="${ event.key }"]` ).classList.value;
+      textCont = document.querySelector( `[data-key="${ event.key }"]` ).textContent;
+      
+    }else if( event.type === 'mousedown' ){
+      cls = this.classList.value;
+      textCont = this.textContent
+    }
+
+    switch ( cls ) {
+      case 'num' :
+        if( flag ){
+          flag = false;
+          tempFormula = [];
+          tempResult = [];
+        }
+        if( !tempResult.length && textCont == 0 ) return;
+
+        tempFormula.push( textCont );
+        tempResult.push( textCont );
+
+        break;
+      case 'oper':
+        if( !tempResult.length ) return;
+        tempFormula.push( textCont );
+        // tempResult = [];
+        break;
+      case 'dot':
+        console.log( 'dot',tempResult.indexOf('.') )
+        if( tempFormula.indexOf('.') >= 0 || tempResult.indexOf('.') >= 0 ) return;
+        if( !tempResult.length ){
+          tempFormula.push( 0 );
+          tempResult.push( 0 );
+        }
+        tempFormula.push( textCont );
+        tempResult.push( textCont );
+        break;
+      case 'sum':
+        let arr = [];
+        flag = true;
+        tempFormula.map(function (e,i) {
+          if (e === '÷') {
+            e = '/';
+          } else if (e === '×') {
+            e = '*';
+          } else if (e === '−') {
+            e = '-';
+          } else if (e === '+') {
+            e = '+';
+          }
+          arr.push( e )
+        });
+
+        if( RegExp(/\+|-|\*|\/$/).test( arr[ arr.length - 1 ] ) ){
+          tempFormula.length = tempFormula.length - 1;
+          arr.length = arr.length - 1; 
+        };
+
+        console.log( tempFormula )
+        if( !tempFormula.length ) return;
+        tempResult = [ Math.round(eval( arr.join(''))*100) / 100];
+
+        break;
+      case 'clear':
+        flag = false;
+        tempFormula = [];
+        tempResult = [];
+        break;
+      default:
+        break;
+    }
+
+    $hdformula.textContent = tempFormula.join('') || 0;
+    $hdresult.textContent = toPrice(tempResult.join('')) || 0;
+
+
+    calw = $hdresult.clientWidth;      
+    textSize( calw )
   };
   // isDigit = function( dom,type ){
     
@@ -45,78 +127,12 @@
   //   }
   // },
   
+  window.addEventListener('keydown', isCalc);
 
   $num.forEach(function( el,idx ){
     // let keyCode = el.getAttribute('data-key').split(',')[0] || el.getAttribute('data-key').split(',')[1];
-    // console.log( keyCode )
-    // window.addEventListener('keydown',function( event ){
-      
-    // });
-    el.addEventListener('mousedown', function (event ){
-      
-      switch (this.classList.value) {
-        case 'num' :
-          tempFormula.push( this.textContent );
-          tempResult.push( this.textContent );
-          break;
-        case 'oper':
-          if( !tempResult.length ) return;
-          
-          tempFormula.push( this.textContent );
-          tempResult = [];
-          break;
-        case 'dot':
-          if( tempResult.indexOf('.') > 0 ) return;
-          tempFormula.push( this.textContent );
-          tempResult.push( this.textContent );
-          break;
-        case 'sum':
-          // let total = $hdresult.textContent.split(' '),
-            // arr = [];
-          tempFormula.map(function (e,i) {
-            if (e === '÷') {
-              // e = '/';
-              tempFormula.splice(i,1,'/');
-              // tempFormula[i].replace(e, '/');
-            } else if (e === '×') {
-              // e = '*';
-              tempFormula.splice(i,1,'*');
-            } else if (e === '−') {
-              // e = '-';
-              tempFormula.splice(i,1,'-');
-            } else if (e === '+') {
-              // e = '+';
-              tempFormula.splice(i,1,'+');
-            }
-          });
-          // $hdformula.textContent = eval(arr.join(''));
-          // console.log( tempFormula )
-          break;
-        case 'clear':
-          // $hdformula.textContent = 0;
-          // $hdresult.textContent = 0;
-          tempFormula = [];
-          tempResult = [];
-          break;
-        default:
-          break;
-      }
-      console.log(tempFormula);
-      $hdformula.textContent = tempFormula.join('') || 0;
-      $hdresult.textContent = toPrice(tempResult.join('')) || 0;
-
-
-
-      // isDigit($hdresult, this.textContent);
-      // isDigit($hdformula, this.textContent);
-
-      // isCalculate( this );
-
-      calw = $hdformula.clientWidth;
-      textSize( calw )
-
-      
-    });
+    // console.log( keyCode )  
+    el.addEventListener('mousedown', isCalc);
   });
   
   
