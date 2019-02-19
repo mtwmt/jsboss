@@ -39,28 +39,18 @@ Vue.component('play', {
     getZero: function getZero(str, len) {
       return (Math.pow(10, len) + str + '').substr(1);
     },
+    // 倒數計時
     countdown: function countdown() {
-      var _self = this,
-          t = void 0;
+      var t = void 0;
 
-      if (--_self.time === 0) {
+      if (--this.time === 0) {
         clearTimeout(t); // 雙向綁定
 
         this.$emit('getscore', this.score);
         this.$emit('getpage', 'end');
       } else {
         t = setTimeout(this.countdown, 1000);
-      } // if( _self.time === 0 ){
-      //   clearTimeout(t);
-      //   console.log( 'countdown' )
-      // }else{
-      //   _self.time--;
-      //   if( t ){
-      //     clearTimeout(t);
-      //   }
-      //   t = setTimeout( this.countdown, 1000 );
-      // }
-
+      }
     },
     // 亂數取值
     randTime: function randTime(min, max) {
