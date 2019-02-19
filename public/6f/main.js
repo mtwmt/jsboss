@@ -2,9 +2,6 @@
 
 Vue.component('start', {
   props: ['challenge'],
-  data: function data() {
-    return {};
-  },
   methods: {
     go: function go() {
       this.$emit('getpage', 'play');
@@ -27,14 +24,11 @@ Vue.component('play', {
       time: ''
     };
   },
-  mounted: function mounted() {},
   created: function created() {
     this.time = this.challenge;
     this.countdown();
     this.game();
   },
-  watch: {},
-  computed: {},
   methods: {
     getZero: function getZero(str, len) {
       return (Math.pow(10, len) + str + '').substr(1);
@@ -139,17 +133,11 @@ var vm = new Vue({
   data: {
     page: "start",
     challenge: 60,
-    score: 0,
-    time: ''
+    score: 0
   },
-  created: function created() {},
-  computed: {},
   methods: {
     getscore: function getscore(data) {
       this.score = data;
-    },
-    gettime: function gettime(data) {
-      this.time = data || this.challenge;
     },
     getpage: function getpage(data) {
       this.page = data;

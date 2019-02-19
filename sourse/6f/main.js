@@ -1,8 +1,5 @@
 Vue.component('start',{
   props: ['challenge'],
-  data: function(){
-    return{}
-  },
   methods: {
     go(){
       this.$emit('getpage','play'); 
@@ -42,16 +39,18 @@ Vue.component('play',{
       time: '',
     }
   },
-  mounted(){},
   created() {
     this.time = this.challenge;
     this.countdown();
     this.game();
   },
+<<<<<<< HEAD
   watch:{},
   computed: {
     
   },
+=======
+>>>>>>> 79f22f182b94871bc02ed1f57a17f46ed285c2ea
   methods: {
     getZero(str, len){
       return ( (Math.pow(10,len) + str + '').substr(1) )
@@ -187,18 +186,10 @@ var vm = new Vue({
     page: "start",
     challenge: 60,
     score: 0,
-    time:'',
-  },
-  created() {},
-  computed: {
-    
   },
   methods: {
     getscore( data ){
       this.score = data;
-    },
-    gettime (data){
-      this.time = data || this.challenge;
     },
     getpage( data ){
       this.page = data;
