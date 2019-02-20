@@ -5,11 +5,10 @@
       $hdformula = document.querySelector('.formula'),
       $hdresult = document.querySelector('.result'),
       $num = document.querySelectorAll('.cal-body span'),
-      $sum = document.querySelector('.sum'),
       calw,
       tempFormula = [],
       tempResult = [],
-      flag = false,
+      flag = '',
       calboxW = $hd.clientWidth - 40,
       textSize = function textSize(textW) {
     var fz = parseInt($hdresult.style.fontSize, 10);
@@ -46,13 +45,19 @@
     } else if (event.type === 'mousedown') {
       cls = this.classList.value;
       textCont = this.textContent;
-    }
+    } // console.log('cls', cls )
+
 
     switch (cls) {
       case 'num':
-        if (flag) {
-          flag = false;
+        if (flag === 'clear') {
+          flag = '';
           tempFormula = [];
+          tempResult = [];
+        }
+
+        if (flag === 'func') {
+          flag = '';
           tempResult = [];
         }
 
@@ -62,9 +67,9 @@
         break;
 
       case 'oper':
-        if (!tempResult.length) return;
-        tempFormula.push(textCont); // tempResult = [];
-
+        if (flag === 'func') return;
+        flag = 'func';
+        tempFormula.push(textCont);
         break;
 
       case 'dot':
@@ -82,7 +87,7 @@
 
       case 'sum':
         var arr = [];
-        flag = true;
+        flag = 'clear';
         tempFormula.map(function (e, i) {
           if (e === '÷') {
             e = '/';
@@ -103,13 +108,12 @@
         }
 
         ;
-        console.log(tempFormula);
         if (!tempFormula.length) return;
         tempResult = [Math.round(eval(arr.join('')) * 100) / 100];
         break;
 
       case 'clear':
-        flag = false;
+        flag = 'clear';
         tempFormula = [];
         tempResult = [];
         break;
@@ -122,20 +126,10 @@
     $hdresult.textContent = toPrice(tempResult.join('')) || 0;
     calw = $hdresult.clientWidth;
     textSize(calw);
-  }; // isDigit = function( dom,type ){
-  //   dom.textContent = (!parseInt(dom.textContent, 10)) ? '' : dom.textContent;
-  //   if (dom.textContent.length > 0 ){
-  //     dom.textContent = dom.textContent + type.replace(/[^0-9]/, '');
-  //   }else{
-  //     dom.textContent = dom.textContent + type.replace(/[^0-9]/, '0');
-  //   }
-  // },
-
+  };
 
   window.addEventListener('keydown', isCalc);
   $num.forEach(function (el, idx) {
-    // let keyCode = el.getAttribute('data-key').split(',')[0] || el.getAttribute('data-key').split(',')[1];
-    // console.log( keyCode )  
     el.addEventListener('mousedown', isCalc);
   });
 })();

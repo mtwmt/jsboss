@@ -8,7 +8,7 @@ body { background: #E8E8E8; }
 
 .calculator .cal-header { position: relative; width: 100%; height: 109px; text-align: right; border-radius: 20px 20px 0px 20px; background: #041936; }
 
-.calculator .cal-header .formula { position: absolute; top: 16px; right: 16px; width: 100%; font-size: 16px; line-height: 1; color: #00C4FF; }
+.calculator .cal-header .formula { position: absolute; top: 16px; right: 0px; padding: 0 16px; width: 100%; font-size: 16px; line-height: 1.2; color: #00C4FF; word-wrap: break-word; }
 
 .calculator .cal-header .result { position: absolute; bottom: 16px; right: 16px; font-size: 56px; display: block; line-height: 1.2; color: #fff; -webkit-transform-origin: 100% 100%; transform-origin: 100% 100%; }
 
