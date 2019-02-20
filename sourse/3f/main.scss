@@ -98,6 +98,9 @@ body{
           background: rgba(#fff, 0.1);
         }
       }
+      &.back,&.clear{
+        color: #00C4FF;
+      }
     }
   }
 }

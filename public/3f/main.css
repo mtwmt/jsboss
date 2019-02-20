@@ -25,3 +25,5 @@ body { background: #E8E8E8; }
 .calculator .cal-body span.sum { padding: 0 30px 0 0; width: 152px; text-align: right; background: linear-gradient(to right, #00c4ff 0%, #6c00ff 100%); }
 
 .calculator .cal-body span.sum:hover { background: rgba(255, 255, 255, 0.1); }
+
+.calculator .cal-body span.back, .calculator .cal-body span.clear { color: #00C4FF; }

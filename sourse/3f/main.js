@@ -42,7 +42,6 @@
       cls = this.classList.value;
       textCont = this.textContent
     }
-    // console.log('cls', cls )
     switch ( cls ) {
       case 'num' :
         if( flag === 'clear' ){
@@ -64,7 +63,6 @@
         tempFormula.push( textCont );
         break;
       case 'dot':
-        console.log( 'dot',tempResult.indexOf('.') )
         if( tempFormula.indexOf('.') >= 0 || tempResult.indexOf('.') >= 0 ) return;
         if( !tempResult.length ){
           tempFormula.push( 0 );
