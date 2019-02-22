@@ -107,7 +107,7 @@
 
         ;
         if (!tempFormula.length) return;
-        tempResult = [Math.round(eval(arr.join('')) * 1000) / 1000];
+        tempResult = [Math.round(eval(arr.join('')) * 100) / 100];
         break;
 
       case 'clear':
