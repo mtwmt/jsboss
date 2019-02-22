@@ -72,7 +72,9 @@
         break;
 
       case 'dot':
-        if (tempFormula.indexOf('.') >= 0 || tempResult.indexOf('.') >= 0) return;
+        console.log('dot', tempResult, flag, flag.length); // if( tempFormula.indexOf('.') >= 0 || tempResult.indexOf('.') >= 0 ) return;
+
+        if (tempResult.indexOf('.') >= 0 || flag.length) return;
 
         if (!tempResult.length) {
           tempFormula.push(0);
@@ -107,7 +109,7 @@
 
         ;
         if (!tempFormula.length) return;
-        tempResult = [Math.round(eval(arr.join('')) * 100) / 100];
+        tempResult = [Math.round(eval(arr.join('')) * 1000) / 1000];
         break;
 
       case 'clear':
