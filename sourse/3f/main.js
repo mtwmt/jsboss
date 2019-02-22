@@ -63,12 +63,7 @@
         tempFormula.push( textCont );
         break;
       case 'dot':
-        
-        console.log( 'dot',tempResult ,flag,flag.length)
-        // if( tempFormula.indexOf('.') >= 0 || tempResult.indexOf('.') >= 0 ) return;
         if( tempResult.indexOf('.') >= 0 || flag.length ) return;
-
-
         if( !tempResult.length ){
           tempFormula.push( 0 );
           tempResult.push( 0 );
