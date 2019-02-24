@@ -9,7 +9,10 @@
       wh = 600,
       $save = document.querySelector('.save'),
       $clear = document.querySelector('.clear'),
+      $undo = document.querySelector('.undo'),
+      $redo = document.querySelector('.redo'),
       canvasData = [],
+      step,
   draw = function(e){
     if( e.offsetX > $canvas.width || e.offsetY > $canvas.height ){
       status = false;
@@ -32,6 +35,13 @@
   
     // console.log(e.offsetX,e.offsetY )
   },
+  creatImg = function(){
+    const img = new Image();
+    img.src = canvasData[step];
+    img.onload = function(){
+      ctx.drawImage( img,0,0 );
+    }
+  },
   init = function(){
     let ww = $canvas.width = (window.innerWidth > 980) ? 1280 : window.innerWidth,
         wh = $canvas.height = (window.innerHeight > 800) ? 800 : window.innerHeight;
@@ -42,28 +52,15 @@
     ctx.strokeRect(0, 0, ww, wh)
   };
   
-  $main.width = ww;
-  $main.height = wh;
+  $main.style.width = ww + 'px';
+  $main.style.height = wh + 'px';
   $canvas.width = ww;
   $canvas.height = wh;
   
-  ctx.fillStyle = '#E8E8E8'
+  ctx.fillStyle = '#E8E8E8';
   ctx.fillRect(0, 0, ww, wh)
   
   
-  // window.addEventListener('load', init)
-  // window.addEventListener('resize', init)
-
-  // ctx.lineCap = 'round';
-  // ctx.lineWidth = 20;
-  // ctx.beginPath();
-  // ctx.strokeStyle = '#159';
-  // ctx.moveTo( 20,20 );
-  // ctx.lineTo( 20, 30 );
-
-  // ctx.moveTo( 1000, 20 );
-  // ctx.lineTo( 20, 500 );
-  // ctx.stroke();
 
   $save.addEventListener('click',function(){
     let dataURL = $canvas.toDataURL('image/png');
@@ -73,24 +70,53 @@
     ctx.fillStyle = '#E8E8E8'
     ctx.fillRect(0, 0, ww, wh)
   });
+  $undo.addEventListener('click',function( e ){
+    step -= 1;
+    creatImg();
+    console.log( 'undo' ,step)
+  });
+  $redo.addEventListener('click',function( e ){
+    step += 1;
+    creatImg();
+    console.log( 'undo' ,step)
+  });
+
 
   $canvas.addEventListener('mousedown',function( e ){
-  if( status ) return;
-  status = true;
-  posX = e.offsetX;
-  posY = e.offsetY;
+    if( status ) return;
+    status = true;
+    posX = e.offsetX;
+    posY = e.offsetY;
 
   });
   window.addEventListener('mousemove', draw);
 
   window.addEventListener('mouseup',function( e ){
+    
     status = false;
     posX = e.offsetX;
     posY = e.offsetY;
-    canvasData = $canvas.toDataURL();
+
+    if( e.target.className.indexOf('undo') >= 0 || e.target.className.indexOf('redo') >= 0 )  return;
+    
+    if( step < canvasData.length - 1){
+      canvasData.length = step + 1;
+    }
+
+    canvasData.push( $canvas.toDataURL() );
+
+    
+
+    step = canvasData.length - 1;
+
+    console.log( 'canvasData',canvasData  )
   });
 
+  window.addEventListener('load', function(){
+    
+  });
 
+  
 
 })();
 

@@ -4,7 +4,7 @@ html { position: relative; width: 100%; height: 100%; display: flex; justify-con
 
 body, html { font-family: "Noto Sans TC", Arial, sans-serif; font-weight: bold; }
 
-.main { position: relative; width: 1280px; height: 800px; overflow: hidden; }
+.main { position: relative; overflow: hidden; }
 
 canvas { position: absolute; left: 0; top: 0; }
 
