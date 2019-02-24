@@ -11,8 +11,13 @@
   textSize = function (textW){
     let fz = parseInt($hdresult.style.fontSize, 10);
 
-    while (textW > calboxW) {
-      fz -= 2;
+    // while (textW > calboxW) {
+    //   fz -= 2;
+    //   $hdresult.style.fontSize = `${fz}px`;
+    //   textW = $hdresult.clientWidth;
+    // }
+
+    if( fz; textW > calboxW; fz - 2  ){
       $hdresult.style.fontSize = `${fz}px`;
       textW = $hdresult.clientWidth;
     }
@@ -91,7 +96,7 @@
           arr.length = arr.length - 1; 
         };
         if( !tempFormula.length ) return;
-        tempResult = [ Math.round(eval( arr.join(''))*100) / 100];
+        tempResult = [ Math.round( eval( arr.join(''))*100 ) / 100];
         break;
       case 'clear':
         flag = 'clear';
