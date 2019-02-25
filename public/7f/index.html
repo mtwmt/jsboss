@@ -14,16 +14,19 @@
     <div class="main">
       <canvas></canvas>
       <div class="topbar">
+        <button><i class="fas fa-angle-up"></i></button>
         <a href="" download="" class="func save"><i class="fas fa-save"></i>SAVE</a>
         <div class="func clear"><i class="fas fa-expand"></i>CLEAR ALL</div>
-        <div class="func undo"><i class="fas fa-undo"></i>UNDO</div>
-        <div class="func redo"><i class="fas fa-redo"></i>REDO</div>
+        <div class="func undo" data-step='-1'><i class="fas fa-undo"></i>UNDO</div>
+        <div class="func redo" data-step='1'><i class="fas fa-redo"></i>REDO</div>
       </div>
       <div class="bottombar">
-        <div class="pen"></div>
-        <div class="func pensize"></div>
-        <div class="func pencolor"></div>
+        <!-- <button><i class="fas fa-angle-down"></i></button> -->
+        <div class="func pen"><i class="fas fa-paint-brush"></i></div>
+        <div class="func pensize">SIZE <input type="text" value="10" />px</div>
+        <div class="func pencolor">COLOR: <input type="color" /></div>
       </div>
+    </div>
     </div>
   </body>
 </html>

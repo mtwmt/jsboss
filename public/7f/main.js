@@ -7,14 +7,15 @@
       status = false,
       posX,
       posY,
-      ww = 1280,
-      wh = 600,
+      ww,
+      wh,
       $save = document.querySelector('.save'),
       $clear = document.querySelector('.clear'),
       $undo = document.querySelector('.undo'),
       $redo = document.querySelector('.redo'),
       canvasData = [],
-      step,
+      step = 0,
+      idx,
       draw = function draw(e) {
     if (e.offsetX > $canvas.width || e.offsetY > $canvas.height) {
       status = false;
@@ -34,7 +35,7 @@
     posX = e.offsetX;
     posY = e.offsetY; // console.log(e.offsetX,e.offsetY )
   },
-      creatImg = function creatImg() {
+      creatImg = function creatImg(step) {
     var img = new Image();
     img.src = canvasData[step];
 
@@ -43,20 +44,21 @@
     };
   },
       init = function init() {
-    var ww = $canvas.width = window.innerWidth > 980 ? 1280 : window.innerWidth,
-        wh = $canvas.height = window.innerHeight > 800 ? 800 : window.innerHeight; // ctx.lineJoin = 'round'
+    ww = window.innerWidth;
+    wh = window.innerHeight;
+    $main.style.width = ww + 'px';
+    $main.style.height = wh + 'px';
+    $canvas.width = ww;
+    $canvas.height = wh;
+    ctx.fillStyle = '#E8E8E8';
+    ctx.fillRect(0, 0, ww, wh); // let ww = $canvas.width = (window.innerWidth > 980) ? 1280 : window.innerWidth,
+    //     wh = $canvas.height = (window.innerHeight > 800) ? 800 : window.innerHeight;
+    // ctx.lineJoin = 'round'
     // ctx.lineCap = 'round'
     // ctx.fillStyle = '#ffcccc';
-
-    ctx.strokeRect(0, 0, ww, wh);
+    // ctx.strokeRect(0, 0, ww, wh)
   };
 
-  $main.style.width = ww + 'px';
-  $main.style.height = wh + 'px';
-  $canvas.width = ww;
-  $canvas.height = wh;
-  ctx.fillStyle = '#E8E8E8';
-  ctx.fillRect(0, 0, ww, wh);
   $save.addEventListener('click', function () {
     var dataURL = $canvas.toDataURL('image/png');
     this.href = dataURL;
@@ -66,14 +68,16 @@
     ctx.fillRect(0, 0, ww, wh);
   });
   $undo.addEventListener('click', function (e) {
+    if (step === 0) return;
     step -= 1;
-    creatImg();
-    console.log('undo', step);
+    creatImg(step);
+    console.log('$undo');
   });
   $redo.addEventListener('click', function (e) {
+    if (step >= canvasData.length - 1) return;
     step += 1;
-    creatImg();
-    console.log('undo', step);
+    creatImg(step);
+    console.log('redo');
   });
   $canvas.addEventListener('mousedown', function (e) {
     if (status) return;
@@ -86,15 +90,26 @@
     status = false;
     posX = e.offsetX;
     posY = e.offsetY;
-    if (e.target.className.indexOf('undo') >= 0 || e.target.className.indexOf('redo') >= 0) return;
 
-    if (step < canvasData.length - 1) {
+    if (step < canvasData.length) {
       canvasData.length = step + 1;
     }
 
     canvasData.push($canvas.toDataURL());
     step = canvasData.length - 1;
-    console.log('canvasData', canvasData);
   });
-  window.addEventListener('load', function () {});
+  document.querySelector('.topbar').addEventListener('mouseup', function (e) {
+    e.stopPropagation();
+  });
+  document.querySelector('.bottombar').addEventListener('mouseup', function (e) {
+    e.stopPropagation();
+  });
+  window.addEventListener('load', init); // window.addEventListener('resize', function(){
+  //   ww = window.innerWidth;
+  //   wh = window.innerHeight;
+  //   $main.style.width = ww + 'px';
+  //   $main.style.height = wh + 'px';
+  //   $canvas.width = ww;
+  //   $canvas.height = wh;
+  // });
 })();
