@@ -13,6 +13,9 @@
       $clear = document.querySelector('.clear'),
       $undo = document.querySelector('.undo'),
       $redo = document.querySelector('.redo'),
+      $pencolor = document.querySelector('.pencolor input'),
+      $btnTop = document.querySelector('.topbar button'),
+      pnecolor = $pencolor.value,
       canvasData = [],
       step = 0,
       idx,
@@ -26,7 +29,7 @@
 
     ctx.lineWidth = 10;
     ctx.lineCap = 'round';
-    ctx.strokeStyle = '#159'; // draw
+    ctx.strokeStyle = pnecolor; // draw
 
     ctx.beginPath();
     ctx.moveTo(posX, posY);
@@ -79,6 +82,14 @@
     creatImg(step);
     console.log('redo');
   });
+  $pencolor.addEventListener('change', function (e) {
+    pnecolor = this.value;
+    console.log(this.value);
+  });
+  $btnTop.addEventListener('click', function (e) {
+    // this.parentNode.className = 'topbar';
+    console.log(e, this.parentNode.className.indexOf('is-active'));
+  });
   $canvas.addEventListener('mousedown', function (e) {
     if (status) return;
     status = true;
@@ -97,6 +108,7 @@
 
     canvasData.push($canvas.toDataURL());
     step = canvasData.length - 1;
+    console.log('up');
   });
   document.querySelector('.topbar').addEventListener('mouseup', function (e) {
     e.stopPropagation();
