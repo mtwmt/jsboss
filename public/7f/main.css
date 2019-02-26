@@ -12,11 +12,15 @@ canvas { position: absolute; left: 0; top: 0; }
 
 .topbar button { bottom: -28px; }
 
-.topbar.is-active { -webkit-transform: translateY(-80px); transform: translateY(-80px); }
+.topbar.is-close { -webkit-transform: translateY(-80px); transform: translateY(-80px); }
 
-.bottombar { transition: .3s; position: absolute; bottom: 0px; left: 0px; z-index: 99; width: 100%; height: 80px; line-height: 80px; display: flex; justify-content: center; background: #fff; }
+.bottombar { transition: .3s; position: absolute; bottom: 40px; left: 50%; -webkit-transform: translateX(-50%); transform: translateX(-50%); z-index: 99; width: 80%; line-height: 80px; display: flex; justify-content: center; background: #fff; border-radius: 40px; box-shadow: 0px 4p 16px #000000; }
 
-.bottombar .pensize input { width: 74px; height: 48px; border: 0; text-align: center; border-radius: 24px; font-size: 20px; font-weight: bold; outline: none; background: #E8E8E8; }
+.bottombar div { transition: .3s; transition-delay: .3s; opacity: 100; }
+
+.bottombar .pensize input[type=text] { width: 74px; height: 48px; border: 0; text-align: center; border-radius: 24px; font-size: 20px; font-weight: bold; outline: none; background: #E8E8E8; }
+
+.bottombar .pensize input[type=range] { -webkit-transform: rotate(270deg); transform: rotate(270deg); width: 60px; }
 
 .bottombar .pencolor input[type=color] { -webkit-appearance: none; width: 48px; height: 48px; vertical-align: middle; }
 
@@ -24,11 +28,21 @@ canvas { position: absolute; left: 0; top: 0; }
 
 .bottombar .pencolor input[type=color]::-webkit-color-swatch { border: none; }
 
+.bottombar button { top: -28px; }
+
+.bottombar button i { transition: .3s; transition-delay: .35s; top: -12px; }
+
+.bottombar.is-close { width: 0; transition-delay: .35s; }
+
+.bottombar.is-close button i { top: 0; }
+
+.bottombar.is-close div { transition: 0; transition-delay: 0; opacity: 0; display: none; }
+
 button { position: absolute; left: 50%; -webkit-transform: translateX(-50%); transform: translateX(-50%); text-align: center; width: 56px; height: 56px; border-radius: 100%; border: 0; font-size: 24px; outline: none; background: #fff; }
 
 button i { position: relative; top: 12px; }
 
-.func { font-size: 20px; font-weight: bold; margin: 0 20px; cursor: pointer; text-decoration: none; color: #000; }
+.func { position: relative; font-size: 20px; font-weight: bold; margin: 0 20px; cursor: pointer; text-decoration: none; color: #000; }
 
 .func i { margin-right: 10px; font-size: 40px; vertical-align: middle; }
 

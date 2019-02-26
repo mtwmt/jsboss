@@ -13,30 +13,59 @@
       $clear = document.querySelector('.clear'),
       $undo = document.querySelector('.undo'),
       $redo = document.querySelector('.redo'),
+      $eraser = document.querySelector('.eraser'),
+      $pen = document.querySelector('.pen'),
       $pencolor = document.querySelector('.pencolor input'),
+      $pensize = document.querySelectorAll('.pensize input'),
       $btnTop = document.querySelector('.topbar button'),
+      $btnBtm = document.querySelector('.bottombar button'),
       pnecolor = $pencolor.value,
+      pensize = document.querySelector('.pensize input[type="text"]').value,
       canvasData = [],
       step = 0,
-      idx,
-      draw = function draw(e) {
+      drawStart = function drawStart(e) {
+    if (status) return;
+    status = true;
+    posX = e.offsetX;
+    posY = e.offsetY; // setting
+
+    ctx.lineWidth = pensize;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = pnecolor;
+    document.querySelectorAll('.is-active').forEach(function (el) {
+      if (el.className.includes('eraser')) {
+        ctx.lineWidth = parseInt(pensize, 10) * 10;
+        ctx.lineCap = 'square';
+        ctx.strokeStyle = '#E8E8E8';
+      }
+    });
+  },
+      drawMove = function drawMove(e) {
     if (e.offsetX > $canvas.width || e.offsetY > $canvas.height) {
       status = false;
       return;
     }
 
-    if (!status) return; // setting
-
-    ctx.lineWidth = 10;
-    ctx.lineCap = 'round';
-    ctx.strokeStyle = pnecolor; // draw
+    if (!status) return; // draw
 
     ctx.beginPath();
     ctx.moveTo(posX, posY);
     ctx.lineTo(e.offsetX, e.offsetY);
     ctx.stroke();
     posX = e.offsetX;
-    posY = e.offsetY; // console.log(e.offsetX,e.offsetY )
+    posY = e.offsetY;
+  },
+      drawEnd = function drawEnd(e) {
+    status = false;
+    posX = e.offsetX;
+    posY = e.offsetY;
+
+    if (step < canvasData.length - 1) {
+      canvasData.length = step + 1;
+    }
+
+    canvasData.push($canvas.toDataURL());
+    step = canvasData.length - 1;
   },
       creatImg = function creatImg(step) {
     var img = new Image();
@@ -46,6 +75,9 @@
       ctx.drawImage(img, 0, 0);
     };
   },
+      soptMouseupEvent = function soptMouseupEvent(e) {
+    e.stopPropagation();
+  },
       init = function init() {
     ww = window.innerWidth;
     wh = window.innerHeight;
@@ -54,12 +86,16 @@
     $canvas.width = ww;
     $canvas.height = wh;
     ctx.fillStyle = '#E8E8E8';
-    ctx.fillRect(0, 0, ww, wh); // let ww = $canvas.width = (window.innerWidth > 980) ? 1280 : window.innerWidth,
-    //     wh = $canvas.height = (window.innerHeight > 800) ? 800 : window.innerHeight;
-    // ctx.lineJoin = 'round'
-    // ctx.lineCap = 'round'
-    // ctx.fillStyle = '#ffcccc';
-    // ctx.strokeRect(0, 0, ww, wh)
+  },
+      resize = function resize() {
+    init();
+    ctx.fillRect(0, 0, ww, wh);
+    creatImg(canvasData.length - 1);
+  },
+      load = function load() {
+    init();
+    ctx.fillRect(0, 0, ww, wh);
+    canvasData.push($canvas.toDataURL());
   };
 
   $save.addEventListener('click', function () {
@@ -74,54 +110,71 @@
     if (step === 0) return;
     step -= 1;
     creatImg(step);
-    console.log('$undo');
   });
   $redo.addEventListener('click', function (e) {
-    if (step >= canvasData.length - 1) return;
+    if (step === canvasData.length - 1) return;
     step += 1;
     creatImg(step);
-    console.log('redo');
+  });
+  $eraser.addEventListener('click', function (e) {
+    this.classList.toggle('is-active');
+
+    if (this.className.includes('is-active')) {
+      $pen.classList.remove('is-active');
+    }
+  });
+  $pen.addEventListener('click', function (e) {
+    this.classList.toggle('is-active');
+
+    if (this.className.includes('is-active')) {
+      $eraser.classList.remove('is-active');
+    } // console.log( this.className.includes('eraser') )
+
   });
   $pencolor.addEventListener('change', function (e) {
     pnecolor = this.value;
-    console.log(this.value);
+  });
+  $pensize.forEach(function (el, idx) {
+    el.addEventListener('change', function () {
+      var _self = this;
+
+      $pensize.forEach(function (element) {
+        element.value = _self.value;
+        pensize = _self.value;
+      });
+    });
   });
   $btnTop.addEventListener('click', function (e) {
-    // this.parentNode.className = 'topbar';
-    console.log(e, this.parentNode.className.indexOf('is-active'));
-  });
-  $canvas.addEventListener('mousedown', function (e) {
-    if (status) return;
-    status = true;
-    posX = e.offsetX;
-    posY = e.offsetY;
-  });
-  window.addEventListener('mousemove', draw);
-  window.addEventListener('mouseup', function (e) {
-    status = false;
-    posX = e.offsetX;
-    posY = e.offsetY;
-
-    if (step < canvasData.length) {
-      canvasData.length = step + 1;
+    if (this.parentNode.className.indexOf('is-close') >= 0) {
+      this.parentNode.className = 'topbar';
+      this.childNodes[0].className = 'fas fa-angle-up';
+    } else {
+      this.parentNode.className = 'topbar is-close';
+      this.childNodes[0].className = 'fas fa-angle-down';
     }
+  });
+  $btnBtm.addEventListener('click', function (e) {
+    this.parentNode.classList.toggle('is-close');
+  });
+  $btnBtm.parentNode.addEventListener('transitionend', function (e) {
+    var _self = this,
+        $btn = _self.querySelector('button i');
 
-    canvasData.push($canvas.toDataURL());
-    step = canvasData.length - 1;
-    console.log('up');
+    if (e.propertyName.includes('width')) {
+      if ($btn.className.includes('fa-angle-down')) {
+        $btn.className = 'fas fa-paint-brush';
+        return;
+      } else {
+        $btn.className = 'fas fa-angle-down';
+        return;
+      }
+    }
   });
-  document.querySelector('.topbar').addEventListener('mouseup', function (e) {
-    e.stopPropagation();
-  });
-  document.querySelector('.bottombar').addEventListener('mouseup', function (e) {
-    e.stopPropagation();
-  });
-  window.addEventListener('load', init); // window.addEventListener('resize', function(){
-  //   ww = window.innerWidth;
-  //   wh = window.innerHeight;
-  //   $main.style.width = ww + 'px';
-  //   $main.style.height = wh + 'px';
-  //   $canvas.width = ww;
-  //   $canvas.height = wh;
-  // });
+  $canvas.addEventListener('mousedown', drawStart);
+  window.addEventListener('mousemove', drawMove);
+  window.addEventListener('mouseup', drawEnd);
+  document.querySelector('.topbar').addEventListener('mouseup', soptMouseupEvent);
+  document.querySelector('.bottombar').addEventListener('mouseup', soptMouseupEvent);
+  window.addEventListener('load', load);
+  window.addEventListener('resize', resize);
 })();
