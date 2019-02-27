@@ -13,16 +13,20 @@
       $clear = document.querySelector('.clear'),
       $undo = document.querySelector('.undo'),
       $redo = document.querySelector('.redo'),
-      $eraser = document.querySelector('.eraser'),
-      $pen = document.querySelector('.pen'),
+      $paint = document.querySelectorAll('.paint'),
       $pencolor = document.querySelector('.pencolor input'),
       $pensize = document.querySelectorAll('.pensize input'),
       $btnTop = document.querySelector('.topbar button'),
       $btnBtm = document.querySelector('.bottombar button'),
+      $textarea = document.createElement('textarea'),
       pnecolor = $pencolor.value,
       pensize = document.querySelector('.pensize input[type="text"]').value,
-      canvasData = [],
+      history = [],
       step = 0,
+      fontPosX,
+      fontPosY,
+      squareW,
+      squareH,
       drawStart = function drawStart(e) {
     if (status) return;
     status = true;
@@ -37,7 +41,21 @@
         ctx.lineWidth = parseInt(pensize, 10) * 10;
         ctx.lineCap = 'square';
         ctx.strokeStyle = '#E8E8E8';
-      }
+      } else if (el.className.includes('square')) {} //   else if( el.className.includes('font') ){
+      //     status = false;
+      //     $textarea.setAttribute('value','');
+      //     $canvas.parentNode.appendChild( $textarea );
+      //     $textarea.style = `position:absolute; top:${ posY }px;left:${ posX }px;z-index:999;`;
+      //     if( $textarea.value.length > 0 ){
+      //       ctx.fillStyle = pnecolor;
+      //       ctx.font = `${pensize}px Arial`;
+      //       ctx.fillText( $textarea.value, fontPosX, fontPosY);
+      //       // $textarea.value = '';
+      //       $textarea.remove();
+      //     }
+      //     console.log( 'font',$textarea.value, $textarea.value.length, fontPosX,fontPosY,posX,posY)
+      //   }
+
     });
   },
       drawMove = function drawMove(e) {
@@ -48,28 +66,46 @@
 
     if (!status) return; // draw
 
-    ctx.beginPath();
-    ctx.moveTo(posX, posY);
-    ctx.lineTo(e.offsetX, e.offsetY);
-    ctx.stroke();
-    posX = e.offsetX;
-    posY = e.offsetY;
+    document.querySelectorAll('.is-active').forEach(function (el) {
+      if (el.className.includes('square')) {
+        ctx.fillRect(posX, posY, e.offsetX - posX, e.offsetY - posY);
+        ctx.fillStyle = pnecolor;
+        ctx.restore(); // let imgSquare = ctx.getImageData( 100,100, 50,50 );
+        // ctx.putImageData( imgSquare, posX, posY);
+        // ctx.fillStyle = '#e8e8e8';
+        // ctx.restore();
+        // squareW = e.offsetX - posX;
+        // squareH = e.offsetY - posY;
+      } else {
+        ctx.beginPath();
+        ctx.moveTo(posX, posY);
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.stroke();
+        posX = e.offsetX;
+        posY = e.offsetY;
+      }
+    });
   },
       drawEnd = function drawEnd(e) {
     status = false;
+    document.querySelectorAll('.is-active').forEach(function (el) {
+      if (el.className.includes('square')) {// ctx.fillStyle = pnecolor;
+        // ctx.fillRect(posX, posY, e.offsetX - posX,e.offsetY - posY);
+      }
+    });
     posX = e.offsetX;
     posY = e.offsetY;
 
-    if (step < canvasData.length - 1) {
-      canvasData.length = step + 1;
+    if (step < history.length - 1) {
+      history.length = step + 1;
     }
 
-    canvasData.push($canvas.toDataURL());
-    step = canvasData.length - 1;
+    history.push($canvas.toDataURL());
+    step = history.length - 1;
   },
       creatImg = function creatImg(step) {
     var img = new Image();
-    img.src = canvasData[step];
+    img.src = history[step];
 
     img.onload = function () {
       ctx.drawImage(img, 0, 0);
@@ -90,12 +126,12 @@
       resize = function resize() {
     init();
     ctx.fillRect(0, 0, ww, wh);
-    creatImg(canvasData.length - 1);
+    creatImg(history.length - 1);
   },
       load = function load() {
     init();
     ctx.fillRect(0, 0, ww, wh);
-    canvasData.push($canvas.toDataURL());
+    history.push($canvas.toDataURL());
   };
 
   $save.addEventListener('click', function () {
@@ -103,6 +139,7 @@
     this.href = dataURL;
   });
   $clear.addEventListener('click', function () {
+    ctx.clearRect(0, 0, ww, wh);
     ctx.fillStyle = '#E8E8E8';
     ctx.fillRect(0, 0, ww, wh);
   });
@@ -112,24 +149,27 @@
     creatImg(step);
   });
   $redo.addEventListener('click', function (e) {
-    if (step === canvasData.length - 1) return;
+    if (step === history.length - 1) return;
     step += 1;
     creatImg(step);
   });
-  $eraser.addEventListener('click', function (e) {
-    this.classList.toggle('is-active');
+  $paint.forEach(function (el, idx) {
+    el.addEventListener('click', function (e) {
+      $paint.forEach(function (v, k) {
+        if (v.classList.contains('is-active')) {
+          v.classList.remove('is-active');
+        }
 
-    if (this.className.includes('is-active')) {
-      $pen.classList.remove('is-active');
-    }
-  });
-  $pen.addEventListener('click', function (e) {
-    this.classList.toggle('is-active');
-
-    if (this.className.includes('is-active')) {
-      $eraser.classList.remove('is-active');
-    } // console.log( this.className.includes('eraser') )
-
+        if (el.className.includes('font')) {
+          $canvas.setAttribute('style', 'cursor:text');
+        } else if (el.className.includes('eraser')) {
+          $canvas.setAttribute('style', 'cursor:crosshair');
+        } else {
+          $canvas.setAttribute('style', 'cursor:default');
+        }
+      });
+      this.classList.add('is-active');
+    });
   });
   $pencolor.addEventListener('change', function (e) {
     pnecolor = this.value;
@@ -172,9 +212,18 @@
   });
   $canvas.addEventListener('mousedown', drawStart);
   window.addEventListener('mousemove', drawMove);
-  window.addEventListener('mouseup', drawEnd);
+  window.addEventListener('mouseup', drawEnd); // window.addEventListener('keyup', function(e){
+  //   fontPosX = posX;
+  //   fontPosY = posY;
+  //   // ctx.fillStyle = pnecolor;
+  //   // ctx.font = `${pensize}px Arial`;
+  //   // ctx.fillText( $textarea.value,posX,posY);
+  //   // $textarea.remove();
+  //   console.log( fontPosX,fontPosY )
+  // });
+
   document.querySelector('.topbar').addEventListener('mouseup', soptMouseupEvent);
   document.querySelector('.bottombar').addEventListener('mouseup', soptMouseupEvent);
   window.addEventListener('load', load);
   window.addEventListener('resize', resize);
-})();
+})(); // http://www.w3school.com.cn/tags/html_ref_canvas.asp

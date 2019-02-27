@@ -70,6 +70,12 @@ canvas{
     transition-delay: .3s;
     opacity: 100;
   }
+  .paint{
+    i{ color: #bbb; }
+    &.is-active{
+      i{ color: #000; }
+    }
+  }
   .pensize{
     input[type=text]{
       width: 74px;
@@ -142,7 +148,7 @@ button{
   }
   
 }
-.func{
+.func,.paint{
   position: relative;
   font-size: 20px;
   font-weight: bold;

@@ -18,6 +18,10 @@ canvas { position: absolute; left: 0; top: 0; }
 
 .bottombar div { transition: .3s; transition-delay: .3s; opacity: 100; }
 
+.bottombar .paint i { color: #bbb; }
+
+.bottombar .paint.is-active i { color: #000; }
+
 .bottombar .pensize input[type=text] { width: 74px; height: 48px; border: 0; text-align: center; border-radius: 24px; font-size: 20px; font-weight: bold; outline: none; background: #E8E8E8; }
 
 .bottombar .pensize input[type=range] { -webkit-transform: rotate(270deg); transform: rotate(270deg); width: 60px; }
@@ -42,8 +46,8 @@ button { position: absolute; left: 50%; -webkit-transform: translateX(-50%); tra
 
 button i { position: relative; top: 12px; }
 
-.func { position: relative; font-size: 20px; font-weight: bold; margin: 0 20px; cursor: pointer; text-decoration: none; color: #000; }
+.func, .paint { position: relative; font-size: 20px; font-weight: bold; margin: 0 20px; cursor: pointer; text-decoration: none; color: #000; }
 
-.func i { margin-right: 10px; font-size: 40px; vertical-align: middle; }
+.func i, .paint i { margin-right: 10px; font-size: 40px; vertical-align: middle; }
 
-.func.pen { cursor: auto; }
+.func.pen, .paint.pen { cursor: auto; }
