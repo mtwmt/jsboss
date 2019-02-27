@@ -18,15 +18,12 @@
       $pensize = document.querySelectorAll('.pensize input'),
       $btnTop = document.querySelector('.topbar button'),
       $btnBtm = document.querySelector('.bottombar button'),
-      $textarea = document.createElement('textarea'),
+      // $textarea = document.createElement('textarea'),
+  $square = document.createElement('div'),
       pnecolor = $pencolor.value,
-      pensize = document.querySelector('.pensize input[type="text"]').value,
+      pensize = document.querySelector('.pensize input[type="select"]').value,
       history = [],
       step = 0,
-      fontPosX,
-      fontPosY,
-      squareW,
-      squareH,
       drawStart = function drawStart(e) {
     if (status) return;
     status = true;
@@ -41,21 +38,9 @@
         ctx.lineWidth = parseInt(pensize, 10) * 10;
         ctx.lineCap = 'square';
         ctx.strokeStyle = '#E8E8E8';
-      } else if (el.className.includes('square')) {} //   else if( el.className.includes('font') ){
-      //     status = false;
-      //     $textarea.setAttribute('value','');
-      //     $canvas.parentNode.appendChild( $textarea );
-      //     $textarea.style = `position:absolute; top:${ posY }px;left:${ posX }px;z-index:999;`;
-      //     if( $textarea.value.length > 0 ){
-      //       ctx.fillStyle = pnecolor;
-      //       ctx.font = `${pensize}px Arial`;
-      //       ctx.fillText( $textarea.value, fontPosX, fontPosY);
-      //       // $textarea.value = '';
-      //       $textarea.remove();
-      //     }
-      //     console.log( 'font',$textarea.value, $textarea.value.length, fontPosX,fontPosY,posX,posY)
-      //   }
-
+      } else if (el.className.includes('square')) {
+        $canvas.parentNode.appendChild($square);
+      }
     });
   },
       drawMove = function drawMove(e) {
@@ -68,14 +53,7 @@
 
     document.querySelectorAll('.is-active').forEach(function (el) {
       if (el.className.includes('square')) {
-        ctx.fillRect(posX, posY, e.offsetX - posX, e.offsetY - posY);
-        ctx.fillStyle = pnecolor;
-        ctx.restore(); // let imgSquare = ctx.getImageData( 100,100, 50,50 );
-        // ctx.putImageData( imgSquare, posX, posY);
-        // ctx.fillStyle = '#e8e8e8';
-        // ctx.restore();
-        // squareW = e.offsetX - posX;
-        // squareH = e.offsetY - posY;
+        $square.style = "\n          position:absolute; z-index:999;\n          top:" + (e.offsetY < posY ? e.offsetY : posY) + "px;\n          left:" + (e.offsetX < posX ? e.offsetX : posX) + "px;\n          width: " + Math.abs(e.offsetX - posX) + "px;\n          height: " + Math.abs(e.offsetY - posY) + "px; \n          background:" + pnecolor + ";\n        ";
       } else {
         ctx.beginPath();
         ctx.moveTo(posX, posY);
@@ -89,8 +67,10 @@
       drawEnd = function drawEnd(e) {
     status = false;
     document.querySelectorAll('.is-active').forEach(function (el) {
-      if (el.className.includes('square')) {// ctx.fillStyle = pnecolor;
-        // ctx.fillRect(posX, posY, e.offsetX - posX,e.offsetY - posY);
+      if (el.className.includes('square')) {
+        $square.remove();
+        ctx.fillStyle = pnecolor;
+        ctx.fillRect(posX, posY, e.offsetX - posX, e.offsetY - posY);
       }
     });
     posX = e.offsetX;
@@ -102,8 +82,10 @@
 
     history.push($canvas.toDataURL());
     step = history.length - 1;
+    console.log(history);
   },
       creatImg = function creatImg(step) {
+    console.log(this);
     var img = new Image();
     img.src = history[step];
 
@@ -137,6 +119,7 @@
   $save.addEventListener('click', function () {
     var dataURL = $canvas.toDataURL('image/png');
     this.href = dataURL;
+    this.setAttribute('download', Date.now());
   });
   $clear.addEventListener('click', function () {
     ctx.clearRect(0, 0, ww, wh);
@@ -174,7 +157,7 @@
   $pencolor.addEventListener('change', function (e) {
     pnecolor = this.value;
   });
-  $pensize.forEach(function (el, idx) {
+  $pensize.forEach(function (el) {
     el.addEventListener('change', function () {
       var _self = this;
 
@@ -212,14 +195,14 @@
   });
   $canvas.addEventListener('mousedown', drawStart);
   window.addEventListener('mousemove', drawMove);
-  window.addEventListener('mouseup', drawEnd); // window.addEventListener('keyup', function(e){
-  //   fontPosX = posX;
-  //   fontPosY = posY;
-  //   // ctx.fillStyle = pnecolor;
-  //   // ctx.font = `${pensize}px Arial`;
-  //   // ctx.fillText( $textarea.value,posX,posY);
-  //   // $textarea.remove();
-  //   console.log( fontPosX,fontPosY )
+  window.addEventListener('mouseup', drawEnd); // window.addEventListener('keydown', function(e){
+  //   ctx.fillStyle = pnecolor;
+  //   ctx.font = `${pensize}px Arial`;
+  //   ctx.fillText( $textarea.value,posX,posY);
+  //   // console.log( fontPosX,fontPosY )
+  // });
+  // window.addEventListener('keyup', function(e){
+  //   $textarea.remove();
   // });
 
   document.querySelector('.topbar').addEventListener('mouseup', soptMouseupEvent);
