@@ -82,10 +82,8 @@
 
     history.push($canvas.toDataURL());
     step = history.length - 1;
-    console.log(history);
   },
       creatImg = function creatImg(step) {
-    console.log(this);
     var img = new Image();
     img.src = history[step];
 
