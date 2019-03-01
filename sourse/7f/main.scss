@@ -20,8 +20,8 @@ body,html{
 
 .main{
   position: relative;
-  width: 1280px;
-  height: 800px;
+  // width: 1280px;
+  // height: 800px;
   overflow: hidden;
 }
 canvas{
@@ -43,38 +43,128 @@ canvas{
   display: flex;
   justify-content: center;
   background: #fff;
-  &:before{
-    position: absolute;
+  button{
     bottom: -56/2 + px;
-    left: 50%;
-    transform: translateX(-50%);
-    content: '\f106';
-    width: 56px;
-    height: 56px;
-    border-radius: 100%;
-    background: #fff;
-    font-size: 24px;
-    font-family: "Font Awesome 5 Free";
-    font-weight: 900;
-    text-align: center;
   }
-  &.is-active{
+  &.is-close{
     transform: translateY(-80px);
-    &:before{
-      content: '\f107';
+  }
+}
+.bottombar{
+  transition: .3s;
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 99;
+  width: 80%;
+  // height: 80px;
+  line-height: 80px;
+  display: flex;
+  justify-content: center;
+  background: #fff;
+  border-radius: 40px;
+  box-shadow: 0px 4p 16px #000000;
+  div{
+    transition: .3s;
+    transition-delay: .3s;
+    opacity: 100;
+  }
+  .paint{
+    i{ color: #bbb; }
+    &.is-active{
+      i{ color: #000; }
+    }
+  }
+  .pensize{
+    input[type=select]{
+      width: 74px;
+      height: 48px;
+      border: 0;
+      text-align: center;
+      border-radius: 24px;
+      font-size: 20px;
+      font-weight: bold;
+      outline: none;
+      background: #E8E8E8;
+    }
+    input[type=range]{
+      transform: rotate(270deg);
+      width: 60px;
+    }
+  }
+  .pencolor{
+    input[type=color]{
+      -webkit-appearance: none;
+      width: 48px;
+      height: 48px;
+      // border-radius: 100%;
+      vertical-align: middle;
+      &::-webkit-color-swatch-wrapper {
+        padding: 0;
+      }
+      &::-webkit-color-swatch {
+        border: none;
+      }
+    }
+  }
+  button{
+    top: -56/2 + px;
+    i{
+      transition: .3s;
+      transition-delay: .35s;
+      top: -12px;
+    }
+  }
+  &.is-close{
+    width: 0;
+    transition-delay: .35s;
+    button i{
+      top: 0;
+    }
+    div{
+      transition: 0;
+      transition-delay: 0;
+      opacity: 0;
+      display: none;
     }
   }
 }
-.func{
+button{
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 100%;
+  border: 0;
+  font-size: 24px;
+  outline: none;
+  background: #fff;
+  i{
+    position: relative;
+    top: 12px;
+  }
+  
+}
+.func,.paint{
+  position: relative;
   font-size: 20px;
   font-weight: bold;
   margin: 0 20px;
   cursor: pointer;
   text-decoration: none;
   color: #000;
+  &.paint{
+    margin: 5px;
+  }
   i{
     margin-right: 10px;
     font-size: 40px;
     vertical-align: middle;
+  }
+  &.pen{
+    cursor: auto;
   }
 }

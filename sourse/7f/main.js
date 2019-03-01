@@ -5,92 +5,219 @@
       status = false,
       posX,
       posY,
-      ww = 1280,
-      wh = 600,
+      ww,
+      wh,
       $save = document.querySelector('.save'),
       $clear = document.querySelector('.clear'),
-      canvasData = [],
-  draw = function(e){
+      $undo = document.querySelector('.undo'),
+      $redo = document.querySelector('.redo'),
+      $paint = document.querySelectorAll('.paint'),
+      $pencolor = document.querySelector('.pencolor input'),
+      $pensize = document.querySelectorAll('.pensize input'),
+      $btnTop = document.querySelector('.topbar button'),
+      $btnBtm = document.querySelector('.bottombar button'),
+      // $textarea = document.createElement('textarea'),
+      $square = document.createElement('div'),
+      pnecolor = $pencolor.value,
+      pensize = document.querySelector('.pensize input[type="select"]').value,
+      history = [],
+      step = 0,
+  drawStart = function(e){
+    if( status ) return;
+    status = true;
+    posX = e.offsetX;
+    posY = e.offsetY;
+    // setting
+    ctx.lineWidth = pensize;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = pnecolor;
+    document.querySelectorAll('.is-active').forEach(function( el ){
+      if( el.className.includes('eraser') ){
+        ctx.lineWidth = parseInt(pensize,10) * 10;
+        ctx.lineCap = 'square';
+        ctx.strokeStyle = '#E8E8E8';
+      }else if( el.className.includes('square') ){
+        $canvas.parentNode.appendChild( $square );
+      }
+    });
+  },
+  drawMove = function(e){
     if( e.offsetX > $canvas.width || e.offsetY > $canvas.height ){
       status = false;
       return;
     }
     if( !status ) return;
-    
-    // setting
-    ctx.lineWidth = 10;
-    ctx.lineCap = 'round';
-    ctx.strokeStyle = '#159';
-  
+
     // draw
-    ctx.beginPath();
-    ctx.moveTo( posX,posY );
-    ctx.lineTo( e.offsetX,e.offsetY );
-    ctx.stroke();
+    document.querySelectorAll('.is-active').forEach(function( el ){
+      if( el.className.includes('square') ){
+        $square.style = `
+          position:absolute; z-index:999;
+          top:${ e.offsetY < posY ? e.offsetY : posY }px;
+          left:${ e.offsetX < posX ? e.offsetX : posX }px;
+          width: ${ Math.abs(e.offsetX - posX)}px;
+          height: ${Math.abs(e.offsetY - posY)}px; 
+          background:${pnecolor};
+        `;
+      }else{
+        ctx.beginPath();
+        ctx.moveTo( posX,posY );
+        ctx.lineTo( e.offsetX,e.offsetY );
+        ctx.stroke();
+        posX = e.offsetX;
+        posY = e.offsetY;
+      }
+    });
+  },
+  drawEnd = function( e ){
+    status = false;
+    document.querySelectorAll('.is-active').forEach(function( el ){
+      if( el.className.includes('square') ){
+        $square.remove();
+        ctx.fillStyle = pnecolor;
+        ctx.fillRect(posX, posY, e.offsetX - posX,e.offsetY - posY);    
+      }
+    });
     posX = e.offsetX;
     posY = e.offsetY;
-  
-    // console.log(e.offsetX,e.offsetY )
+
+    if( step < history.length - 1 ){   
+      history.length = step + 1;
+    }
+    history.push( $canvas.toDataURL() ); 
+    step = history.length - 1;
+  },
+  creatImg = function( step ){
+    const img = new Image();
+    img.src = history[step];
+    img.onload = function(){
+      ctx.drawImage( img,0,0 );
+    }
+    
+  },
+  soptMouseupEvent = function( e ){
+    e.stopPropagation();
   },
   init = function(){
-    let ww = $canvas.width = (window.innerWidth > 980) ? 1280 : window.innerWidth,
-        wh = $canvas.height = (window.innerHeight > 800) ? 800 : window.innerHeight;
-
-    // ctx.lineJoin = 'round'
-    // ctx.lineCap = 'round'
-    // ctx.fillStyle = '#ffcccc';
-    ctx.strokeRect(0, 0, ww, wh)
+    ww = window.innerWidth;
+    wh = window.innerHeight;
+    $main.style.width = ww + 'px';
+    $main.style.height = wh + 'px';
+    $canvas.width = ww;
+    $canvas.height = wh;
+    ctx.fillStyle = '#E8E8E8';
+  },
+  resize = function(){
+    init();
+    ctx.fillRect(0, 0, ww, wh);
+    creatImg( history.length - 1 );
+  },
+  load = function(){
+    init();
+    ctx.fillRect(0, 0, ww, wh);
+    history.push( $canvas.toDataURL() ); 
   };
-  
-  $main.width = ww;
-  $main.height = wh;
-  $canvas.width = ww;
-  $canvas.height = wh;
-  
-  ctx.fillStyle = '#E8E8E8'
-  ctx.fillRect(0, 0, ww, wh)
-  
-  
-  // window.addEventListener('load', init)
-  // window.addEventListener('resize', init)
-
-  // ctx.lineCap = 'round';
-  // ctx.lineWidth = 20;
-  // ctx.beginPath();
-  // ctx.strokeStyle = '#159';
-  // ctx.moveTo( 20,20 );
-  // ctx.lineTo( 20, 30 );
-
-  // ctx.moveTo( 1000, 20 );
-  // ctx.lineTo( 20, 500 );
-  // ctx.stroke();
-
   $save.addEventListener('click',function(){
     let dataURL = $canvas.toDataURL('image/png');
     this.href = dataURL;
+    this.setAttribute('download',Date.now());
   });
   $clear.addEventListener('click',function(){
-    ctx.fillStyle = '#E8E8E8'
-    ctx.fillRect(0, 0, ww, wh)
+    ctx.clearRect(0, 0, ww, wh);
+    ctx.fillStyle = '#E8E8E8';
+    ctx.fillRect(0, 0, ww, wh);
+  });
+  $undo.addEventListener('click',function( e ){
+    if( step === 0  ) return;
+    step -= 1;
+    creatImg( step );
+    
+  });
+  $redo.addEventListener('click',function( e ){
+    if( step === history.length - 1  ) return;
+    step += 1;
+    creatImg( step );
   });
 
-  $canvas.addEventListener('mousedown',function( e ){
-  if( status ) return;
-  status = true;
-  posX = e.offsetX;
-  posY = e.offsetY;
-
+  $paint.forEach(function( el,idx ){
+    el.addEventListener('click',function( e ){
+      $paint.forEach(function( v,k ){
+        if( v.classList.contains('is-active') ){
+          v.classList.remove('is-active');
+        }
+        if( el.className.includes('font') ){
+          $canvas.setAttribute('style','cursor:text');
+        }else if( el.className.includes('eraser') ){
+          $canvas.setAttribute('style','cursor:crosshair');
+        }else{
+          $canvas.setAttribute('style','cursor:default');
+        }
+      });
+      this.classList.add('is-active');
+    });  
   });
-  window.addEventListener('mousemove', draw);
 
-  window.addEventListener('mouseup',function( e ){
-    status = false;
-    posX = e.offsetX;
-    posY = e.offsetY;
-    canvasData = $canvas.toDataURL();
+ 
+
+  $pencolor.addEventListener('change',function( e ){
+    pnecolor = this.value;
   });
+  $pensize.forEach(function(el){
+    el.addEventListener('change',function(){
+      const _self = this;
+      $pensize.forEach(function( element){
+        element.value = _self.value;
+        pensize = _self.value;
+      });
+    });
+  });
+  $btnTop.addEventListener('click',function( e ){
+    if( this.parentNode.className.indexOf('is-close') >= 0 ){
+      this.parentNode.className = 'topbar';
+      this.childNodes[0].className = 'fas fa-angle-up';
+    }else{
+      this.parentNode.className = 'topbar is-close';
+      this.childNodes[0].className = 'fas fa-angle-down';
+    }
+  });
+  $btnBtm.addEventListener('click',function( e ){
+    this.parentNode.classList.toggle('is-close');
+  });
+  $btnBtm.parentNode.addEventListener('transitionend',function( e ){
+    const _self = this,
+          $btn = _self.querySelector('button i');
+    if( e.propertyName.includes('width') ){
+      if( $btn.className.includes('fa-angle-down') ){
+        $btn.className = 'fas fa-paint-brush';
+        return;
+      }else{
+        $btn.className = 'fas fa-angle-down';
+        return;
+      } 
+    }
+  });
+  $canvas.addEventListener('mousedown',drawStart);
+  window.addEventListener('mousemove', drawMove);
+  window.addEventListener('mouseup',drawEnd);
 
+  // window.addEventListener('keydown', function(e){
+    
+  //   ctx.fillStyle = pnecolor;
+  //   ctx.font = `${pensize}px Arial`;
+  //   ctx.fillText( $textarea.value,posX,posY);
+    
+  //   // console.log( fontPosX,fontPosY )
 
+  // });
+  // window.addEventListener('keyup', function(e){
+  //   $textarea.remove();
 
+  // });
+
+  document.querySelector('.topbar').addEventListener('mouseup',soptMouseupEvent );
+  document.querySelector('.bottombar').addEventListener('mouseup',soptMouseupEvent);
+  window.addEventListener('load', load);
+  window.addEventListener('resize', resize );
 })();
 
+// http://www.w3school.com.cn/tags/html_ref_canvas.asp
