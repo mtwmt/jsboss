@@ -1,3 +1,11 @@
+$base-font-size: 16px !default;
+@function rem($target, $context: $base-font-size){
+  @if $target == 0 { @return 0 }
+    @return ($target / $context) + 0rem;
+}
+
+
+
 *{
   box-sizing: border-box;
 }
@@ -12,13 +20,143 @@ html{
  
 }
 body,html{
-  font-family: "Noto Sans TC", Arial, sans-serif;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  font-family: "Roboto Condensed", Arial, sans-serif;
   font-weight: bold;
 }
 
 .main{
   position: relative;
-  // width: 1280px;
-  // height: 800px;
-  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.tictactoe{
+  width: rem(570px);
+  padding: rem(8px);
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  div{
+    width: rem(180px);
+    height: rem(180px);
+    text-align: center;
+    vertical-align: middle;
+    display: inline-block;
+    line-height: 0;
+    &:before{
+      content: '';
+      display: inline-block;
+      vertical-align: middle;
+      width: 0;
+      height: 100%;
+    }
+    i{
+      vertical-align: middle;
+      font-size: rem(90px);
+      &.fa-circle{ color: #000; }
+      &.fa-times{ color: #fff; }
+    }
+  }
+}
+
+button{
+  margin: rem(16px);
+  width: rem(180*3px);
+  height: rem(90px);
+  border-radius: rem(8px);
+  border: 0;
+  font-size: rem(48px);
+  font-weight: bold;
+  font-family: "Roboto Condensed";
+  .start &{
+    color: #FF6D70;
+    background: #fff;  
+  }
+  .game &{
+    color: #fff;
+    background: #ED494C;
+  }
+}
+
+.start{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;  
+  background-color: #000;
+  .tictactoe{
+    div{
+      &:nth-child(1),&:nth-child(5),&:nth-child(9){
+        font-style: italic;
+        font-size: rem(100px);
+      }
+      &:nth-child(2){
+        font-size: rem(270px);
+        color: #ed494c;
+      }
+      &:nth-child(3){
+        font-size: rem(140px);
+        color: #000;
+        text-shadow: 
+          rem(-5px) 0px #fff,
+          0px rem(5px) #fff, 
+          rem(5px) 0px #fff,  
+          0px rem(-5px) #fff, 
+      }
+      &:nth-child(4),&:nth-child(8){
+        font-size: rem(140px);
+        color: #ed494c;
+      }
+      &:nth-child(6),&:nth-child(7){
+        font-size: rem(270px);
+        color: #000;
+        text-shadow: 
+          rem(-5px) 0px #ed494c,
+          0px rem(5px) #ed494c, 
+          rem(5px) 0px #ed494c,  
+          0px rem(-5px) #ed494c, 
+      }
+    }
+  }
+}
+
+.game{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;  
+  background-color: #FF6D70;
+  .tictactoe{
+    div{
+      border-left: 8px solid #ED494C;
+      border-bottom: 8px solid #ED494C;
+      &:nth-child(3n+1){
+        border-left: 0px;
+      }
+      &:nth-child(7),&:nth-child(8),&:nth-child(9){
+        border-bottom: 0px;
+      }
+    }
+  }
+}
+
+
+
+
+$device-list: 320px 360px 400px 440px 480px 520px 560px 600px 640px;
+@each $current-device in $device-list{
+    @media screen and (min-width: $current-device) {
+    body, html {
+      font-size: $current-device * 0.025;
+    }
+  }
 }
