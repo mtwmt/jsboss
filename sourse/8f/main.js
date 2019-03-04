@@ -7,61 +7,77 @@ Vue.component('start',{
   },
   template: `
   <div class="start">
-    <div class="tictactoe">
-      <div>TIC</div>
-      <div>○</div>
-      <div>✖</div>
-      <div>✖</div>
-      <div>TAC</div>
-      <div>○</div>
-      <div>○</div>
-      <div>✖</div>
-      <div>TOC</div>
-      <button @click="gopage">START</button>
+    <div class="content">
+      <div class="tictactoe">
+        <div>TIC</div>
+        <div>○</div>
+        <div>✖</div>
+        <div>✖</div>
+        <div>TAC</div>
+        <div>○</div>
+        <div>○</div>
+        <div>✖</div>
+        <div>TOC</div>
+      </div>
+      <button>START</button>
     </div>
   </div>
   `
 });
 
 Vue.component('game',{
-  props:[],
+  props:['totalnum'],
   data(){
     return {
       step: 0,
       score: [0,0,0,0,0,0,0,0,0],
       cal: [],
-      // score: [],
     }
   },
   watch:{
     step(){
-
-      this.score.map( (e,idx)=>{
+      this.score.map( e=>{
         if( e !== 0 ){
           this.cal = [
             this.score[1] + this.score[2] + this.score[3],
             this.score[4] + this.score[5] + this.score[6],
             this.score[7] + this.score[8] + this.score[9],
+            this.score[1] + this.score[4] + this.score[7],
+            this.score[2] + this.score[5] + this.score[8],
+            this.score[3] + this.score[6] + this.score[9],
+            this.score[1] + this.score[5] + this.score[9],
+            this.score[3] + this.score[5] + this.score[7]
           ]
         }
-      })
+      });
+
+      this.cal.map( e => {
+        if( e === 3 || e === -3 ){
+          if( e === 3 ){
+            this.winner('〇');
+            this.gopage();
+          }else if( e === -3 ){
+            this.winner('✖');
+            this.gopage();
+          }
+        }else{
+          console.log( 'gg' )
+        }
+      });
     },
   },
   computed:{
-    // eval(){
-    //   return [
-    //     this.score[1] + this.score[2] + this.score[3],
-    //     this.score[4] + this.score[5] + this.score[6],
-    //   ]
-    // }
+  },
+  created(){
+    console.log( this.cal )
   },
   methods:{
     kick( key ){
-      this.step += 1;
       let _self = this,
           $tictactoe = _self.$el.querySelector('.tictactoe'),
           $panel = $tictactoe.querySelectorAll('div');
-
+          
+      this.step += 1;
       $panel.forEach( (el,idx) => {
         if( idx+1 === key && !el.querySelector('i') ){
           if( (this.step % 2) === 1){
@@ -74,33 +90,82 @@ Vue.component('game',{
         }
       });
       
+    },
+    winner( win ){
+      this.$emit('getwinner', win ); 
+    },
+    gopage(){
+      this.$emit('getpage','winner'); 
     }
   },
   template:`
   <div class="game">
-    <div class="tictactoe">
-      <div 
-        v-for="i in 9" 
-        :key="i"
-        :data-num="i"
-        @click="kick(i)"
-      ></div>
+    <div class="content">
+      <div class="score">
+        <div 
+          :class="(step % 2 === 0) ? '': 'is-active'"
+          class="trun">✖</div>
+        <div class="num">10</div>
+        <div class="vs">VS</div>
+        <div class="num">8</div>
+        <div 
+        :class="(step % 2 === 0) ? 'is-active': ''"
+          class="trun">○</div>
+      </div>
+      <div class="tictactoe">
+        <div 
+          v-for="i in 9" 
+          :key="i"
+          :data-num="i"
+          @click="kick(i)"
+        ></div>
+      </div>
       <button>RESTART</button>
     </div>
   </div>
   `
 });
 
+Vue.component('winner',{
+  props:['win'],
+  methods:{
+    gopage(){
+      this.$emit('getpage','game'); 
+    }
+  },
+  template: `
+  <div class="winner">
+    <div class="content">
+      <div class="score">
+        <div class="trun">✖</div>
+        <div class="num">10</div>
+        <div class="vs">VS</div>
+        <div class="num">8</div>
+        <div class="trun is-active">○</div>
+      </div>
+      <div class="result">
+        <i>{{ win }}</i>
+        <div class="text">WINNER!</div>
+      </div>
+      <button>RESTART</button>
+    </div>
+  </div>
+  `
+});
 
 var vm = new Vue({
   el: '#app',
   data:{
     page: 'game',
     winner: '',
+    score: [],
   },
   methods: {
     getpage( data ){
-      this.page = data
+      this.page = data;
+    },
+    getwinner( data ){
+      this.winner = data;
     }
   },
   template: `
@@ -111,10 +176,13 @@ var vm = new Vue({
     />
     <game 
       v-else-if="page === 'game'"
+      :totalnum="score"
       @getpage="getpage"
+      @getwinner="getwinner"
     />
     <winner
       v-else="page === 'winner'"
+      :win="winner"
       @getpage="getpage"
     />
     <end

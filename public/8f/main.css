@@ -6,7 +6,9 @@ body, html { position: relative; width: 100%; height: 100%; font-family: "Roboto
 
 .main { position: relative; width: 100%; height: 100%; }
 
-.tictactoe { width: 35.625rem; padding: 0.5rem; color: #fff; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; }
+.main .content { text-align: center; }
+
+.tictactoe { width: 35.75rem; margin: 1rem; padding: 0.5rem; color: #fff; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; }
 
 .tictactoe div { width: 11.25rem; height: 11.25rem; text-align: center; vertical-align: middle; display: inline-block; line-height: 0; }
 
@@ -18,11 +20,31 @@ body, html { position: relative; width: 100%; height: 100%; font-family: "Roboto
 
 .tictactoe div i.fa-times { color: #fff; }
 
-button { margin: 1rem; width: 33.75rem; height: 5.625rem; border-radius: 0.5rem; border: 0; font-size: 3rem; font-weight: bold; font-family: "Roboto Condensed"; }
+.result { position: relative; margin: 1rem; padding: 0.5rem; width: 35.75rem; height: 35.75rem; }
+
+.result i { position: absolute; top: 50%; left: 50%; -webkit-transform: translate(-50%, -50%); transform: translate(-50%, -50%); display: inline-block; color: #ED494C; font-size: 28.125rem; }
+
+.result .text { position: absolute; top: 50%; left: 50%; -webkit-transform: translate(-50%, -50%); transform: translate(-50%, -50%); font-size: 9.625rem; font-style: italic; -webkit-text-stroke: 0.3125rem #fff; color: transparent; }
+
+.score { position: relative; margin-bottom: 2rem; display: flex; justify-content: space-between; line-height: 3.75rem; font-size: 3rem; border: 0.25rem solid #000; border-radius: 0.5rem; background-color: #fff; }
+
+.score .trun { position: relative; flex: 0 0 auto; width: 3.8125rem; color: #fff; background: #ED494C; border-radius: 0.25rem 0 0 0.25rem; }
+
+.score .trun:last-child { background: #000; border-radius: 0 0.25rem 0.25rem 0; font-size: 6.25rem; font-weight: bold; line-height: 2.875rem; }
+
+.score .trun.is-active:after { position: absolute; top: 3.125rem; right: -100%; width: 200%; content: 'YOUR TURN!'; color: #fff; font-size: 1.25rem; line-height: 3.75rem; }
+
+.score .trun.is-active:last-child:after { left: -100%; }
+
+.score .num { flex: 0 0 auto; }
+
+.score .vs { margin-top: -0.625rem; width: 4.375rem; height: 4.375rem; line-height: 5rem; font-size: 1.25rem; color: #fff; background: #000; border-radius: 0.5rem 0.5rem 0 0; }
+
+button { width: 33.75rem; height: 5.625rem; border-radius: 0.5rem; border: 0; font-size: 3rem; font-weight: bold; font-family: "Roboto Condensed"; }
 
 .start button { color: #FF6D70; background: #fff; }
 
-.game button { color: #fff; background: #ED494C; }
+.game button, .winner button { color: #fff; background: #ED494C; }
 
 .start { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background-color: #000; }
 
@@ -43,6 +65,8 @@ button { margin: 1rem; width: 33.75rem; height: 5.625rem; border-radius: 0.5rem;
 .game .tictactoe div:nth-child(3n+1) { border-left: 0px; }
 
 .game .tictactoe div:nth-child(7), .game .tictactoe div:nth-child(8), .game .tictactoe div:nth-child(9) { border-bottom: 0px; }
+
+.winner { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background-color: #FF6D70; }
 
 @media screen and (min-width: 320px) { body, html { font-size: 8px; } }
 
