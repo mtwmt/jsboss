@@ -28,9 +28,11 @@ body, html { position: relative; width: 100%; height: 100%; font-family: "Roboto
 
 .score { position: relative; margin-bottom: 2rem; display: flex; justify-content: space-between; line-height: 3.75rem; font-size: 3rem; border: 0.25rem solid #000; border-radius: 0.5rem; background-color: #fff; }
 
-.score .trun { position: relative; flex: 0 0 auto; width: 3.8125rem; color: #fff; background: #ED494C; border-radius: 0.25rem 0 0 0.25rem; }
+.score .trun { position: relative; flex: 0 0 auto; width: 3.8125rem; color: #fff; background: #000; border-radius: 0.25rem 0 0 0.25rem; border-right: 0.25rem solid #000; border-left: 0; }
 
-.score .trun:last-child { background: #000; border-radius: 0 0.25rem 0.25rem 0; font-size: 6.25rem; font-weight: bold; line-height: 2.875rem; }
+.score .trun:last-child { border-radius: 0 0.25rem 0.25rem 0; font-size: 6.25rem; font-weight: bold; line-height: 2.875rem; border-right: 0; border-left: 0.25rem solid #000; }
+
+.score .trun.is-active { background: #ED494C; }
 
 .score .trun.is-active:after { position: absolute; top: 3.125rem; right: -100%; width: 200%; content: 'YOUR TURN!'; color: #fff; font-size: 1.25rem; line-height: 3.75rem; }
 
@@ -44,7 +46,7 @@ button { width: 33.75rem; height: 5.625rem; border-radius: 0.5rem; border: 0; fo
 
 .start button { color: #FF6D70; background: #fff; }
 
-.game button, .winner button { color: #fff; background: #ED494C; }
+.game button, .winner button, .flat button { color: #fff; background: #ED494C; }
 
 .start { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background-color: #000; }
 
@@ -66,7 +68,9 @@ button { width: 33.75rem; height: 5.625rem; border-radius: 0.5rem; border: 0; fo
 
 .game .tictactoe div:nth-child(7), .game .tictactoe div:nth-child(8), .game .tictactoe div:nth-child(9) { border-bottom: 0px; }
 
-.winner { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background-color: #FF6D70; }
+.winner, .flat { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background-color: #FF6D70; }
+
+.flat i { width: 100%; font-size: 16.25rem; }
 
 @media screen and (min-width: 320px) { body, html { font-size: 8px; } }
 

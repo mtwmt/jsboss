@@ -115,16 +115,20 @@ body,html{
     flex: 0 0 auto;
     width: rem(61px);
     color: #fff;
-    background: #ED494C;
+    background: #000;
     border-radius: rem(4px) 0 0 rem(4px);
+    border-right:rem(4px) solid #000;
+    border-left:0;
     &:last-child{
-      background: #000;
       border-radius: 0 rem(4px) rem(4px) 0;
       font-size: rem(100px);
       font-weight: bold;
       line-height: rem(46px);
+      border-right:0;
+      border-left:rem(4px) solid #000;
     }
     &.is-active{
+      background: #ED494C;
       &:after{
         position: absolute;
         top: rem(50px);
@@ -170,7 +174,7 @@ button{
     color: #FF6D70;
     background: #fff;  
   }
-  .game &,.winner &{
+  .game &,.winner &,.flat &{
     color: #fff;
     background: #ED494C;
   }
@@ -242,7 +246,7 @@ button{
   }
 }
 
-.winner{
+.winner,.flat{
   position: relative;
   width: 100%;
   height: 100%;
@@ -252,7 +256,10 @@ button{
   background-color: #FF6D70;
 }
 
-
+.flat i{
+  width: 100%;
+  font-size: rem(260px);
+}
 
 $device-list: 320px 360px 400px 440px 480px 520px 560px 600px 640px;
 @each $current-device in $device-list{
