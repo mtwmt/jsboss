@@ -101,8 +101,11 @@ body,html{
 }
 
 .score{
+  width: rem(180*3px);
+  
   position: relative;
-  margin-bottom: rem(32px);
+  // padding: 0 rem(8px);
+  margin: 0 auto rem(32px) auto;
   display: flex;
   justify-content: space-between;
   line-height: rem(60px);

@@ -1,3 +1,5 @@
+
+// 開始
 Vue.component('start',{
   props:[],
   methods:{
@@ -25,6 +27,7 @@ Vue.component('start',{
   `
 });
 
+// 遊戲中
 Vue.component('game',{
   props:['totalnum','winner'],
   data(){
@@ -50,37 +53,20 @@ Vue.component('game',{
           ]
         }
       });
-
       this.playing;
-
-      // if( this.step === 9 ){
-      //   this.playing;
-      // }else{
-      //   this.gopage('flat')
-      // }
-      
     },
   },
   computed:{
     playing(){
-      let cnt = 0;
-      this.cal.map( e => {
-        if( e === 3 || e === -3 ){
-          if( e === 3 ){
-            this.gowinner('〇');
-            this.gopage('winner');
-          }else if( e === -3 ){
-            this.gowinner('✖');
-            this.gopage('winner');
-          }
+      if( this.cal.indexOf(3) >=0 ){
+        return this.gopage('winner','〇');
+      }else if( this.cal.indexOf(-3) >=0 ){
+        return this.gopage('winner','✖');
+      }else{
+        if( this.step === 9 && this.cal.indexOf(3) >= -1 && this.cal.indexOf(-3) >= -1 ){
+          return this.gopage('flat','');
         }
-      });
-
-      this.score.map( function( e ){
-        cnt += e;
-      });
-
-      
+      }
     }
   },
   created(){
@@ -109,7 +95,8 @@ Vue.component('game',{
     gowinner( win ){
       this.$emit('getwinner', win );
     },
-    gopage( page ){
+    gopage( page, win ){
+      this.gowinner( win );
       this.$emit('getpage',page);
     }
   },
@@ -120,9 +107,9 @@ Vue.component('game',{
         <div 
           :class="(step % 2 === 0) ? '': 'is-active'"
           class="trun">✖</div>
-        <div class="num">0</div>
+        <div class="num">{{totalnum.x}}</div>
         <div class="vs">VS</div>
-        <div class="num">0</div>
+        <div class="num">{{totalnum.o}}</div>
         <div 
         :class="(step % 2 === 0) ? 'is-active': ''"
           class="trun">○</div>
@@ -141,11 +128,22 @@ Vue.component('game',{
   `
 });
 
+// 贏家
 Vue.component('winner',{
-  props:['win'],
+  props:['win','totalnum'],
   methods:{
     gopage(){
       this.$emit('getpage','start'); 
+    }
+  },
+  created(){
+
+    if( this.win === '〇' ){
+      localStorage.setItem('o', parseInt(this.totalnum.o,10) + 1 )
+      this.totalnum.o = parseInt(this.totalnum.o,10) + 1;
+    }else if( this.win === '✖' ){
+      localStorage.setItem('x', parseInt(this.totalnum.x,10) + 1 )
+      this.totalnum.x = parseInt(this.totalnum.x,10) + 1;
     }
   },
   template: `
@@ -153,9 +151,9 @@ Vue.component('winner',{
     <div class="content">
       <div class="score">
         <div class="trun">✖</div>
-        <div class="num">0</div>
+        <div class="num">{{ totalnum.x }}</div>
         <div class="vs">VS</div>
-        <div class="num">0</div>
+        <div class="num">{{ totalnum.o }}</div>
         <div class="trun is-active">○</div>
       </div>
       <div class="result">
@@ -168,8 +166,9 @@ Vue.component('winner',{
   `
 });
 
+// 平手
 Vue.component('flat',{
-  props:[],
+  props:['totalnum'],
   methods:{
     gopage(){
       this.$emit('getpage','start'); 
@@ -180,9 +179,9 @@ Vue.component('flat',{
     <div class="content">
       <div class="score">
         <div class="trun">✖</div>
-        <div class="num">0</div>
+        <div class="num">{{totalnum.x}}</div>
         <div class="vs">VS</div>
-        <div class="num">0</div>
+        <div class="num">{{totalnum.o}}</div>
         <div class="trun is-active">○</div>
       </div>
       <div class="result">
@@ -199,9 +198,16 @@ Vue.component('flat',{
 var vm = new Vue({
   el: '#app',
   data:{
-    page: 'game',
+    page: 'start',
     winner: '',
-    score: [],
+    score: {
+      o:'',
+      x:''
+    },
+  },
+  created(){
+    this.score.o = localStorage.getItem('o') || 0;
+    this.score.x = localStorage.getItem('x') || 0;
   },
   methods: {
     getpage( data ){
@@ -226,11 +232,13 @@ var vm = new Vue({
     />
     <winner
       v-else-if="page === 'winner'"
+      :totalnum="score"
       :win="winner"
       @getpage="getpage"
     />
     <flat
       v-else="page === 'flat'"
+      :totalnum="score"
       @getpage="getpage"
     />
   </div>
