@@ -1,0 +1,25 @@
+* { box-sizing: border-box; }
+
+html { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
+
+body, html { position: relative; width: 100%; height: 100%; font-family: "Roboto Condensed", Arial, sans-serif; font-weight: bold; }
+
+.main { position: relative; width: 100%; height: 100%; background: #5858B9; display: flex; justify-content: center; align-items: center; }
+
+.main .content { text-align: center; }
+
+.turntable { position: relative; width: 540px; height: 540px; background-image: url("img/wheel-outside.svg"); background-repeat: no-repeat; background-position: center; background-size: contain; }
+
+.turntable .item { position: absolute; top: 28px; right: 28px; width: 242.5px; height: 485px; border-radius: 0 242.5px 242.5px 0; overflow: hidden; -webkit-transform-origin: 0% 50%; transform-origin: 0% 50%; }
+
+.turntable .item .fill { position: absolute; top: 0; right: 0; width: 485px; height: 242.5px; -webkit-transform-origin: 50% 100%; transform-origin: 50% 100%; -webkit-transform: rotate(-90deg); transform: rotate(-90deg); border: 0px solid #1F1172; border-width: 0 0 2px 0; }
+
+.turntable .item:nth-child(even) .fill { background: #F0BEFF; }
+
+.turntable .item:nth-child(odd) .fill { background: #343BAA; }
+
+.turntable .item .gift { position: absolute; width: 50%; height: 50%; color: #fff; background: #000; -webkit-transform-origin: 50% 100%; transform-origin: 50% 100%; }
+
+.turntable .hand { position: absolute; top: 50%; left: 50%; -webkit-transform: translate(-50%, -69%) rotate(0deg); transform: translate(-50%, -69%) rotate(0deg); width: 128px; height: 208px; background-image: url("img/hand.svg"); background-repeat: no-repeat; background-position: center; background-size: contain; -webkit-transform-origin: 50% 69%; transform-origin: 50% 69%; }
+
+.turntable .press { position: absolute; left: 50%; top: 50%; -webkit-transform: translate(-50%, -50%); transform: translate(-50%, -50%); width: 101px; height: 101px; text-align: center; line-height: 101px; font-size: 30px; color: #FF00BA; border-radius: 100%; background: #1F1172; cursor: pointer; }
