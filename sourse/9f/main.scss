@@ -33,11 +33,13 @@ body,html{
   display: flex;
   justify-content: center;
   align-items: center;
+  // flex-wrap: wrap;
   .content{
     text-align: center; 
   }
 }
 .result{
+  overflow: hidden;
   position: absolute;
   z-index: 0;
   top: 50%;
@@ -55,22 +57,34 @@ body,html{
     display: inline-block;
     vertical-align: middle;
   }
-  i{
+  p{
     display: block;
     color: #FF00BA;
     font-size: 72px;
     text-decoration: underline;
   }
+  i{
+    position: absolute;
+    // left: 0;
+    // top: -10px;
+    color: rgba(#1F1172,0.7) ;
+    font-size: 50px;
+  }
   .result-text{
     display: inline-block;
     vertical-align: middle;
     text-align: left;
+    
+    position: relative;
+    z-index: 2;
+    background: #3835b1;
   }
   &.lt{
     left: 0;
     font-size: 72px;
     .result-text{
       margin-right: 540/2+px;
+      
     }
   }
   &.rt{
@@ -98,9 +112,23 @@ body,html{
     transform-origin: 50% 50%;
     width: 100%;
     height: 100%;
+    border-radius: 100%;
+    // background: #343BAA;
+    &:after{
+      position: absolute;
+      content: '';
+      width: 90%;
+      height: 90%;
+      top: 5%;
+      left: 5%;
+      background: #343BAA;
+      border-radius: 100%;
+      z-index: 0;
+    }
   }
   .items{
     position: absolute;
+    z-index: 1;
     top:28px;
     right: 28px;
     width: (485/2)+px;
@@ -108,13 +136,14 @@ body,html{
     border-radius:0 (485/2)+px (485/2)+px 0;
     overflow: hidden;
     transform-origin:0% 50%;
+    // background: #343BAA;
     .fill{
       position:absolute;
       top:0;
       right:0; 
       width: 485px;
       height: (485/2)+px;
-      // background: #F0BEFF;
+      background: #343BAA;
       transform-origin:50% 100%;
       transform:rotate(-90deg);
       border:0px solid #1F1172;
@@ -132,6 +161,9 @@ body,html{
       &-block{
         margin-top: 30px;
       }
+      .gift-block{
+        i{ display: block; }
+      }
     }
     &:nth-child(even){
       .fill{ background: #F0BEFF; }
@@ -141,10 +173,14 @@ body,html{
       .fill{ background: #343BAA; }
       .gift{ color: #F0BEFF;}
     }
-    
+    &.is-active{
+      .fill{ background: #FF00BA; }
+      .gift{ color: #fff;}
+    }
   }
   .hand{
     position: absolute;
+    z-index: 99;
     top: 50%;
     left: 50%;
     transform: translate(-50%,-69%) rotate(0deg);
@@ -159,6 +195,7 @@ body,html{
   }
   .press{
     position: absolute;
+    z-index: 99;
     left:50%;
     top:50%;
     transform: translate(-50%,-50%);
@@ -174,7 +211,20 @@ body,html{
   }
 }
 
-
+.infoset{
+  position: absolute;
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  .btn{
+    display: inline-block;
+    vertical-align: top;
+  }
+  .getResult{
+    display: inline-block;
+    color:#1F1172;
+  }
+}
 
 
 // $device-list: 320px 360px 400px 440px 480px 520px 560px 600px 640px;
