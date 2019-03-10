@@ -167,7 +167,6 @@ var vm = new Vue({
 });
 
 
-// :style="'transform: rotate('+ (getAngle / -2) +'deg)'"
-// @click=press()
+
 // 物件取長度
 // console.log( Object.keys(this.item).length )
