@@ -37,16 +37,69 @@ body,html{
     text-align: center; 
   }
 }
-
+.result{
+  position: absolute;
+  z-index: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50%;
+  height: 237px;
+  text-align: center;
+  color: #fff;
+  background: #3835b1;
+  display: inline-block;
+  &:before{
+    content: '';
+    width: 0;
+    height: 100%;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  i{
+    display: block;
+    color: #FF00BA;
+    font-size: 72px;
+    text-decoration: underline;
+  }
+  .result-text{
+    display: inline-block;
+    vertical-align: middle;
+    text-align: left;
+  }
+  &.lt{
+    left: 0;
+    font-size: 72px;
+    .result-text{
+      margin-right: 540/2+px;
+    }
+  }
+  &.rt{
+    right: 0;
+    font-size: 32px;
+    .result-text{
+      margin-left: 540/2+px;
+    }
+  }
+  
+}
 .turntable{
   position: relative;
+  z-index: 1;
   width: 540px;
   height: 540px;
   background-image:url('img/wheel-outside.svg');
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
+  flex: 0 0 auto;
   .item{
+    position: relative;
+    // transform: rotate(28deg);
+    transform-origin: 50% 50%;
+    width: 100%;
+    height: 100%;
+  }
+  .items{
     position: absolute;
     top:28px;
     right: 28px;
@@ -67,22 +120,28 @@ body,html{
       border:0px solid #1F1172;
       border-width: 0 0 2px 0;
     }
+    .gift{
+      position: absolute;
+      left:0;
+      top:0;
+      margin-left: -25%;
+      width: 50%;
+      height: 50%;
+      text-align: center;
+      transform-origin: 50% 100%;
+      &-block{
+        margin-top: 30px;
+      }
+    }
     &:nth-child(even){
       .fill{ background: #F0BEFF; }
+      .gift{ color: #343BAA;}
     }
     &:nth-child(odd){
       .fill{ background: #343BAA; }
+      .gift{ color: #F0BEFF;}
     }
-    .gift{
-      position: absolute;
-      // left:50%;
-      // top:0;
-      width: 50%;
-      height: 50%;
-      color: #fff;
-      background: #000;
-      transform-origin: 50% 100%;
-    }
+    
   }
   .hand{
     position: absolute;
@@ -96,6 +155,7 @@ body,html{
     background-position: center;
     background-size: contain;
     transform-origin: 50% 69%;
+    // transition: .05s;
   }
   .press{
     position: absolute;
@@ -113,6 +173,7 @@ body,html{
     cursor: pointer;
   }
 }
+
 
 
 
