@@ -65,7 +65,6 @@ var vm = new Vue({
       let _self = this,
           stopdeg = _self.getRandom(720,2160),
           t;
-      console.log( stopdeg )
       if( _self.deg >　stopdeg ){
         clearTimeout(t);
         _self.run = false;
