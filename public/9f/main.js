@@ -50,6 +50,8 @@ var vm = new Vue({
     },
     // 
     getWinner: function getWinner(obj) {
+      console.log('win', obj);
+
       var _self = this,
           getAngle = _self.getAngle;
 
@@ -71,10 +73,10 @@ var vm = new Vue({
       if (_self.deg > stopdeg) {
         clearTimeout(t);
         _self.run = false;
-        this.getWinner(_self.deg % 360);
+        _self.deg = _self.getRandom(0, 359), this.getWinner(_self.deg);
       } else {
         _self.deg = parseFloat(_self.deg, 10) || 0;
-        _self.deg += 10;
+        _self.deg += 5;
         t = setTimeout(_self.runTurn, 2);
       }
     },
