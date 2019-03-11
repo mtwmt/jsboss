@@ -11,16 +11,17 @@
   textSize = function (textW){
     let fz = parseInt($hdresult.style.fontSize, 10);
 
-    // while (textW > calboxW) {
-    //   fz -= 2;
-    //   $hdresult.style.fontSize = `${fz}px`;
-    //   textW = $hdresult.clientWidth;
-    // }
-
-    if( fz; textW > calboxW; fz - 2  ){
+    while (textW > calboxW) {
+      fz -= 2;
       $hdresult.style.fontSize = `${fz}px`;
       textW = $hdresult.clientWidth;
     }
+
+    // 有問題 待驗証
+    // for( fz; textW > calboxW; fz-2  ){
+    //   $hdresult.style.fontSize = `${fz}px`;
+    //   textW = $hdresult.clientWidth;
+    // }
   },
   isNumber = function (obj) {
     return parseFloat( obj );

@@ -3,10 +3,11 @@
     "year": 2017,
     "item": {
       "Flight": [1,"fas fa-plane"],
-      "Child": [4,"far fa-smile-wink"],
-      "Anything": [5,"fas fa-star"],
-      "Wifi": [5,"fas fa-wifi"],
-      "Wish": [5,"fas fa-birthday-cake"]
+      "Wish": [5,"fas fa-birthday-cake"],
+      "Anything": [3,"fas fa-star"],
+      "Wifi": [4,"fas fa-wifi"],
+      "Child": [2,"far fa-smile-wink"],
+      "Movie": [5,"fas fa-film"]
     }
   },
   {

@@ -11,21 +11,47 @@ var vm = new Vue({
     stopdeg:'',
   },
   watch: {
-    // 監控轉到的角度
-    // deg(){
-    //   if( this.deg === 3599 ){
-    //     this.deg = this.getRandom(0,359);
-    //     this.run = false;
-    //     this.getWinner( this.deg )
-    //   }
-    // },
   },
   created(){
     this.setYear( this.year )
   },
   computed: {
     getAngle(){
-      return (360 / this.getItem.length);
+      let _self = this,
+          cnt = cnt || 0,
+          angle,
+          angleTemp = [],
+          angleAccu = [],
+          angleItem = [];
+
+      _self.getItem.map(e=>{
+        cnt += _self.item[e][0];
+        angleTemp.push( _self.item[e][0]);
+      });
+      angle = 360 / cnt;
+
+      angleTemp.map((e,i)=>{
+        e = e * angle;
+
+        // 陣列累加
+        // angleItem[0] = 0;
+        // angleItem[1] = angleTemp[0] * angle;
+        // angleItem[2] = angleItem[1] + angleTemp[1] * angle;
+        // angleItem[3] = angleItem[2] + angleTemp[2] * angle;
+        // angleItem[4] = angleItem[3] + angleTemp[3] * angle;
+        // angleItem[5] = angleItem[4] + angleTemp[4] * angle;
+
+        angleAccu[i] = angleAccu[i] || 0;
+        angleAccu[i+1] = angleAccu[i] + e;
+        angleItem.push( e )
+      });
+
+      return {
+        angleItem: angleItem,
+        angleAccu: angleAccu
+      }
+      // return angleItem;
+      // return (360 / this.getItem.length);
     },
     getItem(){
       return Object.keys(this.item);
@@ -41,7 +67,6 @@ var vm = new Vue({
       return result;
     },
   },
-  
   methods: {
     // 亂數取值
     getRandom(min, max) {
@@ -51,16 +76,26 @@ var vm = new Vue({
     getWinner( obj ){
       console.log( 'win',obj )
       let _self = this,
-          getAngle = _self.getAngle;
+          getAngle = _self.getAngle.angleAccu;
 
-      for( let i=0; i< _self.getItem.length; i++ ){
-        if( obj >= i* getAngle &&  obj < (i+1) * getAngle){
+      getAngle.map( (e,i) =>{
+        if( obj > getAngle[i] && obj < getAngle[i+1] ){
           _self.winner = _self.getItem[i]; 
+
+          if( _self.item[_self.getItem[i]][0] <= 0 ){
+            // _self.press();
+          }
         }
+      });
+
+      if( parseFloat(_self.item[_self.winner][0],10) > 0 ){
+        _self.resultList[_self.winner] = _self.resultList[_self.winner] || 0;
+        _self.resultList[_self.winner] = parseFloat(_self.resultList[_self.winner],10) + 1;
+        _self.item[_self.winner][0] = parseFloat(_self.item[_self.winner][0],10) - 1
       }
-      _self.resultList[_self.winner] = _self.resultList[_self.winner] || 0;
-      _self.resultList[_self.winner] = parseFloat(_self.resultList[_self.winner],10) + 1;
-      _self.item[_self.winner][0] = parseFloat(_self.item[_self.winner][0],10) - 1;
+      // _self.resultList[_self.winner] = _self.resultList[_self.winner] || 0;
+      // _self.resultList[_self.winner] = parseFloat(_self.resultList[_self.winner],10) + 1;
+      // _self.item[_self.winner][0] = (_self.item[_self.winner][0] == 0) ? 0 : parseFloat(_self.item[_self.winner][0],10) - 1;
     },
     runTurn(){
       let _self = this,    
@@ -68,7 +103,7 @@ var vm = new Vue({
       if( _self.deg >= _self.stopdeg ){
         clearTimeout(t);
         _self.run = false;
-        this.getWinner( _self.deg % 360);
+        this.getWinner( Math.round(_self.deg) % 360);
       }else{
         _self.deg = parseFloat( _self.deg,10 ) || 0;
         t = setTimeout( _self.runTurn ,2);
@@ -87,13 +122,27 @@ var vm = new Vue({
       }
     },
     press(){
-      let _self = this;
+      let _self = this,
+          cnt = cnt || 0;
       _self.winner = '';
       if(_self.run) return;
       _self.run = true;
       _self.deg = 0;
-      _self.item = _self.getResult;
-      _self.stopdeg = _self.getRandom(3241,3600);
+      // _self.item = _self.getResult;
+      _self.stopdeg = _self.getRandom(3241,3599);
+
+      _self.getItem.map( function( e ){
+        if( _self.item[e][0] > 0 ){
+          cnt += 1;
+        }
+      })
+
+      if( cnt > 2 && cnt % 2 == 0){
+        _self.item = _self.getResult;
+      }
+
+      console.log( 'cnt',cnt ,cnt % 2)
+
       _self.runTurn();
     },
     setYear( data ){
@@ -129,14 +178,14 @@ var vm = new Vue({
         <div class="items"
           v-for="(key,i) in getItem.length"
           :key="key"
-          :style="'transform: rotate('+ i * getAngle  +'deg);font-size:'+ getAngle/2 +'px;'"
+          :style="'transform: rotate('+ getAngle.angleAccu[i] +'deg); font-size:'+ getAngle.angleItem[i]/2 +'px;'"
           :class="( winner == getItem[i] )? 'is-active': ''"
         >
           <div class="fill"
-            :style="'transform: rotate('+ (getAngle - 90) +'deg)'"
+            :style="'transform: rotate('+ (getAngle.angleItem[i] - 90) +'deg)'"
           ></div>
           <div class="gift"
-            :style="'transform: rotate('+ getAngle/2 +'deg)'"
+            :style="'transform: rotate('+ getAngle.angleItem[i]/2 +'deg)'"
           ><div class="gift-block">
             <i v-if="item[getItem[i]][1]" 
               :class="item[getItem[i]][1]"></i>
