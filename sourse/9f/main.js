@@ -8,9 +8,9 @@ var vm = new Vue({
     resultList: {},
     deg: 0,
     run: false,
+    stopdeg:'',
   },
   watch: {
-    year(){}
     // 監控轉到的角度
     // deg(){
     //   if( this.deg === 3599 ){
@@ -63,18 +63,27 @@ var vm = new Vue({
       _self.item[_self.winner][0] = parseFloat(_self.item[_self.winner][0],10) - 1;
     },
     runTurn(){
-      let _self = this,
-          stopdeg = _self.getRandom(720,2160),
+      let _self = this,    
           t;
-      if( _self.deg >　stopdeg ){
+      if( _self.deg >= _self.stopdeg ){
         clearTimeout(t);
         _self.run = false;
-        _self.deg = _self.getRandom(0,359),
-        this.getWinner( _self.deg );
+        this.getWinner( _self.deg % 360);
       }else{
         _self.deg = parseFloat( _self.deg,10 ) || 0;
-        _self.deg += 5;
         t = setTimeout( _self.runTurn ,2);
+
+        if( _self.deg < 720 ){
+          _self.deg += 10;
+        }else if( _self.deg < 1800 ){
+          _self.deg += 8;
+        }else if( _self.deg < 2520 ){
+          _self.deg += 4;
+        }else if( _self.deg < 2880 ){
+          _self.deg += 2;
+        }else{
+          _self.deg += 1;
+        }
       }
     },
     press(){
@@ -83,14 +92,11 @@ var vm = new Vue({
       if(_self.run) return;
       _self.run = true;
       _self.deg = 0;
-
       _self.item = _self.getResult;
-
+      _self.stopdeg = _self.getRandom(3241,3600);
       _self.runTurn();
-      
     },
     setYear( data ){
-      
       axios.get('data.json')
       .then( res=>{
         let temp = res.data.find( e => (e.year == data) );
@@ -116,7 +122,6 @@ var vm = new Vue({
           >{{ i }}:{{ resultList[i] }}</li>
         </ul>
       </div>
-      
     </div>
     <div class="turntable">
       <div class="item"
