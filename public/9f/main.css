@@ -3,7 +3,7 @@
 
 html { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
 
-body, html { position: relative; width: 100%; height: 100%; font-family: "Roboto Condensed", Arial, sans-serif; font-weight: bold; }
+body, html { position: relative; width: 100%; height: 100%; font-family: "Roboto Condensed","微軟正黑體", Arial, sans-serif; font-weight: bold; }
 
 .main { position: relative; width: 100%; height: 100%; background: #5858B9; display: flex; justify-content: center; align-items: center; }
 
@@ -33,7 +33,7 @@ body, html { position: relative; width: 100%; height: 100%; font-family: "Roboto
 
 .turntable .item:after { position: absolute; content: ''; width: 90%; height: 90%; top: 5%; left: 5%; background: #343BAA; border-radius: 100%; z-index: 0; }
 
-.turntable .items { position: absolute; z-index: 1; top: 28px; right: 28px; width: 242.5px; height: 485px; border-radius: 0 242.5px 242.5px 0; overflow: hidden; -webkit-transform-origin: 0% 50%; transform-origin: 0% 50%; font-family: "Roboto Condensed", "微軟正黑體"; }
+.turntable .items { position: absolute; z-index: 1; top: 28px; right: 28px; width: 242.5px; height: 485px; border-radius: 0 242.5px 242.5px 0; overflow: hidden; -webkit-transform-origin: 0% 50%; transform-origin: 0% 50%; }
 
 .turntable .items .fill { position: absolute; top: 0; right: 0; width: 485px; height: 242.5px; background: #343BAA; -webkit-transform-origin: 50% 100%; transform-origin: 50% 100%; -webkit-transform: rotate(-90deg); transform: rotate(-90deg); border: 0px solid #1F1172; border-width: 0 0 2px 0; }
 
