@@ -35,7 +35,9 @@ body, html { position: relative; width: 100%; height: 100%; font-family: "Roboto
 
 .turntable .items { position: absolute; z-index: 1; top: 28px; right: 28px; width: 242.5px; height: 485px; border-radius: 0 242.5px 242.5px 0; overflow: hidden; -webkit-transform-origin: 0% 50%; transform-origin: 0% 50%; }
 
-.turntable .items .fill { position: absolute; top: 0; right: 0; width: 485px; height: 242.5px; background: #343BAA; -webkit-transform-origin: 50% 100%; transform-origin: 50% 100%; -webkit-transform: rotate(-90deg); transform: rotate(-90deg); border: 0px solid #1F1172; border-width: 0 0 2px 0; }
+.turntable .items .fill { position: absolute; top: 0; right: 0; width: 485px; height: 242.5px; background: #343BAA; -webkit-transform-origin: 50% 100%; transform-origin: 50% 100%; -webkit-transform: rotate(-90deg); transform: rotate(-90deg); border: 0px solid #1F1172; border-width: 0 0 2px 0; border-radius: 485px 485px 0 0; }
+
+.turntable .items .fill2 { position: absolute; top: 0; right: 0; width: 485px; height: 242.5px; background: #ffc; -webkit-transform-origin: 50% 100%; transform-origin: 50% 100%; -webkit-transform: rotate(90deg); transform: rotate(90deg); border-radius: 485px 485px 0 0; }
 
 .turntable .items .gift { position: absolute; left: 0; top: 0; margin-left: -25%; width: 50%; height: 50%; text-align: center; -webkit-transform-origin: 50% 100%; transform-origin: 50% 100%; }
 
@@ -43,15 +45,15 @@ body, html { position: relative; width: 100%; height: 100%; font-family: "Roboto
 
 .turntable .items .gift .gift-block i { display: block; }
 
-.turntable .items:nth-child(even) .fill { background: #F0BEFF; }
-
-.turntable .items:nth-child(even) .gift { color: #343BAA; }
-
-.turntable .items:nth-child(odd) .fill { background: #343BAA; }
+.turntable .items:nth-child(odd) .fill, .turntable .items:nth-child(odd) .fill2 { background: #343BAA; }
 
 .turntable .items:nth-child(odd) .gift { color: #F0BEFF; }
 
-.turntable .items.is-active .fill { background: #FF00BA; }
+.turntable .items:nth-child(even) .fill, .turntable .items:nth-child(even) .fill2 { background: #F0BEFF; }
+
+.turntable .items:nth-child(even) .gift { color: #343BAA; }
+
+.turntable .items.is-active .fill, .turntable .items.is-active .fill2 { background: #FF00BA; }
 
 .turntable .items.is-active .gift { color: #fff; }
 

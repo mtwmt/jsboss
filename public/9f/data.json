@@ -1,5 +1,12 @@
 [
   {
+    "year": "test",
+    "item": {
+      "1Wish": [1,"fas fa-plane"],
+      "2Flight": [2,"fas fa-plane"]
+    }
+  },
+  {
     "year": 2017,
     "item": {
       "Flight": [1,"fas fa-plane"],

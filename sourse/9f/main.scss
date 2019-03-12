@@ -134,6 +134,7 @@ body,html{
     width: (485/2)+px;
     height: 485px;
     border-radius:0 (485/2)+px (485/2)+px 0;
+    // border-radius: (485/2)+px;
     overflow: hidden;
     transform-origin:0% 50%;
     // background: #343BAA;
@@ -148,6 +149,20 @@ body,html{
       transform:rotate(-90deg);
       border:0px solid #1F1172;
       border-width: 0 0 2px 0;
+      border-radius: 485px 485px 0 0;
+    }
+    .fill2{
+      position:absolute;
+      top:0;
+      right:0; 
+      width: 485px;
+      height: (485/2)+px;
+      background: #ffc;
+      transform-origin:50% 100%;
+      transform:rotate(90deg);
+      // border:0px solid #1F1172;
+      // border-width: 0 0 2px 0;
+      border-radius: 485px 485px 0 0;
     }
     .gift{
       position: absolute;
@@ -165,16 +180,17 @@ body,html{
         i{ display: block; }
       }
     }
-    &:nth-child(even){
-      .fill{ background: #F0BEFF; }
-      .gift{ color: #343BAA;}
-    }
     &:nth-child(odd){
-      .fill{ background: #343BAA; }
+      .fill,.fill2{ background: #343BAA; }
+      
       .gift{ color: #F0BEFF;}
     }
+    &:nth-child(even){
+      .fill,.fill2{ background: #F0BEFF; }
+      .gift{ color: #343BAA;}
+    }
     &.is-active{
-      .fill{ background: #FF00BA; }
+      .fill,.fill2{ background: #FF00BA; }
       .gift{ color: #fff;}
     }
   }
