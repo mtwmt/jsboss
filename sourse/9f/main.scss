@@ -136,6 +136,7 @@ body,html{
     border-radius:0 (485/2)+px (485/2)+px 0;
     overflow: hidden;
     transform-origin:0% 50%;
+    font-family: "Roboto Condensed", "微軟正黑體";
     // background: #343BAA;
     .fill{
       position:absolute;
@@ -213,8 +214,7 @@ body,html{
 .infoset{
   position: absolute;
   top: 50px;
-  left: 50%;
-  transform: translateX(-50%);
+  right: 10px;
   .btn{
     display: inline-block;
     vertical-align: top;

@@ -28,7 +28,7 @@ var vm = new Vue({
         cnt += _self.item[e][0];
         angleTemp.push( _self.item[e][0]);
       });
-      angle = 360 / cnt;
+      angle = Math.round(360 / cnt);
 
       angleTemp.map((e,i)=>{
         e = e * angle;
@@ -45,12 +45,10 @@ var vm = new Vue({
         angleAccu[i+1] = angleAccu[i] + e;
         angleItem.push( e )
       });
-
       return {
         angleItem: angleItem,
         angleAccu: angleAccu
       }
-      // return angleItem;
       // return (360 / this.getItem.length);
     },
     getItem(){
@@ -74,16 +72,14 @@ var vm = new Vue({
     },
     // 
     getWinner( obj ){
-      console.log( 'win',obj )
       let _self = this,
           getAngle = _self.getAngle.angleAccu;
 
       getAngle.map( (e,i) =>{
-        if( obj > getAngle[i] && obj < getAngle[i+1] ){
+        if( obj > getAngle[i] && obj <= getAngle[i+1] ){
           _self.winner = _self.getItem[i]; 
-
-          if( _self.item[_self.getItem[i]][0] <= 0 ){
-            // _self.press();
+          if( _self.item[_self.getItem[i]][0] == 0 ){
+            _self.press();
           }
         }
       });
@@ -135,14 +131,14 @@ var vm = new Vue({
         if( _self.item[e][0] > 0 ){
           cnt += 1;
         }
-      })
+      });
 
-      if( cnt > 2 && cnt % 2 == 0){
+      if( cnt > 1 && cnt % 2 == 0){
         _self.item = _self.getResult;
-      }
-
-      console.log( 'cnt',cnt ,cnt % 2)
-
+      }else if( cnt === 0 ){
+        alert('獎項已全部抽光囉!');
+        return;
+      }      
       _self.runTurn();
     },
     setYear( data ){
@@ -178,7 +174,7 @@ var vm = new Vue({
         <div class="items"
           v-for="(key,i) in getItem.length"
           :key="key"
-          :style="'transform: rotate('+ getAngle.angleAccu[i] +'deg); font-size:'+ getAngle.angleItem[i]/2 +'px;'"
+          :style="'transform: rotate('+ getAngle.angleAccu[i] +'deg);font-size:'+ Math.min(getAngle.angleItem[i]/2,30) +'px;'"
           :class="( winner == getItem[i] )? 'is-active': ''"
         >
           <div class="fill"
