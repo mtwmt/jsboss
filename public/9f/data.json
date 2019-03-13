@@ -1,16 +1,5 @@
 [
   {
-    "year": "test",
-    "item": {
-<<<<<<< HEAD
-      "Flight": [1,"fas fa-plane"]
-=======
-      "1Wish": [1,"fas fa-plane"],
-      "2Flight": [2,"fas fa-plane"]
->>>>>>> 709b0e9c32caf8e4ca41bead4ab4358b67a45a36
-    }
-  },
-  {
     "year": 2017,
     "item": {
       "Flight": [1,"fas fa-plane"],

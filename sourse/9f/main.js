@@ -2,7 +2,7 @@
 var vm = new Vue({
   el: '#app',
   data:{
-    year: 'test',
+    year: '2017',
     winner: '',
     item: {},
     resultList: {},
