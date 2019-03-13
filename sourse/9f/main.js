@@ -64,6 +64,7 @@ var vm = new Vue({
       });
       return result;
     },
+    
   },
   methods: {
     // 亂數取值
@@ -89,9 +90,6 @@ var vm = new Vue({
         _self.resultList[_self.winner] = parseFloat(_self.resultList[_self.winner],10) + 1;
         _self.item[_self.winner][0] = parseFloat(_self.item[_self.winner][0],10) - 1
       }
-      // _self.resultList[_self.winner] = _self.resultList[_self.winner] || 0;
-      // _self.resultList[_self.winner] = parseFloat(_self.resultList[_self.winner],10) + 1;
-      // _self.item[_self.winner][0] = (_self.item[_self.winner][0] == 0) ? 0 : parseFloat(_self.item[_self.winner][0],10) - 1;
     },
     runTurn(){
       let _self = this,    
@@ -175,11 +173,18 @@ var vm = new Vue({
         <div class="items"
           v-for="(key,i) in getItem.length"
           :key="key"
-          :style="'transform: rotate('+ getAngle.angleAccu[i] +'deg);font-size:'+ Math.min(getAngle.angleItem[i]/2,30) +'px;'"
+          :style="( getAngle.angleItem[i] > 180 ) ?
+          'transform: rotate('+ getAngle.angleAccu[i] +'deg);font-size:'+ Math.min( getAngle.angleItem[i]/2,30) +'px;overflow: visible;':
+          'transform: rotate('+ getAngle.angleAccu[i] +'deg);font-size:'+ Math.min( getAngle.angleItem[i]/2,30) +'px;overflow: hidden;'"
           :class="( winner == getItem[i] )? 'is-active': ''"
         >
-          <div class="fill"
-            :style="'transform: rotate('+ (getAngle.angleItem[i] - 90) +'deg)'"
+          <div class="fill" :style="'transform: rotate('+ (getAngle.angleItem[i] - 90) +'deg)'"
+          ></div>
+          <div class="fill2"
+            v-if="( getAngle.angleItem[i] > 180)"
+            :style="( getAngle.angleItem[i] > 180 && i%2 == 0 ) ?
+            'transform: rotate('+ (getAngle.angleItem[i] - 180 - 90 + 2) +'deg)':
+            ''"
           ></div>
           
           <div class="gift"
