@@ -37,6 +37,8 @@ body, html { position: relative; width: 100%; height: 100%; font-family: "Roboto
 
 .turntable .items .fill { position: absolute; top: 0; right: 0; width: 485px; height: 242.5px; background: #343BAA; -webkit-transform-origin: 50% 100%; transform-origin: 50% 100%; -webkit-transform: rotate(-90deg); transform: rotate(-90deg); border: 0px solid #1F1172; border-width: 0 0 2px 0; }
 
+.turntable .items .fill2 { position: absolute; top: 0; right: 0; width: 485px; height: 242.5px; background: #343BAA; -webkit-transform-origin: 50% 100%; transform-origin: 50% 100%; -webkit-transform: rotate(90deg); transform: rotate(90deg); border: 0px solid #1F1172; border-width: 0 0 2px 0; }
+
 .turntable .items .gift { position: absolute; left: 0; top: 0; margin-left: -25%; width: 50%; height: 50%; text-align: center; -webkit-transform-origin: 50% 100%; transform-origin: 50% 100%; }
 
 .turntable .items .gift-block { margin-top: 30px; }

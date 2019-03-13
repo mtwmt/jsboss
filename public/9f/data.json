@@ -1,5 +1,11 @@
 [
   {
+    "year": "test",
+    "item": {
+      "Flight": [1,"fas fa-plane"]
+    }
+  },
+  {
     "year": 2017,
     "item": {
       "Flight": [1,"fas fa-plane"],

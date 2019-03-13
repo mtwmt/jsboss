@@ -149,6 +149,18 @@ body,html{
       border:0px solid #1F1172;
       border-width: 0 0 2px 0;
     }
+    .fill2{
+      position:absolute;
+      top:0;
+      right:0; 
+      width: 485px;
+      height: (485/2)+px;
+      background: #343BAA;
+      transform-origin:50% 100%;
+      transform:rotate(90deg);
+      border:0px solid #1F1172;
+      border-width: 0 0 2px 0;
+    }
     .gift{
       position: absolute;
       left:0;

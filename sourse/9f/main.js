@@ -2,7 +2,7 @@
 var vm = new Vue({
   el: '#app',
   data:{
-    year: '2017',
+    year: 'test',
     winner: '',
     item: {},
     resultList: {},
@@ -159,6 +159,7 @@ var vm = new Vue({
       <div class="btn">
         <input type="button" value="2017" @click="setYear('2017')">
         <input type="button" value="2018" @click="setYear('2018')">
+        <input type="button" value="test" @click="setYear('test')">
       </div>
       <div class="getResult" v-if="resultList">
         已抽出獎項
@@ -180,6 +181,7 @@ var vm = new Vue({
           <div class="fill"
             :style="'transform: rotate('+ (getAngle.angleItem[i] - 90) +'deg)'"
           ></div>
+          
           <div class="gift"
             :style="'transform: rotate('+ getAngle.angleItem[i]/2 +'deg)'"
           ><div class="gift-block">
