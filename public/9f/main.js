@@ -3,7 +3,7 @@
 var vm = new Vue({
   el: '#app',
   data: {
-    year: '2017',
+    year: '2018',
     winner: '',
     item: {},
     resultList: {},
@@ -27,9 +27,10 @@ var vm = new Vue({
       _self.getItem.map(function (e) {
         cnt += _self.item[e][0];
         angleTemp.push(_self.item[e][0]);
-      });
+      }); // angle = Math.round(360 / cnt);
 
-      angle = Math.round(360 / cnt);
+
+      angle = 360 / cnt;
       angleTemp.map(function (e, i) {
         e = e * angle; // 陣列累加
         // angleItem[0] = 0;
@@ -78,13 +79,13 @@ var vm = new Vue({
         if (obj > getAngle[i] && obj <= getAngle[i + 1]) {
           _self.winner = _self.getItem[i];
 
-          if (_self.item[_self.getItem[i]][0] == 0) {
+          if (!_self.item[_self.getItem[i]][0]) {
             _self.press();
           }
         }
       });
 
-      if (parseFloat(_self.item[_self.winner][0], 10) > 0) {
+      if (parseFloat(_self.item[_self.winner][0], 10) > 0 && _self.winner) {
         _self.resultList[_self.winner] = _self.resultList[_self.winner] || 0;
         _self.resultList[_self.winner] = parseFloat(_self.resultList[_self.winner], 10) + 1;
         _self.item[_self.winner][0] = parseFloat(_self.item[_self.winner][0], 10) - 1;
@@ -123,8 +124,9 @@ var vm = new Vue({
       if (_self.run) return;
       _self.run = true;
       _self.deg = 0; // _self.item = _self.getResult;
+      // _self.stopdeg = _self.getRandom(3241,3599);
 
-      _self.stopdeg = _self.getRandom(3241, 3599);
+      _self.stopdeg = _self.getRandom(1, 359);
 
       _self.getItem.map(function (e) {
         if (_self.item[e][0] > 0) {
@@ -156,6 +158,6 @@ var vm = new Vue({
       });
     }
   },
-  template: "\n  <div class=\"main\">\n    <div class=\"infoset\">\n      <div class=\"btn\">\n        <input type=\"button\" value=\"2017\" @click=\"setYear('2017')\">\n        <input type=\"button\" value=\"2018\" @click=\"setYear('2018')\">\n      </div>\n      <div class=\"getResult\" v-if=\"resultList\">\n        \u5DF2\u62BD\u51FA\u734E\u9805\n        <ul>\n          <li v-for=\"(key,i) in resultList\"\n          >{{ i }}:{{ resultList[i] }}</li>\n        </ul>\n      </div>\n    </div>\n    <div class=\"turntable\">\n      <div class=\"item\"\n      >\n        <div class=\"items\"\n          v-for=\"(key,i) in getItem.length\"\n          :key=\"key\"\n          :style=\"( getAngle.angleItem[i] > 180 ) ?\n          'transform: rotate('+ getAngle.angleAccu[i] +'deg);font-size:'+ Math.min( getAngle.angleItem[i]/2,30) +'px;overflow: visible;':\n          'transform: rotate('+ getAngle.angleAccu[i] +'deg);font-size:'+ Math.min( getAngle.angleItem[i]/2,30) +'px;overflow: hidden;'\"\n          :class=\"( winner == getItem[i] )? 'is-active': ''\"\n        >\n          <div class=\"fill\" :style=\"'transform: rotate('+ (getAngle.angleItem[i] - 90) +'deg)'\"\n          ></div>\n          <div class=\"fill2\"\n            v-if=\"( getAngle.angleItem[i] > 180)\"\n            :style=\"( getAngle.angleItem[i] > 180 && i%2 == 0 ) ?\n            'transform: rotate('+ (getAngle.angleItem[i] - 180 - 90 + 2) +'deg)':\n            ''\"\n          ></div>\n          \n          <div class=\"gift\"\n            :style=\"'transform: rotate('+ getAngle.angleItem[i]/2 +'deg)'\"\n          ><div class=\"gift-block\">\n            <i v-if=\"item[getItem[i]][1]\" \n              :class=\"item[getItem[i]][1]\"></i>\n            {{ getItem[i] }}</div>\n          </div>\n        </div>\n        <div class=\"hand\"\n          :style=\"\n            'transform: translate(-50%,-69%) rotate('+ deg +'deg)'\n          \"\n        ></div>\n        <div class=\"press\"\n          @click=\"press()\"\n        >PRESS</div>\n      </div>\n    </div>\n    <div class=\"result lt\"\n      v-if=\"run !== true && winner.length > 0\"\n    >\n      <i v-for=\"i in 5\" :class=\"item[winner][1]\" :style=\"'top:'+ getRandom(0,80) +'%;left:'+ getRandom(0,60) +'%;'\"></i>\n      <div class=\"result-text\">WELL<br />DONE!</div>\n    </div>\n    <div class=\"result rt\"\n      v-if=\"run !== true && winner.length > 0\"\n    > \n    <i v-for=\"i in 5\" :class=\"item[winner][1]\" :style=\"'top:'+ getRandom(0,80) +'%;left:'+ getRandom(40,97) +'%;'\"></i>\n      <div class=\"result-text\">\n        YOU GET A FREE...\n        <p>{{ winner }}!</p>\n      </div>\n    </div>\n  </div>\n  "
+  template: "\n  <div class=\"main\">\n    <div class=\"infoset\">\n      <div class=\"btn\">\n        <input type=\"button\" value=\"2017\" @click=\"setYear('2017')\">\n        <input type=\"button\" value=\"2018\" @click=\"setYear('2018')\">\n      </div>\n      <div class=\"getResult\" v-if=\"resultList\">\n        \u5DF2\u62BD\u51FA\u734E\u9805\n        <ul>\n          <li v-for=\"(key,i) in resultList\"\n          >{{ i }}:{{ resultList[i] }}</li>\n        </ul>\n      </div>\n    </div>\n    <div class=\"turntable\">\n      <div class=\"item\"\n      >\n        <div class=\"items\"\n          v-for=\"(key,i) in getItem.length\"\n          :key=\"key\"\n          :style=\"( getAngle.angleItem[i] > 180 ) ?\n          'transform: rotate('+ getAngle.angleAccu[i] +'deg);font-size:'+ Math.min( getAngle.angleItem[i]/2,30) +'px;overflow: visible;':\n          'transform: rotate('+ getAngle.angleAccu[i] +'deg);font-size:'+ Math.min( getAngle.angleItem[i]/2,30) +'px;overflow: hidden;'\"\n          :class=\"( winner == getItem[i] )? 'is-active': ''\"\n        >\n          <div class=\"fill\" \n            :style=\"( getAngle.angleItem[i] > 180 ) ?\n            'transform: rotate('+ (getAngle.angleItem[i] - 90 + 180 - getAngle.angleItem[i] ) +'deg)':\n            'transform: rotate('+ (getAngle.angleItem[i] - 90) +'deg)'\"\n          ></div>\n          <div class=\"fill2\"\n            v-if=\"( getAngle.angleItem[i] > 180)\"\n            :style=\"( getAngle.angleItem[i] > 180 ) ?\n            'transform: rotate('+ (getAngle.angleItem[i] + 90 - 180 ) +'deg)':\n            ''\"\n          ></div>\n          \n          <div class=\"gift\"\n            :style=\"'transform: rotate('+ getAngle.angleItem[i]/2 +'deg)'\"\n          ><div class=\"gift-block\">\n            <i v-if=\"item[getItem[i]][1]\" \n              :class=\"item[getItem[i]][1]\"></i>\n            {{ getItem[i] }}</div>\n          </div>\n        </div>\n        <div class=\"hand\"\n          :style=\"\n            'transform: translate(-50%,-69%) rotate('+ deg +'deg)'\n          \"\n        ></div>\n        <div class=\"press\"\n          @click=\"press()\"\n        >PRESS</div>\n      </div>\n    </div>\n    <div class=\"result lt\"\n      v-if=\"run !== true && winner.length > 0\"\n    >\n      <i v-for=\"i in 5\" :class=\"item[winner][1]\" :style=\"'top:'+ getRandom(0,80) +'%;left:'+ getRandom(0,60) +'%;'\"></i>\n      <div class=\"result-text\">WELL<br />DONE!</div>\n    </div>\n    <div class=\"result rt\"\n      v-if=\"run !== true && winner.length > 0\"\n    > \n    <i v-for=\"i in 5\" :class=\"item[winner][1]\" :style=\"'top:'+ getRandom(0,80) +'%;left:'+ getRandom(40,97) +'%;'\"></i>\n      <div class=\"result-text\">\n        YOU GET A FREE...\n        <p>{{ winner }}!</p>\n      </div>\n    </div>\n  </div>\n  "
 }); // 物件取長度
 // console.log( Object.keys(this.item).length )

@@ -2,7 +2,7 @@
 var vm = new Vue({
   el: '#app',
   data:{
-    year: '2017',
+    year: '2018',
     winner: '',
     item: {},
     resultList: {},
@@ -28,7 +28,8 @@ var vm = new Vue({
         cnt += _self.item[e][0];
         angleTemp.push( _self.item[e][0]);
       });
-      angle = Math.round(360 / cnt);
+      // angle = Math.round(360 / cnt);
+      angle = (360 / cnt);
 
       angleTemp.map((e,i)=>{
         e = e * angle;
@@ -79,13 +80,14 @@ var vm = new Vue({
       getAngle.map( (e,i) =>{
         if( obj > getAngle[i] && obj <= getAngle[i+1] ){
           _self.winner = _self.getItem[i]; 
-          if( _self.item[_self.getItem[i]][0] == 0 ){
+          if( !_self.item[_self.getItem[i]][0] ){
             _self.press();
           }
         }
       });
 
-      if( parseFloat(_self.item[_self.winner][0],10) > 0 ){
+      
+      if( parseFloat(_self.item[_self.winner][0],10) > 0 && _self.winner ){
         _self.resultList[_self.winner] = _self.resultList[_self.winner] || 0;
         _self.resultList[_self.winner] = parseFloat(_self.resultList[_self.winner],10) + 1;
         _self.item[_self.winner][0] = parseFloat(_self.item[_self.winner][0],10) - 1
@@ -123,7 +125,8 @@ var vm = new Vue({
       _self.run = true;
       _self.deg = 0;
       // _self.item = _self.getResult;
-      _self.stopdeg = _self.getRandom(3241,3599);
+      // _self.stopdeg = _self.getRandom(3241,3599);
+      _self.stopdeg = _self.getRandom(1,359);
 
       _self.getItem.map( function( e ){
         if( _self.item[e][0] > 0 ){
@@ -177,12 +180,15 @@ var vm = new Vue({
           'transform: rotate('+ getAngle.angleAccu[i] +'deg);font-size:'+ Math.min( getAngle.angleItem[i]/2,30) +'px;overflow: hidden;'"
           :class="( winner == getItem[i] )? 'is-active': ''"
         >
-          <div class="fill" :style="'transform: rotate('+ (getAngle.angleItem[i] - 90) +'deg)'"
+          <div class="fill" 
+            :style="( getAngle.angleItem[i] > 180 ) ?
+            'transform: rotate('+ (getAngle.angleItem[i] - 90 + 180 - getAngle.angleItem[i] ) +'deg)':
+            'transform: rotate('+ (getAngle.angleItem[i] - 90) +'deg)'"
           ></div>
           <div class="fill2"
             v-if="( getAngle.angleItem[i] > 180)"
-            :style="( getAngle.angleItem[i] > 180 && i%2 == 0 ) ?
-            'transform: rotate('+ (getAngle.angleItem[i] - 180 - 90 + 2) +'deg)':
+            :style="( getAngle.angleItem[i] > 180 ) ?
+            'transform: rotate('+ (getAngle.angleItem[i] + 90 - 180 ) +'deg)':
             ''"
           ></div>
           
