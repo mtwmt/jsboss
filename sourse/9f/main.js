@@ -9,6 +9,7 @@ var vm = new Vue({
     deg: 0,
     run: false,
     stopdeg:'',
+    circle: '4'
   },
   watch: {
   },
@@ -95,7 +96,9 @@ var vm = new Vue({
     },
     runTurn(){
       let _self = this,    
-          t;
+          t,
+          circle = parseFloat(_self.circle);
+
       if( _self.deg >= _self.stopdeg ){
         clearTimeout(t);
         _self.run = false;
@@ -104,30 +107,39 @@ var vm = new Vue({
         _self.deg = parseFloat( _self.deg,10 ) || 0;
         t = setTimeout( _self.runTurn ,2);
 
-        if( _self.deg < 720 ){
+        if( _self.deg < 180 ){
           _self.deg += 10;
-        }else if( _self.deg < 1800 ){
+        }else if( _self.deg < (circle - 1 )* 360 ){
           _self.deg += 8;
-        }else if( _self.deg < 2520 ){
-          _self.deg += 4;
-        }else if( _self.deg < 2880 ){
-          _self.deg += 2;
         }else{
-          _self.deg += 1;
+          _self.deg += 2;
         }
+      
+        // if( _self.deg < 720 ){
+        //   _self.deg += 10;
+        // }else if( _self.deg < 1800 ){
+        //   _self.deg += 8;
+        // }else if( _self.deg < 2520 ){
+        //   _self.deg += 4;
+        // }else if( _self.deg < 2880 ){
+        //   _self.deg += 2;
+        // }else{
+        //   _self.deg += 1;
+        // }
       }
     },
     press(){
       let _self = this,
-          cnt = cnt || 0;
+          cnt = cnt || 0,
+          circle = parseFloat(_self.circle);
+
       _self.winner = '';
       if(_self.run) return;
       _self.run = true;
       _self.deg = 0;
       // _self.item = _self.getResult;
-      _self.stopdeg = _self.getRandom(3241,3599);
-      // _self.stopdeg = _self.getRandom(1,359);
 
+      _self.stopdeg = _self.getRandom( (circle - 1 )* 360 + 1, (circle * 360) - 1 );
       _self.getItem.map( function( e ){
         if( _self.item[e][0] > 0 ){
           cnt += 1;
@@ -170,9 +182,9 @@ var vm = new Vue({
       </div>
     </div>
     <div class="turntable">
-      <div class="item"
+      <div class="items"
       >
-        <div class="items"
+        <div class="item"
           v-for="(key,i) in getItem.length"
           :key="key"
           :style="( getAngle.angleItem[i] > 180 ) ?

@@ -106,7 +106,7 @@ body,html{
   background-position: center;
   background-size: contain;
   flex: 0 0 auto;
-  .item{
+  .items{
     position: relative;
     // transform: rotate(28deg);
     transform-origin: 50% 50%;
@@ -126,7 +126,7 @@ body,html{
       z-index: 0;
     }
   }
-  .items{
+  .item{
     position: absolute;
     z-index: 1;
     top:28px;
@@ -147,7 +147,7 @@ body,html{
       background: #343BAA;
       transform-origin:50% 100%;
       transform:rotate(-90deg);
-      // border:0px solid #1F1172;
+      border:0px solid #1F1172;
       border-width: 0 0 2px 0;
       border-radius: 485px 485px 0 0;
     }
@@ -160,22 +160,20 @@ body,html{
       // background: #ffc;
       transform-origin:50% 100%;
       transform:rotate(90deg);
-      // border:0px solid #1F1172;
-      // border-width: 0 0 2px 0;
+      border:0px solid #1F1172;
+      border-width: 0 0 2px 0;
       border-radius: 485px 485px 0 0;
+      &:before{
+        content: '';
+        position: absolute;
+        top: 121px;
+        left: 121px;
+        width: 3px;
+        height: (485/2)+px;
+        background: #FF00BA;
+        transform: rotate(90deg);
+      }
     }
-    // .fill2{
-    //   position:absolute;
-    //   top:0;
-    //   right:0; 
-    //   width: 485px;
-    //   height: (485/2)+px;
-    //   background: #343BAA;
-    //   transform-origin:50% 100%;
-    //   transform:rotate(90deg);
-    //   border:0px solid #1F1172;
-    //   border-width: 0 0 2px 0;
-    // }
     .gift{
       position: absolute;
       left:0;
@@ -193,16 +191,16 @@ body,html{
       }
     }
     &:nth-child(odd){
-      .fill,.fill2{ background: #343BAA; }
+      .fill,.fill2,.fill2::before{ background: #343BAA; }
       
       .gift{ color: #F0BEFF;}
     }
     &:nth-child(even){
-      .fill,.fill2{ background: #F0BEFF; }
+      .fill,.fill2,.fill2::before{ background: #F0BEFF; }
       .gift{ color: #343BAA;}
     }
     &.is-active{
-      .fill,.fill2{ background: #FF00BA; }
+      .fill,.fill2,.fill2::before{ background: #FF00BA; }
       .gift{ color: #fff;}
     }
   }

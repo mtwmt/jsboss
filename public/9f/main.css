@@ -29,33 +29,35 @@ body, html { position: relative; width: 100%; height: 100%; font-family: "Roboto
 
 .turntable { position: relative; z-index: 1; width: 540px; height: 540px; background-image: url("img/wheel-outside.svg"); background-repeat: no-repeat; background-position: center; background-size: contain; flex: 0 0 auto; }
 
-.turntable .item { position: relative; -webkit-transform-origin: 50% 50%; transform-origin: 50% 50%; width: 100%; height: 100%; border-radius: 100%; }
+.turntable .items { position: relative; -webkit-transform-origin: 50% 50%; transform-origin: 50% 50%; width: 100%; height: 100%; border-radius: 100%; }
 
-.turntable .item:after { position: absolute; content: ''; width: 90%; height: 90%; top: 5%; left: 5%; background: #343BAA; border-radius: 100%; z-index: 0; }
+.turntable .items:after { position: absolute; content: ''; width: 90%; height: 90%; top: 5%; left: 5%; background: #343BAA; border-radius: 100%; z-index: 0; }
 
-.turntable .items { position: absolute; z-index: 1; top: 28px; right: 28px; width: 242.5px; height: 485px; border-radius: 0 242.5px 242.5px 0; overflow: hidden; -webkit-transform-origin: 0% 50%; transform-origin: 0% 50%; }
+.turntable .item { position: absolute; z-index: 1; top: 28px; right: 28px; width: 242.5px; height: 485px; border-radius: 0 242.5px 242.5px 0; overflow: hidden; -webkit-transform-origin: 0% 50%; transform-origin: 0% 50%; }
 
-.turntable .items .fill { position: absolute; top: 0; right: 0; width: 485px; height: 242.5px; background: #343BAA; -webkit-transform-origin: 50% 100%; transform-origin: 50% 100%; -webkit-transform: rotate(-90deg); transform: rotate(-90deg); border-width: 0 0 2px 0; border-radius: 485px 485px 0 0; }
+.turntable .item .fill { position: absolute; top: 0; right: 0; width: 485px; height: 242.5px; background: #343BAA; -webkit-transform-origin: 50% 100%; transform-origin: 50% 100%; -webkit-transform: rotate(-90deg); transform: rotate(-90deg); border: 0px solid #1F1172; border-width: 0 0 2px 0; border-radius: 485px 485px 0 0; }
 
-.turntable .items .fill2 { position: absolute; top: 0; right: 0; width: 485px; height: 242.5px; -webkit-transform-origin: 50% 100%; transform-origin: 50% 100%; -webkit-transform: rotate(90deg); transform: rotate(90deg); border-radius: 485px 485px 0 0; }
+.turntable .item .fill2 { position: absolute; top: 0; right: 0; width: 485px; height: 242.5px; -webkit-transform-origin: 50% 100%; transform-origin: 50% 100%; -webkit-transform: rotate(90deg); transform: rotate(90deg); border: 0px solid #1F1172; border-width: 0 0 2px 0; border-radius: 485px 485px 0 0; }
 
-.turntable .items .gift { position: absolute; left: 0; top: 0; margin-left: -25%; width: 50%; height: 50%; text-align: center; -webkit-transform-origin: 50% 100%; transform-origin: 50% 100%; }
+.turntable .item .fill2:before { content: ''; position: absolute; top: 121px; left: 121px; width: 3px; height: 242.5px; background: #FF00BA; -webkit-transform: rotate(90deg); transform: rotate(90deg); }
 
-.turntable .items .gift-block { margin-top: 30px; }
+.turntable .item .gift { position: absolute; left: 0; top: 0; margin-left: -25%; width: 50%; height: 50%; text-align: center; -webkit-transform-origin: 50% 100%; transform-origin: 50% 100%; }
 
-.turntable .items .gift .gift-block i { display: block; }
+.turntable .item .gift-block { margin-top: 30px; }
 
-.turntable .items:nth-child(odd) .fill, .turntable .items:nth-child(odd) .fill2 { background: #343BAA; }
+.turntable .item .gift .gift-block i { display: block; }
 
-.turntable .items:nth-child(odd) .gift { color: #F0BEFF; }
+.turntable .item:nth-child(odd) .fill, .turntable .item:nth-child(odd) .fill2, .turntable .item:nth-child(odd) .fill2::before { background: #343BAA; }
 
-.turntable .items:nth-child(even) .fill, .turntable .items:nth-child(even) .fill2 { background: #F0BEFF; }
+.turntable .item:nth-child(odd) .gift { color: #F0BEFF; }
 
-.turntable .items:nth-child(even) .gift { color: #343BAA; }
+.turntable .item:nth-child(even) .fill, .turntable .item:nth-child(even) .fill2, .turntable .item:nth-child(even) .fill2::before { background: #F0BEFF; }
 
-.turntable .items.is-active .fill, .turntable .items.is-active .fill2 { background: #FF00BA; }
+.turntable .item:nth-child(even) .gift { color: #343BAA; }
 
-.turntable .items.is-active .gift { color: #fff; }
+.turntable .item.is-active .fill, .turntable .item.is-active .fill2, .turntable .item.is-active .fill2::before { background: #FF00BA; }
+
+.turntable .item.is-active .gift { color: #fff; }
 
 .turntable .hand { position: absolute; z-index: 99; top: 50%; left: 50%; -webkit-transform: translate(-50%, -69%) rotate(0deg); transform: translate(-50%, -69%) rotate(0deg); width: 128px; height: 208px; background-image: url("img/hand.svg"); background-repeat: no-repeat; background-position: center; background-size: contain; -webkit-transform-origin: 50% 69%; transform-origin: 50% 69%; }
 
