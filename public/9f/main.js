@@ -124,8 +124,9 @@ var vm = new Vue({
       if (_self.run) return;
       _self.run = true;
       _self.deg = 0; // _self.item = _self.getResult;
+      // _self.stopdeg = _self.getRandom(3241,3599);
 
-      _self.stopdeg = _self.getRandom(3241, 3599); // _self.stopdeg = _self.getRandom(1,359);
+      _self.stopdeg = _self.getRandom(1, 359);
 
       _self.getItem.map(function (e) {
         if (_self.item[e][0] > 0) {
