@@ -1,0 +1,82 @@
+@mixin checkbox-switch($w, $h, $border_w, $bg_default, $bg_cover) {
+  position: relative;
+  width: $w;
+  height: $h;
+  input[type='checkbox'] {
+    opacity: 0;
+    & ~ label {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: $bg_default;
+      border-radius: $h;
+      cursor: pointer;
+      transition: all 0.3s;
+      &:after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0px;
+        width: $h - $border_w * 2;
+        height: $h - $border_w * 2;
+        border-radius: 50%;
+        border: $border_w solid $bg_default;
+        background-color: #fff;
+        transition: all 0.3s;
+      }
+    }
+    &:checked ~ label {
+      background: $bg_cover;
+      &:after {
+        left: $w - $h;
+        border-color: $bg_cover;
+        background-color: #000;
+      }
+    }
+  }
+}
+
+
+*{
+  box-sizing: border-box;
+}
+
+.main{
+  font-family: "Roboto Condensed","微軟正黑體", Arial, sans-serif;
+  width: 320px;
+  padding: 0 20px;
+  &.dark{
+    background: #000;
+    color: #fff;
+  }
+  .main-block{
+    padding: 20px 0;
+    font-size: 24px;
+    font-weight: bold;
+    border-bottom: 1px solid #ccc;
+    &:last-child{
+      border:0;
+    }
+    .col{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      span{ font-size: 16px; }
+    }
+  }
+  .add{
+    margin-top: 20px;
+    width: 100%;
+    line-height: 56px;
+    background: #000;
+    color: #fff;
+    text-align: center;
+    cursor: pointer;
+  }
+}
+
+[data='checkbox-switch'] {
+  @include checkbox-switch(60px, 28px, 2px, #EDEDED, #575757);
+}
