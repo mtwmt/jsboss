@@ -3,15 +3,25 @@
   "name": "幹話產生器",
   "description": "JS地下城 10F-Chrome 應用程式 (幹話產生器)",
   "version": "1.0",
-  // "browser_action": {
-  //   "default_title": "Mandy's sideProject",
+  "icons": {
+    "128": "extention-icon-128px.png",
+    "256": "extention-icon-128px@2x.png"
+  },
+  "browser_action": {
+    "default_title": "Mandy's Project",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "128": "extention-icon-128px.png",
+      "256": "extention-icon-128px@2x.png"
+    }
+  },
+  // "page_action": {
+  //   "default_title": "Mandy's QQ",
   //   "default_icon": "icon.png",
   //   "default_popup": "popup.html"
   // },
-  "page_action": {
-    "default_title": "Mandy's QQ",
-    "default_icon": "icon.png",
-    "default_popup": "popup.html"
+  "chrome_url_overrides": {
+    "newtab": "page.html"
   },
   "content_scripts": [
     {

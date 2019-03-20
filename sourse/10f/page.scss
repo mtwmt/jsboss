@@ -1,0 +1,235 @@
+@import "mixin";
+
+*{
+  box-sizing: border-box;
+}
+
+html,body{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  font-family: "Roboto Condensed","微軟正黑體", Arial, sans-serif;
+  overflow: hidden;
+}
+
+.main{
+  &.is-active{
+    .container{
+      transform: translateX(-30%);
+      .layer{
+        .blank{
+          position: relative;
+          width: 100%;
+          height: 100%;
+          background: rgba(#000,0.5);
+        }
+      }
+    }
+    .sidebar{
+      transform: translateX(0%);
+    }
+    .control{
+      .quote{
+        .quote-text{ display: none; }
+        .quote-add{ display: block; }
+      }
+    }
+  }
+  position: relative;
+  width: 100%;
+  height: 100%;
+  .icon{
+    font-size: 40px;
+    cursor: pointer;
+  }
+  .control{
+    position: relative;
+    z-index: 99;
+    .icon{
+      position: fixed;
+      top: 50px;
+      right: 90px;
+      color: #fff;
+    }
+    .quote{
+      position: fixed;
+      bottom: 30%;
+      left: 10%;
+      width: 50%;
+      font-size: 56px;
+      font-weight: bold;
+      line-height: 1.2;
+      .quote-text{
+        display: block;
+        i{
+          position: relative;
+          display: inline-block;
+          font-size: 160px;
+          line-height: 160px;
+          left: 0;
+        }
+        div{
+          transition: 0.3s;
+          display: inline-block;
+          background: #fff;
+        }
+        
+      }
+      .quote-add{
+        display: none;
+        position: relative;
+        .tit{ color: #fff; }
+        input[type='text']{
+          border: 0;
+          background: transparent;
+          border-bottom: 1px solid #fff;
+          font-size: 24px;
+          color: #fff;
+          width: 100%;
+          line-height: 2.5;
+          &:focus { outline: 0; }
+        }
+        button{
+          &:focus { outline: 0; }
+          position: absolute;
+          right: 0;
+          bottom: 0;
+          border: 0;
+          font-size: 48px;
+          color: #fff;
+          background: none;
+        }
+      }
+    }
+    [data='checkbox-switch']{
+      position: fixed;
+      bottom: 30px;
+      right: 90px;
+    }
+  }
+  .container{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform: translateX(0%);
+    transition: .3s;
+    .layer{
+      transition: 0.3s;
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      
+      .bg{
+        position: absolute;
+        left: 30%;
+        top: 0;
+        width: 70%;
+        height: 100%;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+    }
+  }
+  .sidebar{
+    position: absolute;
+    top:0;
+    right: 0;
+    padding: 40px 2%;
+    width: 30%;
+    height: 100%;
+    transition: .3s;
+    transform: translateX(100%);
+    z-index: 999;
+    .col{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .sidebar-block{
+      margin-top: 20px;
+      padding-left: 40px;
+      font-size: 24px;
+      font-weight: bold;
+      line-height: 2.5;
+      p{
+        text-align: right;
+        a{
+          display: inline-block;
+          font-size: 16px;
+          
+          color: #000;
+          text-decoration: none;
+        }
+      }
+    }
+    ul{
+      li{
+        display: flex;
+        justify-content: space-between;
+        padding: 13px 0;
+        line-height: 1.5;
+        font-size: 16px;
+        border-top: 1px solid #000;
+        .fn{
+          display: inline-block;
+          white-space:nowrap;
+        }
+        i{
+          margin-left: 20px;
+        }
+        &:last-child{
+          border-bottom: 1px solid #000;
+        }
+      }
+    }
+  }
+  &.dark{
+    .control{
+      .quote{
+        color: #fff;
+        .quote-add{
+          color: #000;
+          .tit,input[type='text']{
+            color: #000;
+          }
+        }
+        .quote-text{
+          div{
+            background: #000;
+          }
+        }
+      }
+    }
+    .container{
+      .layer{
+        background: #000;
+        .blank{
+          background: rgba(#fff,0.5)
+        }
+      }
+    }
+    
+    .sidebar{
+      color: #fff;
+      background: #000;
+      
+      ul li{
+        &:last-child{
+          border-color: #fff;  
+        }
+        border-color: #fff;
+      }
+      .more{
+        color: #fff;
+      }
+    }
+  }
+}
+
+
+
+[data='checkbox-switch'] {
+  @include checkbox-switch(60px, 28px, 2px, #EDEDED, #575757);
+}
