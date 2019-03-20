@@ -30,6 +30,7 @@ html,body{
     }
     .control{
       .quote{
+        left: 10%;
         .quote-text{ display: none; }
         .quote-add{ display: block; }
       }
@@ -54,24 +55,27 @@ html,body{
     .quote{
       position: fixed;
       bottom: 30%;
-      left: 10%;
+      left: 13%;
       width: 50%;
       font-size: 56px;
       font-weight: bold;
       line-height: 1.2;
+      font-family: 'Open Sans';
+      font-style: italic;
       .quote-text{
         display: block;
-        i{
-          position: relative;
-          display: inline-block;
-          font-size: 160px;
-          line-height: 160px;
-          left: 0;
-        }
-        div{
+        p{
           transition: 0.3s;
           display: inline-block;
           background: #fff;
+          &:before{
+            position: absolute;
+            top: -160px;
+            left: -100px;
+            content: '“';
+            font-size: 160px;
+            line-height: 160px;
+          }
         }
         
       }
@@ -196,7 +200,7 @@ html,body{
           }
         }
         .quote-text{
-          div{
+          p{
             background: #000;
           }
         }

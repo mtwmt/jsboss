@@ -11,6 +11,8 @@ html, body { position: relative; width: 100%; height: 100%; font-family: "Roboto
 
 .main.is-active .sidebar { -webkit-transform: translateX(0%); transform: translateX(0%); }
 
+.main.is-active .control .quote { left: 10%; }
+
 .main.is-active .control .quote .quote-text { display: none; }
 
 .main.is-active .control .quote .quote-add { display: block; }
@@ -21,13 +23,13 @@ html, body { position: relative; width: 100%; height: 100%; font-family: "Roboto
 
 .main .control .icon { position: fixed; top: 50px; right: 90px; color: #fff; }
 
-.main .control .quote { position: fixed; bottom: 30%; left: 10%; width: 50%; font-size: 56px; font-weight: bold; line-height: 1.2; }
+.main .control .quote { position: fixed; bottom: 30%; left: 13%; width: 50%; font-size: 56px; font-weight: bold; line-height: 1.2; font-family: 'Open Sans'; font-style: italic; }
 
 .main .control .quote .quote-text { display: block; }
 
-.main .control .quote .quote-text i { position: relative; display: inline-block; font-size: 160px; line-height: 160px; left: 0; }
+.main .control .quote .quote-text p { transition: 0.3s; display: inline-block; background: #fff; }
 
-.main .control .quote .quote-text div { transition: 0.3s; display: inline-block; background: #fff; }
+.main .control .quote .quote-text p:before { position: absolute; top: -160px; left: -100px; content: '“'; font-size: 160px; line-height: 160px; }
 
 .main .control .quote .quote-add { display: none; position: relative; }
 
@@ -73,7 +75,7 @@ html, body { position: relative; width: 100%; height: 100%; font-family: "Roboto
 
 .main.dark .control .quote .quote-add .tit, .main.dark .control .quote .quote-add input[type='text'] { color: #000; }
 
-.main.dark .control .quote .quote-text div { background: #000; }
+.main.dark .control .quote .quote-text p { background: #000; }
 
 .main.dark .container .layer { background: #000; }
 

@@ -21,7 +21,7 @@
   //   "default_popup": "popup.html"
   // },
   "chrome_url_overrides": {
-    "newtab": "page.html"
+    "newtab": "newtab/index.html"
   },
   "content_scripts": [
     {
@@ -34,7 +34,7 @@
     "scripts": ["event.js"],
     "persistent": false
   },
-  "permissions" : ["activeTab","tabs"]
+  "permissions" : ["storage","activeTab","tabs"]
 }
 
 

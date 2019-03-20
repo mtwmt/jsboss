@@ -34,8 +34,7 @@ var vm = new Vue({
       </div>
       <div class="quote">
         <div class="quote-text">
-          <i>“</i>
-          <div>跟你講電話的那個晚上，<br />我聽見了你的聲音。</div>
+          <p>跟你講電話的那個晚上，我聽見了你的聲音。</p>
         </div>
         <div class="quote-add">
           <div class="tit">“新增語錄”</div>
