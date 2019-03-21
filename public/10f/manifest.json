@@ -15,11 +15,6 @@
       "256": "extention-icon-128px@2x.png"
     }
   },
-  // "page_action": {
-  //   "default_title": "Mandy's QQ",
-  //   "default_icon": "icon.png",
-  //   "default_popup": "popup.html"
-  // },
   "chrome_url_overrides": {
     "newtab": "newtab/index.html"
   },
