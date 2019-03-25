@@ -1,0 +1,28 @@
+{
+  "manifest_version": 2,
+  "name": "幹話產生器",
+  "description": "JS地下城 10F-Chrome 應用程式 (幹話產生器)",
+  "version": "1.0",
+  "icons": {
+    "128": "assets/icons/128.png",
+    "256": "assets/icons/256.png"
+  },
+  "browser_action": {
+    "default_title": "Mandy's Project",
+    "default_popup": "./popup.html",
+    "default_icon": {
+      "128": "assets/icons/128.png",
+      "256": "assets/icons/256.png"
+    }
+  },
+  "chrome_url_overrides": {
+    "newtab": "./newtab.html"
+  },
+  "background": {
+    "scripts": ["event.js"],
+    "persistent": false
+  },
+  "permissions" : ["storage","activeTab","tabs"]
+}
+
+
