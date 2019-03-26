@@ -39,19 +39,12 @@ const config = {
       },
       {
         test: /\.scss$/,
-        use: [isDevMode ? 'vue-style-loader' : MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+        // use: [isDevMode ? 'vue-style-loader' : MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+        use: ['vue-style-loader', 'css-loader', 'sass-loader'],
       },
-      // {
-      //   test: /\.sass$/,
-      //   use: [isDevMode ? 'vue-style-loader' : MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader?indentedSyntax'],
-      // },
-      // {
-      //   test: /\.styl$/,
-      //   use: [isDevMode ? 'vue-style-loader' : MiniCssExtractPlugin.loader, 'css-loader', 'stylus-loader'],
-      // },
       {
         test: /\.css$/,
-        use: [isDevMode ? 'vue-style-loader' : MiniCssExtractPlugin.loader, 'css-loader'],
+        use: ['vue-style-loader', 'css-loader'],
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
@@ -65,9 +58,7 @@ const config = {
   resolve: {
     alias: {
       vue$: 'vue/dist/vue.runtime.esm.js',
-      // bulma$: 'bulma/css/bulma.css',
     },
-    // extensions: ['.js'],
   },
   plugins: [
     new VueLoaderPlugin(),
@@ -91,17 +82,20 @@ const config = {
   ],
 };
 
-config.plugins.push(
-  new webpack.HotModuleReplacementPlugin(),
-  new ChromeExtensionReloader({
-    entries: {
-      background: 'background',
-      // options: 'options',
-      popup: 'popup',
-      newtab: 'newtab'
-      // contentScripts: 'contentScripts/index',
-    },
-  })
-);
+if (isDevMode) {
+  config.plugins.push(
+    new webpack.HotModuleReplacementPlugin(),
+    new ChromeExtensionReloader({
+      entries: {
+        background: 'background',
+        popup: 'popup',
+        newtab: 'newtab',
+        // contentScripts: 'contentScripts/index',
+      },
+    })
+  );
+} else {
+  console.log('GG');
+}
 
 module.exports = config;

@@ -19,10 +19,11 @@
     "newtab": "./newtab.html"
   },
   "background": {
-    "scripts": ["event.js"],
+    "scripts": ["./background.js"],
     "persistent": false
   },
-  "permissions" : ["storage","activeTab","tabs"]
+  "permissions" : ["storage","activeTab","tabs"],
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }
 
 
