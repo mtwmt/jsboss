@@ -1,12 +1,15 @@
 const path = require('path');
 const webpack = require('webpack');
-
+const fg = require('fast-glob')
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ChromeExtensionReloader = require('webpack-chrome-extension-reloader');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const PurgecssPlugin = require('purgecss-webpack-plugin');
+
 
 const isDevMode = process.env.NODE_ENV === 'development';
 
@@ -82,6 +85,7 @@ const config = {
   ],
 };
 
+
 if (isDevMode) {
   config.plugins.push(
     new webpack.HotModuleReplacementPlugin(),
@@ -95,7 +99,27 @@ if (isDevMode) {
     })
   );
 } else {
-  console.log('GG');
+  config.plugins.push(
+    new ScriptExtHtmlWebpackPlugin({
+      async: [/runtime/],
+      defaultAttribute: 'defer',
+    }),
+    new MiniCssExtractPlugin({
+      filename: '[name].css',
+    }),
+    new PurgecssPlugin({
+      paths: fg.sync([`./src/**/*`], {
+        onlyFiles: true,
+        absolute: true,
+      }),
+    }),
+    new CopyWebpackPlugin([
+      {
+        from: path.join(__dirname, '../src/data'),
+        to: path.join(__dirname, '../dist/data'),
+      },
+    ])
+  )
 }
 
 module.exports = config;
