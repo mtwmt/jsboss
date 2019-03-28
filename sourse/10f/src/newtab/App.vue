@@ -21,8 +21,8 @@
           <div v-else>
             <textarea type="text" v-model="quote[0].text"></textarea>
             <div class="btns">
-              <button class="btn-save" @click="isPageEdit">SVAE</button>
-              <button class="btn-cancle" @click="isCancle()">CANCLE</button>
+              <button class="btn-save" @click="isPageEdit">儲存</button>
+              <button class="btn-cancle" @click="isCancle()">取消</button>
             </div>
           </div>
         </div>
@@ -68,76 +68,109 @@
 import { mapState, mapMutations  } from "vuex";
 export default {
   name: "app",
-  // data() {
-  //   return {
-  //     edit: false,
-  //     dark: false,
-  //     pagequote: false,
-  //     addquote: "",
-  //     quote: [{ text: "路 就是一條直直的", edit: false }]
-  //   };
-  // },
+  data(){
+    return{
+      dark: false,
+      pagequote: false,
+      addquote: ""
+    }
+  },
+  watch: {
+    dark(){
+      let _self = this;
+      console.log( 'set', _self.dark );
+      chrome.storage.sync.set( {dark: _self.dark},function(){} );
+      chrome.storage.onChanged.addListener( (data,type) => {
+        console.log( 'newtab',data,type )
+      });
+    }
+  },
   computed: {
-    ...mapState(["edit","dark","pagequote","addquote","quote"]),
-    
+    ...mapState(["edit","quote"]),
+    // dark: {
+    //   get(){
+    //     console.log( 'get', this.dark );
+    //     return this.dark;
+    //   },
+    //   set( val ){
+    //     console.log( 'set', this.dark ,'val',val);
+    //   }
+    // }
+    // dark:{
+    //   get(){
+    //     chrome.storage.sync.get(function(data) {
+    //       return data.dark;
+    //     })
+    //   },
+    //   set( val ){
+    //     let _self = this;    
+    //     // this.$store.commit('updateDark', val);
+    //     chrome.storage.sync.set( {dark: val},function(){} );
+
+    //     chrome.storage.onChanged.addListener( (data,type) => {
+    //       _self.dark = data.dark.newValue;
+    //       console.log( 'newtab',data,type )
+    //     });
+    //   }
+    // },
+    // dark:{
+    //   get(){
+    //     return this.$store.state.dark
+    //   },
+    //   set( val ){
+    //     this.$store.commit('updateDark', val);
+
+    //     chrome.storage.sync.set( {dark: val},function(){} );
+    //     chrome.storage.onChanged.addListener( (data,type) => {
+    //       console.log( 'newtab',data,type )
+    //     });
+    //   }
+    // },
   },
   created() {
     let _self = this;
 
-    console.log( this.quote[0].text );
-  
+    chrome.storage.sync.get(function(data) {
+      if (!data.quote) {
+        _self.setQuote( {quote: _self.quote} );
+      }else{
+        _self.$store.commit('updateQuote',data.quote );
+      }
 
-    // chrome.storage.sync.get(function(items) {
-    //   if (!items.quote) {
-    //     _self.setQuote( {quote: _self.quote} );
-    //     // chrome.storage.sync.set({ quote: _self.quote },{ dark: false }, function() {
-    //     //   console.log("created add success", items);
-    //     // });
-    //   } else {
-    //     // _self.quote = items.quote;
-
-    //     // this.$store.commit('updateQuote',items.quote);
-    //   }
-    // });
+      if( !data.dark ){
+        chrome.storage.sync.set( {dark: _self.dark},function(){} );
+      }else{
+        _self.$store.commit('updateDark',data.dark );
+      }
+    });
   },
   methods: {
     setQuote( obj,callback ){
       let _self = this;
       chrome.storage.sync.get(function( data ) {
-        
         chrome.storage.sync.set( obj , callback);
       });
       chrome.storage.onChanged.addListener( (data,type) => {
-        _self.quote = data.quote.newValue;
+        _self.$store.commit('updateQuote',data.quote.newValue )
+        console.log( 'onchange',data,type )
       });
     },
-    // setQuote( obj ){
-    //   chrome.storage.sync.set( obj , function() {
-    //     console.log( 'setQuote' );
-    //   });
-    // },
     isActive() {
-      this.edit = !this.edit;
+      // this.edit = !this.edit;
+      if( this.edit ){
+        this.$store.commit('updateEdit',false);
+      }else{
+        this.$store.commit('updateEdit',true);
+      }
+
     },
     isAdd() {
       let _self = this;
       if (!_self.addquote) return;
-
       _self.quote.unshift({ text: _self.addquote, edit: false });
-
-      _self.setQuote( { quote: _self.quote } ,function(){
-        _self.addquote = "";
+      _self.setQuote( {quote: _self.quote },function(){
+        _self.addquote = '';
       });
-      // chrome.storage.sync.get(function(items) {
-        // chrome.storage.sync.set(
-        //   { quote: [{ text: _self.addquote, edit: false }, ...items.quote] },
-        //   function() {
-        //     _self.addquote = "";
-        //     console.log("add success", items);
-        //   }
-        // );
-        // _self.upadte;
-      // });
     },
     isPageEdit() {
       this.pagequote = !this.pagequote;
@@ -153,17 +186,9 @@ export default {
     },
     isSave() {
       var _self = this;
-      
-
-      _self.setQuote( { quote: _self.quote } );
-      
-      // chrome.storage.sync.get(function(items) {
-      //   console.log( 'save',items )
-      //    chrome.storage.sync.set( {quote: _self.quote} ,function(){
-          
-      //   }) ;
-      //   _self.upadte;
-      // });
+      _self.setQuote( { quote: _self.quote },function(){
+        console.log('isSave');
+      });
     },
     isCancle(){
       var _self = this;
@@ -251,7 +276,7 @@ body {
       font-weight: bold;
       line-height: 1.2;
       font-family: "Open Sans";
-      font-style: italic;
+      // font-style: italic;
       .quote-text {
         display: block;
         p {
@@ -260,6 +285,7 @@ body {
           top: 0;
           transition: 0.3s;
           display: inline-block;
+          padding: 10px;
           background: #fff;
           word-break: break-word;
           &:before {
@@ -269,6 +295,8 @@ body {
             content: "“";
             font-size: 160px;
             line-height: 160px;
+            color: #000;
+            -webkit-text-stroke: 1px #fff;
           }
         }
         textarea {
@@ -306,6 +334,7 @@ body {
         position: relative;
         .tit {
           color: #fff;
+
         }
         input[type="text"] {
           border: 0;
@@ -433,14 +462,18 @@ body {
   }
   &.dark {
     .control {
+      .icon{ color: #000; }
       .quote {
         color: #fff;
         .quote-add {
           color: #000;
-          .tit,
-          input[type="text"] {
+          .tit,input[type="text"] {
             color: #000;
           }
+          input[type="text"]{
+            border-bottom: 1px solid #000;
+          }
+          button{ color: #000; }
         }
         .quote-text {
           p {

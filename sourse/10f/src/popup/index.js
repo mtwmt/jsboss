@@ -1,13 +1,14 @@
 import Vue from 'vue';
 import App from './App.vue';
-
-new Vue({
-  el: '#app',
-  render: h => h(App),
-});
-
+import store from './../store';
 
 // new Vue({
-//   store,
+//   el: '#app',
 //   render: h => h(App),
-// }).$mount('#app');
+// });
+
+
+new Vue({
+  store,
+  render: h => h(App),
+}).$mount('#app');

@@ -1,4 +1,4 @@
-# js地下城
+# JS地下城
 
 - 1F-9x9 乘法表板　[觀看](https://mtwmt.github.io/jsboss/public/1f/)
 - 2F-時鐘　[觀看](https://mtwmt.github.io/jsboss/public/2f/) [心得](https://mtwmt.github.io/blog/JSBOSS/2f/)
