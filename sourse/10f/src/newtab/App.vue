@@ -17,12 +17,19 @@
       </div>
       <div class="quote">
         <div class="quote-text">
-          <p>{{ quote[0] }}</p>
+          <p @click="isPageEdit" v-if="!pagequote">{{ quote[0].text }}</p>
+          <div v-else>
+            <textarea type="text" v-model="quote[0].text"></textarea>
+            <div class="btns">
+              <button class="btn-save" @click="isPageEdit">SVAE</button>
+              <button class="btn-cancle" @click="isCancle()">CANCLE</button>
+            </div>
+          </div>
         </div>
         <div class="quote-add">
           <div class="tit">“新增語錄”</div>
           <input type="text" placeholder v-model="addquote">
-          <button @click="isSave()">+</button>
+          <button @click="isAdd()">+</button>
         </div>
       </div>
     </div>
@@ -41,8 +48,8 @@
         <label>我的語錄</label>
         <ul>
           <li v-for="(item,i) in quote" :key="i">
-            <span v-if="!slideEdit[i]">{{ item }}</span>
-            <input v-else-if="slideEdit[i]" type="text" v-model="quote[i]">
+            <span v-if="!item.edit">{{ item.text }}</span>
+            <input v-else type="text" v-model="item.text" @keyup.enter="isEdit(i)">
             <span class="fn">
               <i class="edit fas fa-pen" @click="isEdit(i)"></i>
               <i class="del fas fa-trash" @click="isDel(i)"></i>
@@ -50,7 +57,7 @@
           </li>
         </ul>
         <p>
-          <!-- <a href class="more">載入更多</a> -->
+          <a href class="more" v-if="quote.length>5" >載入更多</a>
         </p>
       </div>
     </div>
@@ -58,95 +65,122 @@
 </template>
 
 <script>
+import { mapState, mapMutations  } from "vuex";
 export default {
   name: "app",
-  data() {
-    return {
-      edit: false,
-      dark: false,
-      addquote: '',
-      slideEdit: [],
-      quote: []
-    };
-  },
+  // data() {
+  //   return {
+  //     edit: false,
+  //     dark: false,
+  //     pagequote: false,
+  //     addquote: "",
+  //     quote: [{ text: "路 就是一條直直的", edit: false }]
+  //   };
+  // },
   computed: {
-    upadte(){
-      let _self = this;
-
-      chrome.storage.onChanged.addListener(changes => {
-        return _self.quote = changes.quote.newValue;
-      });
-      chrome.storage.sync.get(function(items) {
-        console.log('update',items)
-      });
-    }
+    ...mapState(["edit","dark","pagequote","addquote","quote"]),
+    
   },
   created() {
     let _self = this;
-    chrome.storage.sync.get("quote", function(items) {
-      if( !items.quote ){
-        chrome.storage.sync.set({ quote: ['路就是一條直直的。'] }, function(items) {
-          console.log('add success');
-        });
-        _self.upadte;
-      }else{
-        _self.quote = items.quote;
-        
-        console.log('items',items.quote );
-      }
-    });
+
+    console.log( this.quote[0].text );
+  
+
+    // chrome.storage.sync.get(function(items) {
+    //   if (!items.quote) {
+    //     _self.setQuote( {quote: _self.quote} );
+    //     // chrome.storage.sync.set({ quote: _self.quote },{ dark: false }, function() {
+    //     //   console.log("created add success", items);
+    //     // });
+    //   } else {
+    //     // _self.quote = items.quote;
+
+    //     // this.$store.commit('updateQuote',items.quote);
+    //   }
+    // });
   },
   methods: {
-    isActive() {
-      if (this.edit) {
-        this.edit = false;
-      } else {
-        this.edit = true;
-      }
-    },
-    isSave(){
+    setQuote( obj,callback ){
       let _self = this;
-      if( !_self.addquote ) return;
-      chrome.storage.sync.get(function(items) {
-        chrome.storage.sync.set({ quote: [_self.addquote,...items.quote] }, function(items) {
-          console.log('add success');
-          _self.addquote = '';
-        });
-        _self.upadte;
-      });
-    },
-    isEdit(idx){
-      console.log( 'idx',idx )
-      if (this.slideEdit[idx]) {
-        this.slideEdit[idx] = false;
-      } else {
-        this.slideEdit[idx] = true;
-      }
-      // this.slideEdit[idx] = this.slideEdit[idx] || false;
-      // console.log( 'edit1',this.slideEdit[idx] )
-      // if (!this.slideEdit[idx]) {
+      chrome.storage.sync.get(function( data ) {
         
-      //   this.slideEdit[idx] = true;
-      // } else {
-      //   this.slideEdit[idx] = false;
-      // }
-      // console.log( 'edit2',this.slideEdit[idx] )
-    },
-    isDel(idx){
-      let _self = this;
-      chrome.storage.sync.get(function(items) {
-        chrome.storage.sync.set({ quote: [...items.quote.slice(0,idx),...items.quote.slice(idx + 1)] }, function(items) {
-          console.log('del success');
-        });
-        _self.upadte;
-
+        chrome.storage.sync.set( obj , callback);
+      });
+      chrome.storage.onChanged.addListener( (data,type) => {
+        _self.quote = data.quote.newValue;
       });
     },
-    
+    // setQuote( obj ){
+    //   chrome.storage.sync.set( obj , function() {
+    //     console.log( 'setQuote' );
+    //   });
+    // },
+    isActive() {
+      this.edit = !this.edit;
+    },
+    isAdd() {
+      let _self = this;
+      if (!_self.addquote) return;
+
+      _self.quote.unshift({ text: _self.addquote, edit: false });
+
+      _self.setQuote( { quote: _self.quote } ,function(){
+        _self.addquote = "";
+      });
+      // chrome.storage.sync.get(function(items) {
+        // chrome.storage.sync.set(
+        //   { quote: [{ text: _self.addquote, edit: false }, ...items.quote] },
+        //   function() {
+        //     _self.addquote = "";
+        //     console.log("add success", items);
+        //   }
+        // );
+        // _self.upadte;
+      // });
+    },
+    isPageEdit() {
+      this.pagequote = !this.pagequote;
+      if( !this.pagequote ){
+        this.isSave();
+      }
+    },
+    isEdit(idx) {
+      this.quote[idx].edit = !this.quote[idx].edit;
+      if( !this.quote[idx].edit ){
+        this.isSave();
+      }
+    },
+    isSave() {
+      var _self = this;
+      
+
+      _self.setQuote( { quote: _self.quote } );
+      
+      // chrome.storage.sync.get(function(items) {
+      //   console.log( 'save',items )
+      //    chrome.storage.sync.set( {quote: _self.quote} ,function(){
+          
+      //   }) ;
+      //   _self.upadte;
+      // });
+    },
+    isCancle(){
+      var _self = this;
+      chrome.storage.sync.get(function(items) {
+        _self.quote = items.quote;
+      });
+    },
+    isDel(idx) {
+      let _self = this;
+      _self.quote.splice(idx,1);
+      _self.setQuote( { quote: _self.quote },function(){
+        console.log( 'del',_self.quote )
+      });
+      
+    }
   }
 };
-
-
 </script>
 <style lang="scss">
 @import "../../common/scss/mixin";
@@ -210,7 +244,8 @@ body {
     .quote {
       position: fixed;
       bottom: 30%;
-      left: 13%;
+      left: 30%;
+      transform: translateX(-82px);
       width: 50%;
       font-size: 56px;
       font-weight: bold;
@@ -220,9 +255,13 @@ body {
       .quote-text {
         display: block;
         p {
+          position: relative;
+          left: -15%;
+          top: 0;
           transition: 0.3s;
           display: inline-block;
           background: #fff;
+          word-break: break-word;
           &:before {
             position: absolute;
             top: -160px;
@@ -230,6 +269,35 @@ body {
             content: "“";
             font-size: 160px;
             line-height: 160px;
+          }
+        }
+        textarea {
+          position: relative;
+          left: -15%;
+          top: 0;
+          font-size: 55px;
+          width: 100%;
+          border: 0;
+          border-bottom: 1px solid #000;
+          font-family: "微軟正黑體";
+          font-weight: bold;
+          resize: none;
+        }
+        .btns {
+          display: flex;
+          button {
+            border: 0;
+            line-height: 50px;
+            padding: 0 24px;
+            font-weight: bold;
+            &.btn-save , _self.quote[idx].text{
+              color: #fff;
+              background: #000;
+            }
+            &.btn-cancle {
+              color: #000;
+              background: #fff;
+            }
           }
         }
       }
@@ -243,6 +311,7 @@ body {
           border: 0;
           background: transparent;
           border-bottom: 1px solid #fff;
+          padding-right: 63px;
           font-size: 24px;
           color: #fff;
           width: 100%;
@@ -336,16 +405,22 @@ body {
         line-height: 1.5;
         font-size: 16px;
         border-top: 1px solid #000;
-        input[type='text']{
-          border:0;
-          font-size: 16px;
-          font-family: "Roboto Condensed";
-          font-weight: bold;
+        input[type="text"] {
+          // border:0;
+          // font-size: 16px;
+          // font-family: "Roboto Condensed";
+          // font-weight: bold;
           width: 100%;
+        }
+        > span {
+          word-break: break-word;
         }
         .fn {
           display: inline-block;
           white-space: nowrap;
+          i {
+            cursor: pointer;
+          }
         }
         i {
           margin-left: 20px;
@@ -382,11 +457,9 @@ body {
         }
       }
     }
-
     .sidebar {
       color: #fff;
       background: #000;
-
       ul li {
         &:last-child {
           border-color: #fff;
@@ -399,7 +472,6 @@ body {
     }
   }
 }
-
 [data="checkbox-switch"] {
   @include checkbox-switch(60px, 28px, 2px, #ededed, #575757);
 }

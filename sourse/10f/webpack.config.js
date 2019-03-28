@@ -14,6 +14,7 @@ const PurgecssPlugin = require('purgecss-webpack-plugin');
 const isDevMode = process.env.NODE_ENV === 'development';
 
 const config = {
+  mode: 'production',
   context: path.resolve(__dirname, './src'),
   entry: {
     popup: './popup/index.js',
