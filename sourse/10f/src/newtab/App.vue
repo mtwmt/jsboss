@@ -92,7 +92,7 @@ export default {
     let _self = this;
     chrome.storage.sync.get(function(data) {
       if (!data.quote) {
-        _self.setQuote( {quote: false} );
+        _self.setQuote( {quote: _self.quote} );
       }else{
         _self.$store.commit('updateQuote',data.quote );
         _self.random = _self.getRandom( 0, (data.quote.length - 1) );
@@ -107,10 +107,6 @@ export default {
   },
   computed: {
     ...mapState(["edit","dark","quote"]),
-    getQuote(){
-      console.log( 123,this.$store.state.quote )
-      return this.$store.state.quote;
-    },
     dark:{
       get(){
         let _self = this;
