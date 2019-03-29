@@ -9,3 +9,4 @@
 - 7F-畫版　[觀看](https://mtwmt.github.io/jsboss/public/7f/) [心得](https://mtwmt.github.io/blog/JSBOSS/7f/)
 - 8F-井字遊戲　[觀看](https://mtwmt.github.io/jsboss/public/8f/) [心得](https://mtwmt.github.io/blog/JSBOSS/8f/)
 - 9F-抽獎轉盤　[觀看](https://mtwmt.github.io/jsboss/public/9f/) [心得](https://mtwmt.github.io/blog/JSBOSS/9f/)
+- 10-Chrome 應用程式 (幹話產生器)　[ZIP下載](https://github.com/mtwmt/jsboss/raw/master/sourse/10f/dist-zip/10f-v1.0.0.zip) 
