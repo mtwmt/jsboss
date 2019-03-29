@@ -1,0 +1,47 @@
+// $base-font-size: 16px !default;
+// @function rem($target, $context: $base-font-size){
+//   @if $target == 0 { @return 0 }
+//     @return ($target / $context) + 0rem;
+// }
+
+*{
+  box-sizing: border-box;
+}
+
+html{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+ 
+}
+body,html{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  font-family: "Open Sans","微軟正黑體", Arial, sans-serif;
+  font-weight: bold;
+}
+
+.photo{
+  ul{
+    li{
+      img{
+        width: rem(255px);
+        height: rem(255px);
+      }
+    }
+  }
+}
+
+
+$device-list: 320px 360px 400px 440px 480px 520px 560px 600px 640px;
+@each $current-device in $device-list{
+    @media screen and (min-width: $current-device) {
+    body, html {
+      font-size: $current-device * 0.025;
+    }
+  }
+}

@@ -17,9 +17,9 @@
       </div>
       <div class="quote">
         <div class="quote-text">
-          <p @click="isPageEdit" v-if="!pagequote">{{ quote[0].text }}</p>
+          <p @click="isPageEdit" v-if="!pagequote">{{ quote[random].text }}</p>
           <div v-else>
-            <textarea type="text" v-model="quote[0].text"></textarea>
+            <textarea type="text" v-model="quote[random].text"></textarea>
             <div class="btns">
               <button class="btn-save" @click="isPageEdit">儲存</button>
               <button class="btn-cancle" @click="isCancle()">取消</button>
@@ -70,63 +70,21 @@ export default {
   name: "app",
   data(){
     return{
-      dark: false,
       pagequote: false,
-      addquote: ""
+      addquote: '',
+      random: 0
     }
   },
   watch: {
     dark(){
       let _self = this;
-      console.log( 'set', _self.dark );
-      chrome.storage.sync.set( {dark: _self.dark},function(){} );
-      chrome.storage.onChanged.addListener( (data,type) => {
-        console.log( 'newtab',data,type )
+      chrome.storage.sync.get(function(data) {
+        _self.dark = data.dark;
       });
-    }
+      console.log( 'n',this.dark)
+    },
   },
-  computed: {
-    ...mapState(["edit","quote"]),
-    // dark: {
-    //   get(){
-    //     console.log( 'get', this.dark );
-    //     return this.dark;
-    //   },
-    //   set( val ){
-    //     console.log( 'set', this.dark ,'val',val);
-    //   }
-    // }
-    // dark:{
-    //   get(){
-    //     chrome.storage.sync.get(function(data) {
-    //       return data.dark;
-    //     })
-    //   },
-    //   set( val ){
-    //     let _self = this;    
-    //     // this.$store.commit('updateDark', val);
-    //     chrome.storage.sync.set( {dark: val},function(){} );
-
-    //     chrome.storage.onChanged.addListener( (data,type) => {
-    //       _self.dark = data.dark.newValue;
-    //       console.log( 'newtab',data,type )
-    //     });
-    //   }
-    // },
-    // dark:{
-    //   get(){
-    //     return this.$store.state.dark
-    //   },
-    //   set( val ){
-    //     this.$store.commit('updateDark', val);
-
-    //     chrome.storage.sync.set( {dark: val},function(){} );
-    //     chrome.storage.onChanged.addListener( (data,type) => {
-    //       console.log( 'newtab',data,type )
-    //     });
-    //   }
-    // },
-  },
+  
   created() {
     let _self = this;
 
@@ -135,16 +93,39 @@ export default {
         _self.setQuote( {quote: _self.quote} );
       }else{
         _self.$store.commit('updateQuote',data.quote );
-      }
 
+        _self.random = _self.getRandom( 0, (data.quote.length - 1) );
+        console.log( _self.random,_self.quote.length )
+      }
       if( !data.dark ){
         chrome.storage.sync.set( {dark: _self.dark},function(){} );
       }else{
         _self.$store.commit('updateDark',data.dark );
       }
     });
+    
+  },
+  computed: {
+    ...mapState(["edit","dark","quote"]),
+    dark:{
+      get(){
+        return this.$store.state.dark;
+      },
+      set( val ){
+        let _self = this;
+        this.$store.commit('updateDark', val);
+        chrome.storage.sync.set( {dark: val},function(){} );
+        chrome.storage.onChanged.addListener( (data,type) => {
+          _self.dark = data.dark.newValue;
+          console.log( 'newtab',data,type )
+        });
+      }
+    },
   },
   methods: {
+    getRandom(min, max) {
+      return Math.round(Math.random() * (max - min) + min);
+    },
     setQuote( obj,callback ){
       let _self = this;
       chrome.storage.sync.get(function( data ) {
@@ -202,7 +183,6 @@ export default {
       _self.setQuote( { quote: _self.quote },function(){
         console.log( 'del',_self.quote )
       });
-      
     }
   }
 };
@@ -435,10 +415,6 @@ body {
         font-size: 16px;
         border-top: 1px solid #000;
         input[type="text"] {
-          // border:0;
-          // font-size: 16px;
-          // font-family: "Roboto Condensed";
-          // font-weight: bold;
           width: 100%;
         }
         > span {

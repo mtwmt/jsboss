@@ -6,7 +6,7 @@ Vue.use(Vuex);
 let store = new Vuex.Store({
   state: {
     edit: false,
-    // dark: false,
+    dark: false,
     quote: [
       { text: "路 就是一條直直的", edit: false },
       { text: "雨後的高雄，有下過雨的味道。", edit: false }
