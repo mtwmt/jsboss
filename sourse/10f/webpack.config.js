@@ -33,7 +33,14 @@ const config = {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: {
-          extractCSS: !isDevMode,
+          // extractCSS: !isDevMode,
+          loaders: {
+          'scss': 'vue-style-loader!css-loader!sass-loader',
+          'sass': 'vue-style-loader!css-loader!sass-loader?indentedSyntax',
+          'css':'vue-style-loader!css-loader',
+          'style':'vue-style-loader',
+          'less':'vue-style-loader!css-loader!less-loader'
+          }
         },
       },
       {
@@ -43,7 +50,6 @@ const config = {
       },
       {
         test: /\.scss$/,
-        // use: [isDevMode ? 'vue-style-loader' : MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
         use: ['vue-style-loader', 'css-loader', 'sass-loader'],
       },
       {

@@ -44,7 +44,7 @@ var html = function() {
 };
 
 var clean = function() {
-  return del(['public/include/**', 'public/scss/**']);
+  return del(['public/include/**', 'public/scss/**','public/10f/**']);
 };
 
 var watchfile = function() {

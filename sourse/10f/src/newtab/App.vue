@@ -2,7 +2,11 @@
   <div class="main" :class="{'is-active': edit,'dark':dark}">
     <div class="container">
       <div class="layer">
-        <div
+        <div v-if="dark"
+          class="bg"
+          style="-webkit-filter:grayscale(1); background-image: url('https://images.unsplash.com/photo-1499482125586-91609c0b5fd4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1834&q=80')"
+        ></div>
+        <div v-else
           class="bg"
           style="background-image: url('https://images.unsplash.com/photo-1499482125586-91609c0b5fd4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1834&q=80')"
         ></div>
@@ -57,7 +61,7 @@
           </li>
         </ul>
         <p>
-          <a href class="more" v-if="quote.length>5" >載入更多</a>
+          <!-- <a href class="more" v-if="quote.length>5" >載入更多</a> -->
         </p>
       </div>
     </div>
@@ -81,21 +85,17 @@ export default {
       chrome.storage.sync.get(function(data) {
         _self.dark = data.dark;
       });
-      console.log( 'n',this.dark)
     },
   },
   
   created() {
     let _self = this;
-
     chrome.storage.sync.get(function(data) {
       if (!data.quote) {
-        _self.setQuote( {quote: _self.quote} );
+        _self.setQuote( {quote: false} );
       }else{
         _self.$store.commit('updateQuote',data.quote );
-
         _self.random = _self.getRandom( 0, (data.quote.length - 1) );
-        console.log( _self.random,_self.quote.length )
       }
       if( !data.dark ){
         chrome.storage.sync.set( {dark: _self.dark},function(){} );
@@ -107,17 +107,21 @@ export default {
   },
   computed: {
     ...mapState(["edit","dark","quote"]),
+    getQuote(){
+      console.log( 123,this.$store.state.quote )
+      return this.$store.state.quote;
+    },
     dark:{
       get(){
+        let _self = this;
         return this.$store.state.dark;
       },
       set( val ){
         let _self = this;
-        this.$store.commit('updateDark', val);
-        chrome.storage.sync.set( {dark: val},function(){} );
+        chrome.storage.sync.set( {dark: val});
         chrome.storage.onChanged.addListener( (data,type) => {
+          _self.$store.commit('updateDark',data.dark.newValue);
           _self.dark = data.dark.newValue;
-          console.log( 'newtab',data,type )
         });
       }
     },
@@ -132,8 +136,8 @@ export default {
         chrome.storage.sync.set( obj , callback);
       });
       chrome.storage.onChanged.addListener( (data,type) => {
+        console.log( 'newVAl',data.quote )
         _self.$store.commit('updateQuote',data.quote.newValue )
-        console.log( 'onchange',data,type )
       });
     },
     isActive() {
@@ -143,7 +147,6 @@ export default {
       }else{
         this.$store.commit('updateEdit',true);
       }
-
     },
     isAdd() {
       let _self = this;
@@ -168,7 +171,6 @@ export default {
     isSave() {
       var _self = this;
       _self.setQuote( { quote: _self.quote },function(){
-        console.log('isSave');
       });
     },
     isCancle(){
@@ -180,9 +182,7 @@ export default {
     isDel(idx) {
       let _self = this;
       _self.quote.splice(idx,1);
-      _self.setQuote( { quote: _self.quote },function(){
-        console.log( 'del',_self.quote )
-      });
+      _self.setQuote( { quote: _self.quote },function(){});
     }
   }
 };

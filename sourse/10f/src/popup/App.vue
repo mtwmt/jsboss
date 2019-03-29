@@ -26,7 +26,7 @@
       </ul>
       <div class="add" v-if="!toggleAdd" @click="isToggleAdd()">+ 新增語錄</div>
       <div class="addedit" v-else>
-        <input type="text" v-model="addquote">
+        <input type="text" v-model="addquote" placeholder="新增語錄">
         <button @click="isAdd()">+</button>
       </div>
     </div>
@@ -50,33 +50,16 @@ export default {
     dark(){
       let _self = this;
       chrome.storage.sync.get(function(data) {
-        _self.dark = data.dark;
+        _self.dark = data.dark
       });
-      console.log( 'p',this.dark)
     },
-  },
-  computed: {
-    ...mapState(["edit","dark","quote"]),
-    dark:{
-      get(){
-        return this.$store.state.dark;
-      },
-      set( val ){
-        let _self = this;
-        this.$store.commit('updateDark', val);
-        chrome.storage.sync.set( {dark: val},function(){} );
-        chrome.storage.onChanged.addListener( (data,type) => {
-          _self.dark = data.dark.newValue;
-          console.log( 'popdarkonchange',data,type )
-        });
-      }
-    }
   },
   created(){
     let _self = this;
+
     chrome.storage.sync.get(function(data) {
       if (!data.quote) {
-        _self.setQuote( {quote: _self.quote} );
+        _self.setQuote( {quote: false} );
       }else{
         _self.$store.commit('updateQuote',data.quote );
       }
@@ -89,6 +72,24 @@ export default {
     });
 
   },
+   computed: {
+    ...mapState(["edit","dark","quote"]),
+    dark:{
+      get(){
+        let _self = this;
+        return this.$store.state.dark;
+      },
+      set( val ){
+        let _self = this;
+        chrome.storage.sync.set( {dark: val});
+        chrome.storage.onChanged.addListener( (data,type) => {
+          _self.$store.commit('updateDark',data.dark.newValue);
+          _self.dark = data.dark.newValue;
+        });
+
+      }
+    }
+  },
   methods: {
     setQuote( obj,callback ){
       let _self = this;
@@ -96,21 +97,23 @@ export default {
         chrome.storage.sync.set( obj , callback);
       });
       chrome.storage.onChanged.addListener( (data,type) => {
-        _self.$store.commit('updateQuote',data.quote.newValue )
-        console.log( 'POPonchange',data,type )
+        _self.$store.commit('updateQuote',data.quote.newValue );
       });
     },
     isToggleAdd(){
       this.toggleAdd = !this.toggleAdd;
-      if( this.toggleAdd ){
-        console.log( 123, this.toggleAdd)
-      }
+    },
+    isSave() {
+      var _self = this;
+      _self.setQuote( { quote: _self.quote },function(){
+      });
     },
     isAdd(){
       let _self = this;
       if (!_self.addquote) return;
       _self.quote.unshift({ text: _self.addquote, edit: false });
       _self.setQuote( {quote: _self.quote },function(){
+
         _self.addquote = '';
         _self.toggleAdd = false;
       });
@@ -124,9 +127,7 @@ export default {
     isDel(idx) {
       let _self = this;
       _self.quote.splice(idx,1);
-      _self.setQuote( { quote: _self.quote },function(){
-        console.log( 'POPdel',_self.quote )
-      });
+      _self.setQuote( { quote: _self.quote },function(){});
     }
   }
 }
@@ -178,7 +179,7 @@ export default {
       span{ font-size: 16px; }
     }
     ul {
-      max-height: 250px;
+      max-height: 245px;
       overflow: hidden;
       li {
         display: flex;
@@ -238,6 +239,7 @@ export default {
       &:focus {
         outline: 0;
       }
+      cursor: pointer;
       position: absolute;
       right: 0;
       bottom: -6px;
