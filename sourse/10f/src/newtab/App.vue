@@ -16,7 +16,7 @@
     <div class="control">
       <i class="icon fas fa-bars" @click="isActive"></i>
       <div data="checkbox-switch" v-if="!edit">
-        <input type="checkbox" id="switch1" v-model="dark" value="true">
+        <input type="checkbox" id="switch1" v-model="dark">
         <label for="switch1"></label>
       </div>
       <div class="quote">
@@ -43,7 +43,7 @@
         <div class="col">
           <div class="tit">夜間模式</div>
           <div data="checkbox-switch">
-            <input type="checkbox" id="switch2" v-model="dark" value="true">
+            <input type="checkbox" id="switch2" v-model="dark">
             <label for="switch2"></label>
           </div>
         </div>
@@ -82,28 +82,53 @@ export default {
   watch: {
     dark(){
       let _self = this;
-      chrome.storage.sync.get(function(data) {
-        _self.dark = data.dark;
-      });
+      console.log( 'Watch dark.tab' ,_self.$store.state.dark )
+      // chrome.storage.sync.get(function(data) {
+      //   _self.dark = data.dark;
+      // });
     },
   },
-  
-  created() {
+  mounted(){
     let _self = this;
     chrome.storage.sync.get(function(data) {
-      if (!data.quote) {
-        _self.setQuote( {quote: _self.quote} );
-      }else{
-        _self.$store.commit('updateQuote',data.quote );
-        _self.random = _self.getRandom( 0, (data.quote.length - 1) );
-      }
-      if( !data.dark ){
-        chrome.storage.sync.set( {dark: _self.dark},function(){} );
-      }else{
-        _self.$store.commit('updateDark',data.dark );
-      }
-    });
+      console.log( 'TABmounted',data ,_self.$store.state.dark )
+    })
+  },
+  created() {
+    let _self = this;
     
+    chrome.storage.sync.get(function(data) {
+      data = data || {};
+      data.quote = data.quote ||  _self.quote;
+      data.dark = data.dark || _self.dark;
+
+       _self.$store.commit('updateDark',data.dark );
+
+      console.log( 'created.tab',data,  _self.$store.state.dark )
+
+
+       
+
+      // if (!data.quote.length ) {
+      //   _self.setQuote( {quote: _self.quote},function(){
+      //     console.log('_self.quote',_self.quote)
+      //   });
+      // }else{
+      //   _self.$store.commit('updateQuote',data.quote );
+      //   _self.random = _self.getRandom( 0, (data.quote.length - 1) );
+      // }
+      // if( !data.dark.length ){
+      //   chrome.storage.sync.set( {dark: _self.dark},function(){} );
+      //   chrome.storage.onChanged.addListener( (data,type) => {
+      //     _self.$store.commit('updateDark', _self.dark );
+      //   });
+      // }else{
+      //   _self.$store.commit('updateDark',data.dark );
+      // }
+    });
+    // chrome.storage.onChanged.addListener( (data,type) => {
+    //   console.log( 'onChanged',data )
+    // });
   },
   computed: {
     ...mapState(["edit","dark","quote"]),
@@ -114,10 +139,12 @@ export default {
       },
       set( val ){
         let _self = this;
-        chrome.storage.sync.set( {dark: val});
+        chrome.storage.sync.set( {dark: val},function(){
+          console.log( 'dark.tab',val )
+        });
         chrome.storage.onChanged.addListener( (data,type) => {
-          _self.$store.commit('updateDark',data.dark.newValue);
-          _self.dark = data.dark.newValue;
+          console.log( 'onChanged.tab',data.dark.newValue )
+          _self.$store.commit('updateDark', data.dark.newValue);
         });
       }
     },
@@ -129,11 +156,12 @@ export default {
     setQuote( obj,callback ){
       let _self = this;
       chrome.storage.sync.get(function( data ) {
+        console.log( 'setQuote', data ,obj)
         chrome.storage.sync.set( obj , callback);
       });
       chrome.storage.onChanged.addListener( (data,type) => {
-        console.log( 'newVAl',data.quote )
-        _self.$store.commit('updateQuote',data.quote.newValue )
+        console.log( 'newVAl',data )
+        _self.$store.commit('updateQuote', obj )
       });
     },
     isActive() {

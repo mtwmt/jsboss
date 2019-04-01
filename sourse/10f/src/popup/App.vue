@@ -4,7 +4,7 @@
       <div class="col">
         <div class="tit">夜間模式</div>
         <div data="checkbox-switch">
-          <input type="checkbox" id="switch" v-model="dark" value="true" />
+          <input type="checkbox" id="switch" v-model="dark" />
           <label for="switch"></label>
         </div>
       </div>  
@@ -49,27 +49,44 @@ export default {
   watch: {
     dark(){
       let _self = this;
-      chrome.storage.sync.get(function(data) {
-        _self.dark = data.dark
-      });
+      console.log( 'Watch dark.pop' ,_self.$store.state.dark )
+      // chrome.storage.sync.get(function(data) {
+      //   _self.dark = data.dark
+      // });
     },
+  },
+  mounted(){
+    let _self = this;
+    chrome.storage.sync.get(function(data) {
+      console.log( 'POPmounted',data ,_self.$store.state.dark )
+    })
   },
   created(){
     let _self = this;
 
     chrome.storage.sync.get(function(data) {
-      if (!data.quote) {
-        _self.setQuote( {quote: false} );
-      }else{
-        _self.$store.commit('updateQuote',data.quote );
-      }
+      data = data || {};
+      data.quote = data.quote ||  _self.quote;
+      data.dark = data.dark || _self.dark;
 
-      if( !data.dark ){
-        chrome.storage.sync.set( {dark: _self.dark},function(){} );
-      }else{
-        _self.$store.commit('updateDark',data.dark );
-      }
+      _self.$store.commit('updateDark',data.dark );
+
+      console.log( 'created.pop',data,  _self.$store.state.dark )
     });
+
+    // chrome.storage.sync.get(function(data) {
+    //   if (!data.quote) {
+    //     _self.setQuote( {quote: false} );
+    //   }else{
+    //     _self.$store.commit('updateQuote',data.quote );
+    //   }
+
+    //   if( !data.dark ){
+    //     chrome.storage.sync.set( {dark: _self.dark},function(){} );
+    //   }else{
+    //     _self.$store.commit('updateDark',data.dark );
+    //   }
+    // });
 
   },
    computed: {
@@ -81,10 +98,13 @@ export default {
       },
       set( val ){
         let _self = this;
-        chrome.storage.sync.set( {dark: val});
+
+        chrome.storage.sync.set( {dark: val},function(){
+          console.log( 'dark.pop',val )
+        });
         chrome.storage.onChanged.addListener( (data,type) => {
-          _self.$store.commit('updateDark',data.dark.newValue);
-          _self.dark = data.dark.newValue;
+          console.log( 'onChanged.pop',data.dark.newValue )
+          _self.$store.commit('updateDark', data.dark.newValue);
         });
 
       }
@@ -95,9 +115,12 @@ export default {
       let _self = this;
       chrome.storage.sync.get(function( data ) {
         chrome.storage.sync.set( obj , callback);
+        console.log( 'setQuotepop', data ,obj)
       });
       chrome.storage.onChanged.addListener( (data,type) => {
-        _self.$store.commit('updateQuote',data.quote.newValue );
+        // data.quote.newValue = data.quote.newValue || obj;
+        
+        _self.$store.commit('updateQuote', obj );
       });
     },
     isToggleAdd(){
