@@ -54,10 +54,7 @@ export default {
   watch:{
     dark(){
       let _self = this;
-      chrome.storage.sync.get(function( items ) {
-        chrome.storage.sync.set({'dark': _self.dark} ,function(){});
-      });
-
+      chrome.storage.sync.set({'dark': _self.dark} ,function(){});
     }
   },
   created(){
@@ -82,22 +79,8 @@ export default {
     });
 
     chrome.storage.onChanged.addListener((data,type) => {
-      if (type !== 'sync') {
-        return console.error('Not sync type');
-      }
       for( let i in data ){
-        const obj = data[i],
-              val = obj.newValue;
-
-              
-         _self[i] = val;
-        
-        console.log( 123,i ,val )
-        // if (data.hasOwnProperty(i)) {
-        //   console.log('tab',i)
-        //   _self[i] = data[i].newValue;
-          
-        // }
+        _self[i] = data[i].newValue;
       }
     });
     
@@ -107,8 +90,6 @@ export default {
       let _self = this;
       chrome.storage.sync.get(function( items ) {
         chrome.storage.sync.set( obj, callback);
-        // chrome.storage.onChanged.addListener( (data,type) => {
-        // });
       });
       
     },
@@ -207,15 +188,15 @@ export default {
         > span {
           word-break: break-word;
         }
-        .txt{
-          flex: 1 1 auto;
-          display: -webkit-box;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          -webkit-line-clamp: 1;
-          /*! autoprefixer: off */
-          -webkit-box-orient: vertical;
-        }
+        // .txt{
+        //   flex: 1 1 auto;
+        //   display: -webkit-box;
+        //   overflow: hidden;
+        //   text-overflow: ellipsis;
+        //   -webkit-line-clamp: 1;
+        //   /*! autoprefixer: off */
+        //   -webkit-box-orient: vertical;
+        // }
         .fn {
           display: inline-block;
           white-space: nowrap;

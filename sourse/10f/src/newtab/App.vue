@@ -21,7 +21,7 @@
       </div>
       <div class="quote">
         <div class="quote-text">
-          <p @click="isPageEdit()" v-if="!pagequote">{{ quote[random].text }}</p>
+          <p @click="isPageEdit()" v-if="!pagequote">{{ quote[random].text | txtformat }}</p>
           <div v-else>
             <textarea v-model="quote[random].text"></textarea>
             <div class="btns">
@@ -85,19 +85,30 @@ export default {
       ]
     }
   },
+  filters: {
+    txtformat( t ){
+      var temp = [];
+      
+      temp = t.split('，');
+      temp = [temp.join('，</span><span>')];
+
+
+      temp.unshift('<span>');
+      temp.push('</span>');
+      
+      
+      return temp.join('');
+    }
+  },
   watch:{
     dark(){
       let _self = this;
-      chrome.storage.sync.get(function( items ) {
-        chrome.storage.sync.set({'dark': _self.dark} ,function(){});
-      });
-    
+      chrome.storage.sync.set({'dark': _self.dark} ,function(){});
     }
   },
   created(){
     let _self = this;
     chrome.storage.sync.get( null,function( items ) {
-      console.log( 'item',items )
       if( !items.hasOwnProperty('dark') ){
         chrome.storage.sync.set({
           'dark': _self.dark
@@ -118,13 +129,8 @@ export default {
     });
 
     chrome.storage.onChanged.addListener((data,type) => {
-      if (type !== 'sync') {
-        return console.error('Not sync type');
-      }
       for( let i in data ){
-        const obj = data[i],
-              val = obj.newValue;
-         _self[i] = val;
+         _self[i] = data[i].newValue;
       }
     });
 
@@ -141,15 +147,6 @@ export default {
       let _self = this;
       chrome.storage.sync.get(function( items ) {
         chrome.storage.sync.set( obj, callback);
-        // chrome.storage.onChanged.addListener( (data,type) => {
-        //   console.log('tabS');
-        //   // for( var i in items ){
-        //   //   if (data.hasOwnProperty(i)) {
-              
-        //   //     _self[i] = data[i].newValue;
-        //   //   }
-        //   // }
-        // });
       });
       
     },
@@ -429,15 +426,15 @@ body {
         > span {
           word-break: break-word;
         }
-        .txt{
-          flex: 1 1 auto;
-          display: -webkit-box;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          -webkit-line-clamp: 1;
-          /*! autoprefixer: off */
-          -webkit-box-orient: vertical;
-        }
+        // .txt{
+        //   flex: 1 1 auto;
+        //   display: -webkit-box;
+        //   overflow: hidden;
+        //   text-overflow: ellipsis;
+        //   -webkit-line-clamp: 1;
+        //   /*! autoprefixer: off */
+        //   -webkit-box-orient: vertical;
+        // }
         .fn {
           display: inline-block;
           white-space: nowrap;

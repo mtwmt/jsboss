@@ -93,7 +93,7 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-eval("// OnInstall handler\n// chrome.runtime.onInstalled.addListener(details => {\n//   console.log('onInstalled',details)\n// })\n// chrome.runtime.onMessage.addListener(function(request, sender, sendRequest){\n//   console.log( 'runtime.onMessage',request, sender, sendRequest)\n// });\nchrome.runtime.onInstalled.addListener(function () {\n  chrome.declarativeContent.onPageChanged.removeRules(undefined, function () {\n    chrome.declarativeContent.onPageChanged.addRules([{\n      conditions: [new chrome.declarativeContent.PageStateMatcher({\n        pageUrl: {\n          hostEquals: 'newtab'\n        }\n      })],\n      actions: [new chrome.declarativeContent.ShowPageAction()]\n    }]);\n  });\n});\n\n//# sourceURL=webpack:///./background/index.js?");
+eval("// OnInstall handler\nchrome.runtime.onInstalled.addListener(details => {\n  console.log('onInstalled', details);\n}); // chrome.runtime.onMessage.addListener(function(request, sender, sendRequest){\n//   console.log( 'runtime.onMessage',request, sender, sendRequest)\n// });\n// chrome.runtime.onInstalled.addListener(function() {\n//   chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {\n//     chrome.declarativeContent.onPageChanged.addRules([\n//       {\n//         conditions: [\n//           new chrome.declarativeContent.PageStateMatcher({\n//             pageUrl: { hostEquals: 'newtab' }\n//           })\n//         ],\n//         actions: [new chrome.declarativeContent.ShowPageAction()]\n//       }\n//     ]);\n//   });\n// });\n\n//# sourceURL=webpack:///./background/index.js?");
 
 /***/ })
 
