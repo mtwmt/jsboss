@@ -21,11 +21,11 @@
       </div>
       <div class="quote">
         <div class="quote-text">
-          <p @click="isPageEdit" v-if="!pagequote">{{ quote[random].text }}</p>
+          <p @click="isPageEdit()" v-if="!pagequote">{{ quote[random].text }}</p>
           <div v-else>
-            <textarea type="text" v-model="quote[random].text"></textarea>
+            <textarea v-model="quote[random].text"></textarea>
             <div class="btns">
-              <button class="btn-save" @click="isPageEdit">儲存</button>
+              <button class="btn-save" @click="isPageEdit()">儲存</button>
               <button class="btn-cancle" @click="isCancle()">取消</button>
             </div>
           </div>
@@ -52,7 +52,7 @@
         <label>我的語錄</label>
         <ul>
           <li v-for="(item,i) in quote" :key="i">
-            <span v-if="!item.edit">{{ item.text }}</span>
+            <span class="txt" v-if="!item.edit">{{ item.text }}</span>
             <input v-else type="text" v-model="item.text" @keyup.enter="isEdit(i)">
             <span class="fn">
               <i class="edit fas fa-pen" @click="isEdit(i)"></i>
@@ -60,117 +60,94 @@
             </span>
           </li>
         </ul>
-        <p>
-          <!-- <a href class="more" v-if="quote.length>5" >載入更多</a> -->
-        </p>
+        <!-- <p>
+          <a href="" class="more" v-if="quote.length>5" >載入更多</a>
+        </p> -->
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState, mapMutations  } from "vuex";
 export default {
   name: "app",
   data(){
     return{
+      dark: false,
+      edit: false,
       pagequote: false,
       addquote: '',
-      random: 0
+      random: 0,
+      quote: [
+        { text: "路 就是一條直直的", edit: false },
+        { text: "雨後的高雄，有下過雨的味道。", edit: false },
+        { text: "當我閉上雙眼，眼前只有一片漆黑", edit: false }
+      ]
     }
   },
-  watch: {
+  watch:{
     dark(){
       let _self = this;
-      console.log( 'Watch dark.tab' ,_self.$store.state.dark )
-      // chrome.storage.sync.get(function(data) {
-      //   _self.dark = data.dark;
-      // });
-    },
+      chrome.storage.sync.set({'dark': _self.dark} ,function(){
+        console.log( _self.dark )  
+      });
+      
+    }
   },
-  mounted(){
+  created(){
     let _self = this;
-    chrome.storage.sync.get(function(data) {
-      console.log( 'TABmounted',data ,_self.$store.state.dark )
-    })
-  },
-  created() {
-    let _self = this;
-    
-    chrome.storage.sync.get(function(data) {
-      data = data || {};
-      data.quote = data.quote ||  _self.quote;
-      data.dark = data.dark || _self.dark;
-
-       _self.$store.commit('updateDark',data.dark );
-
-      console.log( 'created.tab',data,  _self.$store.state.dark )
-
-
-       
-
-      // if (!data.quote.length ) {
-      //   _self.setQuote( {quote: _self.quote},function(){
-      //     console.log('_self.quote',_self.quote)
-      //   });
-      // }else{
-      //   _self.$store.commit('updateQuote',data.quote );
-      //   _self.random = _self.getRandom( 0, (data.quote.length - 1) );
-      // }
-      // if( !data.dark.length ){
-      //   chrome.storage.sync.set( {dark: _self.dark},function(){} );
-      //   chrome.storage.onChanged.addListener( (data,type) => {
-      //     _self.$store.commit('updateDark', _self.dark );
-      //   });
-      // }else{
-      //   _self.$store.commit('updateDark',data.dark );
-      // }
-    });
-    // chrome.storage.onChanged.addListener( (data,type) => {
-    //   console.log( 'onChanged',data )
-    // });
-  },
-  computed: {
-    ...mapState(["edit","dark","quote"]),
-    dark:{
-      get(){
-        let _self = this;
-        return this.$store.state.dark;
-      },
-      set( val ){
-        let _self = this;
-        chrome.storage.sync.set( {dark: val},function(){
-          console.log( 'dark.tab',val )
+    chrome.storage.sync.get(function( items ) {
+      if( !items.hasOwnProperty('quote') ){
+        chrome.storage.sync.set({
+          'quote': _self.quote
+        }, function(){
+          console.log( 'false',_self.quote )
         });
-        chrome.storage.onChanged.addListener( (data,type) => {
-          console.log( 'onChanged.tab',data.dark.newValue )
-          _self.$store.commit('updateDark', data.dark.newValue);
-        });
+      }else{
+        _self.quote = items.quote;
+        console.log( 'true',_self.quote )
       }
-    },
+      if( items.dark ){
+        _self.dark = items.dark;
+      }
+      chrome.storage.onChanged.addListener((data,type) => {
+        // _self.dark = data.dark.newValue;
+        // _self.quote = data.quote.newValue;
+        for( var i in items ){
+          if (data.hasOwnProperty(i)) {
+            console.log('tab')
+            _self[i] = data[i].newValue;
+          }
+        }
+      });
+
+    });
+    _self.random = _self.getRandom( 0, ( _self.quote.length - 1) );
+    
   },
   methods: {
     getRandom(min, max) {
+      if( max <= 0 ) return;
       return Math.round(Math.random() * (max - min) + min);
     },
     setQuote( obj,callback ){
       let _self = this;
-      chrome.storage.sync.get(function( data ) {
-        console.log( 'setQuote', data ,obj)
-        chrome.storage.sync.set( obj , callback);
+      chrome.storage.sync.get(function( items ) {
+        chrome.storage.sync.set( obj, callback);
+        chrome.storage.onChanged.addListener( (data,type) => {
+          console.log('tabS');
+          // for( var i in items ){
+          //   if (data.hasOwnProperty(i)) {
+              
+          //     _self[i] = data[i].newValue;
+          //   }
+          // }
+        });
       });
-      chrome.storage.onChanged.addListener( (data,type) => {
-        console.log( 'newVAl',data )
-        _self.$store.commit('updateQuote', obj )
-      });
+      
     },
     isActive() {
-      // this.edit = !this.edit;
-      if( this.edit ){
-        this.$store.commit('updateEdit',false);
-      }else{
-        this.$store.commit('updateEdit',true);
-      }
+      this.edit = !this.edit;
     },
     isAdd() {
       let _self = this;
@@ -194,7 +171,7 @@ export default {
     },
     isSave() {
       var _self = this;
-      _self.setQuote( { quote: _self.quote },function(){
+      _self.setQuote({ quote: _self.quote },function(){
       });
     },
     isCancle(){
@@ -205,12 +182,14 @@ export default {
     },
     isDel(idx) {
       let _self = this;
+      if( _self.quote.length == 1 ) return;
       _self.quote.splice(idx,1);
-      _self.setQuote( { quote: _self.quote },function(){});
+      _self.setQuote({ quote: _self.quote },function(){});
     }
   }
-};
+}
 </script>
+
 <style lang="scss">
 @import "../../common/scss/mixin";
 * {
@@ -280,7 +259,6 @@ body {
       font-weight: bold;
       line-height: 1.2;
       font-family: "Open Sans";
-      // font-style: italic;
       .quote-text {
         display: block;
         p {
@@ -444,9 +422,19 @@ body {
         > span {
           word-break: break-word;
         }
+        .txt{
+          flex: 1 1 auto;
+          display: -webkit-box;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          -webkit-line-clamp: 1;
+          /*! autoprefixer: off */
+          -webkit-box-orient: vertical;
+        }
         .fn {
           display: inline-block;
           white-space: nowrap;
+          flex: 0 0 auto;
           i {
             cursor: pointer;
           }

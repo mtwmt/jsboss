@@ -16,7 +16,7 @@
       </div>
       <ul>
         <li v-for="(item,i) in quote" :key="i">
-          <span v-if="!item.edit">{{ item.text }}</span>
+          <span class="txt" v-if="!item.edit">{{ item.text }}</span>
           <input v-else type="text" v-model="item.text" @keyup.enter="isEdit(i)">
           <span class="fn">
             <i class="edit fas fa-pen" @click="isEdit(i)"></i>
@@ -37,91 +37,73 @@
 </template>
 
 <script>
-import { mapState,mapMutations } from "vuex";
 export default {
   name: "app",
   data() {
     return {
+      dark: false,
       toggleAdd: false,
-      addquote: ''
+      addquote: '',
+      quote: [
+        { text: "路 就是一條直直的", edit: false },
+        { text: "雨後的高雄，有下過雨的味道。", edit: false },
+        { text: "當我閉上雙眼，眼前只有一片漆黑", edit: false }
+      ]
     }
   },
-  watch: {
+  watch:{
     dark(){
       let _self = this;
-      console.log( 'Watch dark.pop' ,_self.$store.state.dark )
-      // chrome.storage.sync.get(function(data) {
-      //   _self.dark = data.dark
-      // });
-    },
-  },
-  mounted(){
-    let _self = this;
-    chrome.storage.sync.get(function(data) {
-      console.log( 'POPmounted',data ,_self.$store.state.dark )
-    })
+      chrome.storage.sync.set({'dark': _self.dark} ,function(){
+        console.log( _self.dark )  
+      });
+      
+    }
   },
   created(){
     let _self = this;
+    chrome.storage.sync.get(function( items ) {
+      if( !items.hasOwnProperty('quote') ){
+        chrome.storage.sync.set({
+          'quote': _self.quote
+        }, function(){});
+      }else{
+        _self.quote = items.quote;
+      }
+      if( items.dark ){
+        _self.dark = items.dark;
+      }
 
-    chrome.storage.sync.get(function(data) {
-      data = data || {};
-      data.quote = data.quote ||  _self.quote;
-      data.dark = data.dark || _self.dark;
-
-      _self.$store.commit('updateDark',data.dark );
-
-      console.log( 'created.pop',data,  _self.$store.state.dark )
+      chrome.storage.onChanged.addListener((data,type) => {
+        // _self.dark = data.dark.newValue;
+        // _self.quote = data.quote.newValue;
+        for( var i in items ){
+          if (data.hasOwnProperty(i)) {
+            console.log('pop')
+            _self[i] = data[i].newValue;
+          }
+        }
+      });
     });
 
-    // chrome.storage.sync.get(function(data) {
-    //   if (!data.quote) {
-    //     _self.setQuote( {quote: false} );
-    //   }else{
-    //     _self.$store.commit('updateQuote',data.quote );
-    //   }
-
-    //   if( !data.dark ){
-    //     chrome.storage.sync.set( {dark: _self.dark},function(){} );
-    //   }else{
-    //     _self.$store.commit('updateDark',data.dark );
-    //   }
-    // });
-
-  },
-   computed: {
-    ...mapState(["edit","dark","quote"]),
-    dark:{
-      get(){
-        let _self = this;
-        return this.$store.state.dark;
-      },
-      set( val ){
-        let _self = this;
-
-        chrome.storage.sync.set( {dark: val},function(){
-          console.log( 'dark.pop',val )
-        });
-        chrome.storage.onChanged.addListener( (data,type) => {
-          console.log( 'onChanged.pop',data.dark.newValue )
-          _self.$store.commit('updateDark', data.dark.newValue);
-        });
-
-      }
-    }
+    
   },
   methods: {
     setQuote( obj,callback ){
       let _self = this;
-      chrome.storage.sync.get(function( data ) {
-        chrome.storage.sync.set( obj , callback);
-        console.log( 'setQuotepop', data ,obj)
+      chrome.storage.sync.get(function( items ) {
+        chrome.storage.sync.set( obj, callback);
+        chrome.storage.onChanged.addListener( (data,type) => {
+          console.log('tabP')
+          // for( var i in items ){
+          //   if (data.hasOwnProperty(i)) {
+              
+          //     _self[i] = data[i].newValue;
+          //   }
+          // }
+        });
       });
-      chrome.storage.onChanged.addListener( (data,type) => {
-        // data.quote.newValue = data.quote.newValue || obj;
-        
-        _self.$store.commit('updateQuote', obj );
-      });
+      
     },
     isToggleAdd(){
       this.toggleAdd = !this.toggleAdd;
@@ -149,6 +131,7 @@ export default {
     },
     isDel(idx) {
       let _self = this;
+      if( _self.quote.length == 1 ) return;
       _self.quote.splice(idx,1);
       _self.setQuote( { quote: _self.quote },function(){});
     }
@@ -216,6 +199,15 @@ export default {
         }
         > span {
           word-break: break-word;
+        }
+        .txt{
+          flex: 1 1 auto;
+          display: -webkit-box;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          -webkit-line-clamp: 1;
+          /*! autoprefixer: off */
+          -webkit-box-orient: vertical;
         }
         .fn {
           display: inline-block;
