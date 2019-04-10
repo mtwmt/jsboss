@@ -54,15 +54,23 @@ export default {
   watch:{
     dark(){
       let _self = this;
-      chrome.storage.sync.set({'dark': _self.dark} ,function(){
-        console.log( _self.dark )  
+      chrome.storage.sync.get(function( items ) {
+        chrome.storage.sync.set({'dark': _self.dark} ,function(){});
       });
-      
+
     }
   },
   created(){
     let _self = this;
     chrome.storage.sync.get(function( items ) {
+      if( !items.hasOwnProperty('dark') ){
+        chrome.storage.sync.set({
+          'dark': _self.dark
+        }, function(){});
+      }else{
+        _self.dark = items.dark;
+      }
+
       if( !items.hasOwnProperty('quote') ){
         chrome.storage.sync.set({
           'quote': _self.quote
@@ -70,22 +78,28 @@ export default {
       }else{
         _self.quote = items.quote;
       }
-      if( items.dark ){
-        _self.dark = items.dark;
-      }
 
-      chrome.storage.onChanged.addListener((data,type) => {
-        // _self.dark = data.dark.newValue;
-        // _self.quote = data.quote.newValue;
-        for( var i in items ){
-          if (data.hasOwnProperty(i)) {
-            console.log('pop')
-            _self[i] = data[i].newValue;
-          }
-        }
-      });
     });
 
+    chrome.storage.onChanged.addListener((data,type) => {
+      if (type !== 'sync') {
+        return console.error('Not sync type');
+      }
+      for( let i in data ){
+        const obj = data[i],
+              val = obj.newValue;
+
+              
+         _self[i] = val;
+        
+        console.log( 123,i ,val )
+        // if (data.hasOwnProperty(i)) {
+        //   console.log('tab',i)
+        //   _self[i] = data[i].newValue;
+          
+        // }
+      }
+    });
     
   },
   methods: {
@@ -93,15 +107,8 @@ export default {
       let _self = this;
       chrome.storage.sync.get(function( items ) {
         chrome.storage.sync.set( obj, callback);
-        chrome.storage.onChanged.addListener( (data,type) => {
-          console.log('tabP')
-          // for( var i in items ){
-          //   if (data.hasOwnProperty(i)) {
-              
-          //     _self[i] = data[i].newValue;
-          //   }
-          // }
-        });
+        // chrome.storage.onChanged.addListener( (data,type) => {
+        // });
       });
       
     },

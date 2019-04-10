@@ -88,40 +88,47 @@ export default {
   watch:{
     dark(){
       let _self = this;
-      chrome.storage.sync.set({'dark': _self.dark} ,function(){
-        console.log( _self.dark )  
+      chrome.storage.sync.get(function( items ) {
+        chrome.storage.sync.set({'dark': _self.dark} ,function(){});
       });
-      
+    
     }
   },
   created(){
     let _self = this;
-    chrome.storage.sync.get(function( items ) {
+    chrome.storage.sync.get( null,function( items ) {
+      console.log( 'item',items )
+      if( !items.hasOwnProperty('dark') ){
+        chrome.storage.sync.set({
+          'dark': _self.dark
+        }, function(){});
+      }else{
+        _self.dark = items.dark;
+      }
+
       if( !items.hasOwnProperty('quote') ){
         chrome.storage.sync.set({
           'quote': _self.quote
-        }, function(){
-          console.log( 'false',_self.quote )
-        });
+        }, function(){});
       }else{
         _self.quote = items.quote;
-        console.log( 'true',_self.quote )
       }
-      if( items.dark ){
-        _self.dark = items.dark;
-      }
-      chrome.storage.onChanged.addListener((data,type) => {
-        // _self.dark = data.dark.newValue;
-        // _self.quote = data.quote.newValue;
-        for( var i in items ){
-          if (data.hasOwnProperty(i)) {
-            console.log('tab')
-            _self[i] = data[i].newValue;
-          }
-        }
-      });
-
+      
+      
     });
+
+    chrome.storage.onChanged.addListener((data,type) => {
+      if (type !== 'sync') {
+        return console.error('Not sync type');
+      }
+      for( let i in data ){
+        const obj = data[i],
+              val = obj.newValue;
+         _self[i] = val;
+      }
+    });
+
+
     _self.random = _self.getRandom( 0, ( _self.quote.length - 1) );
     
   },
@@ -134,15 +141,15 @@ export default {
       let _self = this;
       chrome.storage.sync.get(function( items ) {
         chrome.storage.sync.set( obj, callback);
-        chrome.storage.onChanged.addListener( (data,type) => {
-          console.log('tabS');
-          // for( var i in items ){
-          //   if (data.hasOwnProperty(i)) {
+        // chrome.storage.onChanged.addListener( (data,type) => {
+        //   console.log('tabS');
+        //   // for( var i in items ){
+        //   //   if (data.hasOwnProperty(i)) {
               
-          //     _self[i] = data[i].newValue;
-          //   }
-          // }
-        });
+        //   //     _self[i] = data[i].newValue;
+        //   //   }
+        //   // }
+        // });
       });
       
     },
