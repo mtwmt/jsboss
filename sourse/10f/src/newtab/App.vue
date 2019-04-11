@@ -21,7 +21,8 @@
       </div>
       <div class="quote">
         <div class="quote-text">
-          <p @click="isPageEdit()" v-if="!pagequote">{{ quote[random].text | txtformat }}</p>
+          <!-- <p @click="isPageEdit()" v-if="!pagequote">{{ quote[random].text | txtformat }}</p> -->
+          <p @click="isPageEdit()" v-if="!pagequote" v-html="$options.filters.txtformat(quote[random].text)"></p>
           <div v-else>
             <textarea v-model="quote[random].text"></textarea>
             <div class="btns">
@@ -52,7 +53,8 @@
         <label>我的語錄</label>
         <ul>
           <li v-for="(item,i) in quote" :key="i">
-            <span class="txt" v-if="!item.edit">{{ item.text }}</span>
+            <!-- <span class="txt" v-if="!item.edit">{{ item.text }}</span> -->
+            <span class="txt" v-if="!item.edit"  v-html="$options.filters.txtformat(item.text)"></span>
             <input v-else type="text" v-model="item.text" @keyup.enter="isEdit(i)">
             <span class="fn">
               <i class="edit fas fa-pen" @click="isEdit(i)"></i>
@@ -90,7 +92,7 @@ export default {
       var temp = [];
       
       temp = t.split('，');
-      temp = [temp.join('，</span><span>')];
+      temp = [temp.join('，</span><br /><span>')];
 
 
       temp.unshift('<span>');
@@ -271,8 +273,8 @@ body {
           top: 0;
           transition: 0.3s;
           display: inline-block;
-          padding: 10px;
-          background: #fff;
+          // padding: 10px;
+          // background: #fff;
           word-break: break-word;
           &:before {
             position: absolute;
@@ -283,6 +285,11 @@ body {
             line-height: 160px;
             color: #000;
             -webkit-text-stroke: 1px #fff;
+          }
+          span{
+            padding: 5px 10px;
+            display: inline-block;
+            background: #fff;
           }
         }
         textarea {
