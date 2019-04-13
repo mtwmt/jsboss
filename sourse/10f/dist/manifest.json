@@ -3,6 +3,7 @@
   "name": "幹話產生器",
   "description": "JS地下城 10F-Chrome 應用程式 (幹話產生器)",
   "version": "1.0",
+  "author": "Mandy",
   "icons": {
     "128": "assets/icons/128.png",
     "256": "assets/icons/256.png"
