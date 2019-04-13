@@ -90,6 +90,7 @@ export default {
       let _self = this;
       chrome.storage.sync.get(function( items ) {
         chrome.storage.sync.set( obj, callback);
+
       });
       
     },
@@ -106,9 +107,12 @@ export default {
       if (!_self.addquote) return;
       _self.quote.unshift({ text: _self.addquote, edit: false });
       _self.setQuote( {quote: _self.quote },function(){
-
         _self.addquote = '';
         _self.toggleAdd = false;
+      });
+
+      chrome.storage.sync.get(null,function( items ) {
+        chrome.storage.sync.set( { random: items.random + 1 } );
       });
     },
     isEdit( idx ){
@@ -120,8 +124,16 @@ export default {
     isDel(idx) {
       let _self = this;
       if( _self.quote.length == 1 ) return;
+
+      chrome.storage.sync.get(null,function( items ) {
+        if( items.random > idx ){
+          chrome.storage.sync.set( { random: items.random - 1 } );
+        }
+      });
+
       _self.quote.splice(idx,1);
       _self.setQuote( { quote: _self.quote },function(){});
+
     }
   }
 }
@@ -173,7 +185,7 @@ export default {
       span{ font-size: 16px; }
     }
     ul {
-      max-height: 245px;
+      max-height: 243px;
       overflow: hidden;
       li {
         display: flex;

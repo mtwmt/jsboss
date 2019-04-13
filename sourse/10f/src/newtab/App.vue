@@ -2,11 +2,13 @@
   <div class="main" :class="{'is-active': edit,'dark':dark}">
     <div class="container">
       <div class="layer">
-        <div v-if="dark"
+        <div
+          v-if="dark"
           class="bg"
           style="-webkit-filter:grayscale(1); background-image: url('https://images.unsplash.com/photo-1499482125586-91609c0b5fd4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1834&q=80')"
         ></div>
-        <div v-else
+        <div
+          v-else
           class="bg"
           style="background-image: url('https://images.unsplash.com/photo-1499482125586-91609c0b5fd4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1834&q=80')"
         ></div>
@@ -21,8 +23,11 @@
       </div>
       <div class="quote">
         <div class="quote-text">
-          <!-- <p @click="isPageEdit()" v-if="!pagequote">{{ quote[random].text | txtformat }}</p> -->
-          <p @click="isPageEdit()" v-if="!pagequote" v-html="$options.filters.txtformat(quote[random].text)"></p>
+          <p
+            @click="isPageEdit()"
+            v-if="!pagequote"
+            v-html="$options.filters.txtformat(quote[random].text)"
+          ></p>
           <div v-else>
             <textarea v-model="quote[random].text"></textarea>
             <div class="btns">
@@ -54,7 +59,7 @@
         <ul>
           <li v-for="(item,i) in quote" :key="i">
             <!-- <span class="txt" v-if="!item.edit">{{ item.text }}</span> -->
-            <span class="txt" v-if="!item.edit"  v-html="$options.filters.txtformat(item.text)"></span>
+            <span class="txt" v-if="!item.edit" v-html="$options.filters.txtformat(item.text)"></span>
             <input v-else type="text" v-model="item.text" @keyup.enter="isEdit(i)">
             <span class="fn">
               <i class="edit fas fa-pen" @click="isEdit(i)"></i>
@@ -64,7 +69,7 @@
         </ul>
         <!-- <p>
           <a href="" class="more" v-if="quote.length>5" >載入更多</a>
-        </p> -->
+        </p>-->
       </div>
     </div>
   </div>
@@ -73,84 +78,80 @@
 <script>
 export default {
   name: "app",
-  data(){
-    return{
+  data() {
+    return {
       dark: false,
       edit: false,
       pagequote: false,
-      addquote: '',
+      addquote: "",
       random: 0,
+      randomquote: "",
       quote: [
         { text: "路 就是一條直直的", edit: false },
         { text: "雨後的高雄，有下過雨的味道。", edit: false },
         { text: "當我閉上雙眼，眼前只有一片漆黑", edit: false }
       ]
-    }
+    };
   },
   filters: {
-    txtformat( t ){
-      var temp = [];
+    txtformat(t) {
+      var temp = [],
+          w;
       
-      temp = t.split('，');
-      temp = [temp.join('，</span><br /><span>')];
+      if( t.indexOf('，') >=0 ){
+        w = '，';
+      }else if(t.indexOf(',') >=0){
+        w = ',';
+      }
 
-
-      temp.unshift('<span>');
-      temp.push('</span>');
-      
-      
-      return temp.join('');
+      temp = t.split(w);
+      temp = [temp.join("，</span><br /><span>")];
+      temp.unshift("<span>");
+      temp.push("</span>");
+      return temp.join("");
     }
   },
-  watch:{
-    dark(){
+  watch: {
+    dark() {
       let _self = this;
-      chrome.storage.sync.set({'dark': _self.dark} ,function(){});
-    }
+      chrome.storage.sync.set({ dark: _self.dark }, function() {});
+    },
   },
-  created(){
+  created() {
     let _self = this;
-    chrome.storage.sync.get( null,function( items ) {
-      if( !items.hasOwnProperty('dark') ){
-        chrome.storage.sync.set({
-          'dark': _self.dark
-        }, function(){});
-      }else{
+    chrome.storage.sync.get(null, function(items) {
+      if (!items.hasOwnProperty("dark")) {
+        chrome.storage.sync.set({dark: _self.dark},function() {});
+      } else {
         _self.dark = items.dark;
       }
-
-      if( !items.hasOwnProperty('quote') ){
-        chrome.storage.sync.set({
-          'quote': _self.quote
-        }, function(){});
-      }else{
+      if (!items.hasOwnProperty("quote")) {
+        chrome.storage.sync.set( { quote: _self.quote },function() {});
+      } else {
         _self.quote = items.quote;
       }
-      
-      
+      _self.getRandom();
     });
 
-    chrome.storage.onChanged.addListener((data,type) => {
-      for( let i in data ){
-         _self[i] = data[i].newValue;
+    chrome.storage.onChanged.addListener((data, type) => {
+      for (let i in data) {
+        _self[i] = data[i].newValue;
       }
+      
     });
-
-
-    _self.random = _self.getRandom( 0, ( _self.quote.length - 1) );
-    
+    _self.random = _self.getRandom(0, (_self.quote.length - 1));
+    chrome.storage.sync.set( { random: _self.random });
   },
   methods: {
-    getRandom(min, max) {
+    getRandom(min,max) {
       if( max <= 0 ) return;
       return Math.round(Math.random() * (max - min) + min);
     },
-    setQuote( obj,callback ){
+    setQuote(obj, callback) {
       let _self = this;
-      chrome.storage.sync.get(function( items ) {
-        chrome.storage.sync.set( obj, callback);
+      chrome.storage.sync.get(function(items) {
+        chrome.storage.sync.set(obj, callback);
       });
-      
     },
     isActive() {
       this.edit = !this.edit;
@@ -159,28 +160,30 @@ export default {
       let _self = this;
       if (!_self.addquote) return;
       _self.quote.unshift({ text: _self.addquote, edit: false });
-      _self.setQuote( {quote: _self.quote },function(){
-        _self.addquote = '';
+      _self.setQuote({ quote: _self.quote }, function() {
+        _self.addquote = "";
+        _self.random = _self.random + 1;
+        chrome.storage.sync.set( { random: _self.random });
       });
     },
     isPageEdit() {
+      var _self = this;
       this.pagequote = !this.pagequote;
-      if( !this.pagequote ){
-        this.isSave();
-      }
+
+      _self.isSave();
     },
     isEdit(idx) {
       this.quote[idx].edit = !this.quote[idx].edit;
-      if( !this.quote[idx].edit ){
+      if (!this.quote[idx].edit) {
         this.isSave();
       }
     },
     isSave() {
       var _self = this;
-      _self.setQuote({ quote: _self.quote },function(){
-      });
+      _self.setQuote({ quote: _self.quote }, function() {});
     },
-    isCancle(){
+
+    isCancle() {
       var _self = this;
       chrome.storage.sync.get(function(items) {
         _self.quote = items.quote;
@@ -188,12 +191,17 @@ export default {
     },
     isDel(idx) {
       let _self = this;
-      if( _self.quote.length == 1 ) return;
-      _self.quote.splice(idx,1);
-      _self.setQuote({ quote: _self.quote },function(){});
+      if (_self.quote.length == 1) return;
+      if( _self.random > idx ){
+        _self.random = _self.random - 1;
+        chrome.storage.sync.set( { random: _self.random });
+      }
+      _self.quote.splice(idx, 1);
+      _self.setQuote({ quote: _self.quote }, function() {});
     }
-  }
-}
+  },
+  
+};
 </script>
 
 <style lang="scss">
@@ -286,7 +294,7 @@ body {
             color: #000;
             -webkit-text-stroke: 1px #fff;
           }
-          span{
+          span {
             padding: 5px 10px;
             display: inline-block;
             background: #fff;
@@ -311,7 +319,8 @@ body {
             line-height: 50px;
             padding: 0 24px;
             font-weight: bold;
-            &.btn-save , _self.quote[idx].text{
+            &.btn-save,
+            _self.quote[idx].text {
               color: #fff;
               background: #000;
             }
@@ -327,7 +336,6 @@ body {
         position: relative;
         .tit {
           color: #fff;
-
         }
         input[type="text"] {
           border: 0;
@@ -461,21 +469,26 @@ body {
   }
   &.dark {
     .control {
-      .icon{ color: #000; }
+      .icon {
+        color: #000;
+      }
       .quote {
         color: #fff;
         .quote-add {
           color: #000;
-          .tit,input[type="text"] {
+          .tit,
+          input[type="text"] {
             color: #000;
           }
-          input[type="text"]{
+          input[type="text"] {
             border-bottom: 1px solid #000;
           }
-          button{ color: #000; }
+          button {
+            color: #000;
+          }
         }
         .quote-text {
-          p {
+          span {
             background: #000;
           }
         }
