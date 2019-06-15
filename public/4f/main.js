@@ -3,10 +3,10 @@
 // toLocaleString 轉換
 (function () {
   var $el = document.querySelector('ul'),
-      date = new Date(),
       $item = $el.querySelectorAll('li'),
       getAreaInfo = function getAreaInfo(area) {
-    var time = date.toLocaleString('zh-TW', {
+    var date = new Date(),
+        time = date.toLocaleString('zh-TW', {
       timeZone: area,
       hour12: false,
       hour: 'numeric',
@@ -37,29 +37,27 @@
           info = getAreaInfo(zone),
           dark = info.time.split(':')[0] >= 18 || info.time.split(':')[0] <= 6 ? 'dark' : '',
           city = e.getAttribute('data-city');
-      var str = '';
-      str = "\n            <div class=\"col\">\n              <div class=\"city\">" + city + "</div>\n              <div class=\"date\">" + info.day + " " + info.month + ". " + info.year + "</div>\n            </div>\n            <div class=\"col\">\n                <div class=\"time\">" + info.time + "</div>\n            </div>\n            ";
+      var str = "\n            <div class=\"col\">\n              <div class=\"city\">" + city + "</div>\n              <div class=\"date\">" + info.day + " " + info.month + ". " + info.year + "</div>\n            </div>\n            <div class=\"col\">\n                <div class=\"time\">" + info.time + "</div>\n            </div>\n            ";
       e.innerHTML = '';
       e.className = dark;
-      e.insertAdjacentHTML('beforeend', str);
+      e.innerHTML = str;
     });
   };
 
   template();
-  setInterval(function () {
-    template();
-  }, 5000);
+  setInterval(template, 5000);
 })(); // timestamp 轉換
 // (function() {
 //   let $el = document.querySelector('ul'),
-//     date = new Date(),
-//     localTime = date.getTime(),
-//     localOffest = date.getTimezoneOffset()* 60000,  //地區偏移
-//     utc = localTime + localOffest,  
 //     $item = $el.querySelectorAll('li'),
 //     arrMonth = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
 //     getAreaInfo = function( area, offest ){
-//       let getNow = new Date( utc + (3600000*offest) ),
+//       let 
+//           date = new Date(),
+//           localTime = date.getTime(),
+//           localOffest = date.getTimezoneOffset()* 60000,  //地區偏移
+//           utc = localTime + localOffest,
+//           getNow = new Date( utc + (3600000*offest) ),
 //           year = getNow.getFullYear(),
 //           month = arrMonth[getNow.getMonth()],
 //           day = getNow.getDate(),
@@ -95,7 +93,5 @@
 //       });
 //     };
 //     template()
-//     setInterval(() => {
-//       template();
-//     }, 5000);
+//     setInterval(template, 5000);
 // })();
