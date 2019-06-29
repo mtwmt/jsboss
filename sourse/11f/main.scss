@@ -1,8 +1,16 @@
-// $base-font-size: 16px !default;
-// @function rem($target, $context: $base-font-size){
-//   @if $target == 0 { @return 0 }
-//     @return ($target / $context) + 0rem;
-// }
+$base-font-size: 16px !default;
+@function rem($target, $context: $base-font-size){
+  @if $target == 0 { @return 0 }
+    @return ($target / $context) + 0rem;
+}
+
+%clearfix {
+  &:after {
+    content: " ";
+    display: table;
+    clear: both;
+  }
+}
 
 *{
   box-sizing: border-box;
@@ -23,19 +31,230 @@ body,html{
   height: 100%;
   font-family: "Open Sans","微軟正黑體", Arial, sans-serif;
   font-weight: bold;
+  &.is-lightbox{
+    overflow: hidden;
+  }
+}
+
+.container{
+  position: relative;
+  width: rem(1280px);
+  margin: 0 auto;
+  padding: rem(130px) rem(85px);
+}
+
+h1{
+  float: left;
+  width: rem(180px);
+  font-size: rem(72px);
+  line-height: 1.2;
+  text-decoration: underline;
+  -webkit-writing-mode: vertical-rl;
+  writing-mode: vertical-rl ;
+  &:before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: rem(85px);
+    width: rem(160px);
+    height: rem(16px);
+    background: #000;
+  }
 }
 
 .photo{
+  float: right;
+  width: rem((255 * 3px) + (40*3px));
   ul{
+    margin: rem(-20px);
+    display: inline-block;
+    text-align: right;
     li{
+      cursor: pointer;
+      position: relative;
+      width: rem(255px);
+      height: rem(255px);
+      display: inline-block;
+      margin: rem(20px);
+      transition: .5s;
+      &:hover{
+        box-shadow: rem(16px) rem(16px) 0px #000;
+      }
       img{
-        width: rem(255px);
-        height: rem(255px);
+        width: 100%;
+        height: 100%;
       }
     }
   }
 }
 
+.lightbox{
+  &.is-active{
+    display: flex;
+  }
+  display: none;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba( #000,0.9);
+  &-container{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row-reverse;
+
+    width: rem(1280px);
+    height: 100%;
+    margin: 0 auto;
+    padding: rem(130px) rem(85px);
+  }
+  &-photo{
+    position: relative;
+    // float: right;
+    width: 65%;
+    align-self: center;
+    figure{
+      // align-self: center;
+      max-width: 100%;
+      max-height: 100%;
+      text-align: center;
+      border: rem(10px) solid #fff;
+      border-radius: rem(5px);
+      overflow: hidden;
+    }
+    img{
+      max-width: 100%;
+      max-height: rem(550px);
+    }
+    .fas{
+      display: block;
+      position: absolute;
+      cursor: pointer;
+      color:#efefef;
+    }
+  }
+  &-close{
+    top: rem(20px);
+    right: rem(20px);
+    font-size: rem(36px);
+  }
+  &-prev{
+    top: 50%;
+    transform: translateY(-50%);
+    left: rem(20px);
+    font-size: rem(28px);
+  }
+  &-next{
+    top: 50%;
+    transform: translateY(-50%);
+    right: rem(20px);
+    font-size: rem(28px);
+  }
+  &-info{
+    // float: left;
+    position: relative;
+    width: 30%;
+    height: 100%;
+    // height: 0;
+    // padding-bottom: 44%;
+    color: #fff;
+    .num{
+      font-size: rem(36px);
+      font-weight: normal;
+      i{
+        position: relative;
+        top: rem(-10px);
+        font-size: rem(72px);
+        font-weight: bold;
+      }
+    }
+    .desc{
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      p{
+        font-size: rem(24px);
+        line-height: 1.5;
+        &.author{
+          margin-top: rem(16px);
+          font-size: rem(16px);
+          font-weight: normal;
+          font-style: italic;
+        }
+      }
+    }
+  }
+}
+
+
+
+@media screen and (max-width: 1279px) {
+  .container,.lightbox-container{
+    width: 100%;
+  }
+  .photo{
+    width: calc(100% - 11.25rem);
+  }
+}
+
+@media screen and (max-width: 960px) {
+  h1{
+    -webkit-writing-mode: unset;
+    writing-mode: unset ;
+    width: 100%;
+    margin-bottom: rem(30px);
+    &:before{
+      left: rem(30px);
+    }
+  }
+  .container,.lightbox-container{
+    padding: rem(60px) rem(30px);
+    width: 100%;
+  }
+  .photo{
+    width: 100%;
+    ul{
+      text-align: center;
+    }
+  }
+  .lightbox{
+    &-container{
+      height: auto;
+      padding: rem(30px);
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    &-photo{
+      width: 80%;
+      margin: 0 auto;
+    }
+    &-info{
+      width: 100%;
+      height: auto;
+      margin-top: rem(30px);
+      padding-bottom: 0;
+      display: flex;
+      justify-content: space-between;
+      .num{
+        margin-right: rem(60px);
+      }
+      .desc{
+        position: static;
+        // float: right;
+        .author{
+          text-align: right;
+        }
+      }
+    }
+  }
+}
+
+// @media screen and (max-width: 960px) {
+  
+// }
 
 $device-list: 320px 360px 400px 440px 480px 520px 560px 600px 640px;
 @each $current-device in $device-list{

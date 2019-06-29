@@ -1,0 +1,89 @@
+@charset "UTF-8";
+* { box-sizing: border-box; }
+
+html { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
+
+body, html { position: relative; width: 100%; height: 100%; font-family: "Open Sans","微軟正黑體", Arial, sans-serif; font-weight: bold; }
+
+body.is-lightbox, html.is-lightbox { overflow: hidden; }
+
+.container { position: relative; width: 80rem; margin: 0 auto; padding: 8.125rem 5.3125rem; }
+
+h1 { float: left; width: 11.25rem; font-size: 4.5rem; line-height: 1.2; text-decoration: underline; -webkit-writing-mode: vertical-rl; -ms-writing-mode: tb-rl; writing-mode: vertical-rl; }
+
+h1:before { content: ''; position: absolute; top: 0; left: 5.3125rem; width: 10rem; height: 1rem; background: #000; }
+
+.photo { float: right; width: 55.3125rem; }
+
+.photo ul { margin: -1.25rem; display: inline-block; text-align: right; }
+
+.photo ul li { cursor: pointer; position: relative; width: 15.9375rem; height: 15.9375rem; display: inline-block; margin: 1.25rem; transition: .5s; }
+
+.photo ul li:hover { box-shadow: 1rem 1rem 0px #000; }
+
+.photo ul li img { width: 100%; height: 100%; }
+
+.lightbox { display: none; justify-content: center; align-items: center; position: fixed; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); }
+
+.lightbox.is-active { display: flex; }
+
+.lightbox-container { display: flex; justify-content: space-between; flex-direction: row-reverse; width: 80rem; height: 100%; margin: 0 auto; padding: 8.125rem 5.3125rem; }
+
+.lightbox-photo { position: relative; width: 65%; align-self: center; }
+
+.lightbox-photo figure { max-width: 100%; max-height: 100%; text-align: center; border: 0.625rem solid #fff; border-radius: 0.3125rem; overflow: hidden; }
+
+.lightbox-photo img { max-width: 100%; max-height: 34.375rem; }
+
+.lightbox-photo .fas { display: block; position: absolute; cursor: pointer; color: #efefef; }
+
+.lightbox-close { top: 1.25rem; right: 1.25rem; font-size: 2.25rem; }
+
+.lightbox-prev { top: 50%; -webkit-transform: translateY(-50%); transform: translateY(-50%); left: 1.25rem; font-size: 1.75rem; }
+
+.lightbox-next { top: 50%; -webkit-transform: translateY(-50%); transform: translateY(-50%); right: 1.25rem; font-size: 1.75rem; }
+
+.lightbox-info { position: relative; width: 30%; height: 100%; color: #fff; }
+
+.lightbox-info .num { font-size: 2.25rem; font-weight: normal; }
+
+.lightbox-info .num i { position: relative; top: -0.625rem; font-size: 4.5rem; font-weight: bold; }
+
+.lightbox-info .desc { position: absolute; left: 0; bottom: 0; }
+
+.lightbox-info .desc p { font-size: 1.5rem; line-height: 1.5; }
+
+.lightbox-info .desc p.author { margin-top: 1rem; font-size: 1rem; font-weight: normal; font-style: italic; }
+
+@media screen and (max-width: 1279px) { .container, .lightbox-container { width: 100%; }
+  .photo { width: calc(100% - 11.25rem); } }
+
+@media screen and (max-width: 960px) { h1 { -webkit-writing-mode: unset; -ms-writing-mode: unset; writing-mode: unset; width: 100%; margin-bottom: 1.875rem; }
+  h1:before { left: 1.875rem; }
+  .container, .lightbox-container { padding: 3.75rem 1.875rem; width: 100%; }
+  .photo { width: 100%; }
+  .photo ul { text-align: center; }
+  .lightbox-container { height: auto; padding: 1.875rem; flex-wrap: wrap; align-items: center; }
+  .lightbox-photo { width: 80%; margin: 0 auto; }
+  .lightbox-info { width: 100%; height: auto; margin-top: 1.875rem; padding-bottom: 0; display: flex; justify-content: space-between; }
+  .lightbox-info .num { margin-right: 3.75rem; }
+  .lightbox-info .desc { position: static; }
+  .lightbox-info .desc .author { text-align: right; } }
+
+@media screen and (min-width: 320px) { body, html { font-size: 8px; } }
+
+@media screen and (min-width: 360px) { body, html { font-size: 9px; } }
+
+@media screen and (min-width: 400px) { body, html { font-size: 10px; } }
+
+@media screen and (min-width: 440px) { body, html { font-size: 11px; } }
+
+@media screen and (min-width: 480px) { body, html { font-size: 12px; } }
+
+@media screen and (min-width: 520px) { body, html { font-size: 13px; } }
+
+@media screen and (min-width: 560px) { body, html { font-size: 14px; } }
+
+@media screen and (min-width: 600px) { body, html { font-size: 15px; } }
+
+@media screen and (min-width: 640px) { body, html { font-size: 16px; } }

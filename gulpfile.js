@@ -13,7 +13,7 @@ const prettify = require('gulp-prettify');
 
 var css = function() {
   return gulp
-    .src('sourse/**/*.scss')
+    .src(['sourse/**/*.scss','!sourse/10f/**'])
     .pipe(plumber())
     .pipe(
       sass({
@@ -28,7 +28,7 @@ var css = function() {
 
 var js = function() {
   return gulp
-    .src('sourse/**/*.js')
+    .src(['sourse/**/*.js','!sourse/10f/**'])
     .pipe(plumber())
     .pipe(babel({ presets: ['env'] }))
     .pipe(sourcemaps.init({ loadMaps: true }))
@@ -37,19 +37,19 @@ var js = function() {
 
 var html = function() {
   return gulp
-    .src(['sourse/**/*.html'])
+    .src(['sourse/**/*.html','!sourse/10f/**'])
     .pipe(plumber())
     .pipe(prettify({ indent_size: 2 }))
     .pipe(gulp.dest('public'));
 };
 
 var clean = function() {
-  return del(['public/include/**', 'public/scss/**','public/10f/**']);
+  return del(['public/10f/**','public/include/**', 'public/scss/**']);
 };
 
 var watchfile = function() {
-  gulp.watch('sourse/**/*.scss', css);
-  gulp.watch('sourse/**/*.js', js);
+  gulp.watch(['sourse/**/*.scss'], css);
+  gulp.watch(['sourse/**/*.js'], js);
   gulp.watch(['sourse/**/*.html'], html);
   gulp.watch(['public'], clean);
 };
