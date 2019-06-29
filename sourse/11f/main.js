@@ -84,6 +84,7 @@
         }else if( e.target.className.match(/(lightbox-close)/) ){
           $body.classList.remove('is-lightbox');
           $lightbox.classList.remove('is-active');
+          $lightbox.innerHTML = '';
           return;
         }
         $lbimg.setAttribute('src', $photoItem[_photoIdx].dataset.url);
@@ -112,11 +113,6 @@
           e.addEventListener('click', creatLightbox);
         });
       });
-
-      
-      
-
-
     };
 
   init();
