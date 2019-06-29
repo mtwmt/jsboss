@@ -251,10 +251,6 @@ h1{
   }
 }
 
-// @media screen and (max-width: 960px) {
-  
-// }
-
 $device-list: 320px 360px 400px 440px 480px 520px 560px 600px 640px;
 @each $current-device in $device-list{
     @media screen and (min-width: $current-device) {
